@@ -1,12 +1,15 @@
 # Vision-Based Ball Balancing Table
+
 ### STM32H723 + Jetson Orin Nano | Computer Vision | Real-Time Control | Robotics
 
 <p align="center">
-  <img src="Jetson%2BCamera%2BCAN%20module.jpg" alt="Jetson, camera and CAN integration" width="850">
+  <img src="docs/media/jetson-camera-can.jpg"
+       alt="Jetson, camera and CAN integration"
+       width="850">
 </p>
 
 <p align="center">
-  <b>An end-to-end mechatronic control system combining computer vision, real-time embedded control, CAN communication, calibrated inverse kinematics, and layered failsafe mechanisms.</b>
+  <b>An end-to-end mechatronic control system combining computer vision, real-time embedded control, CAN communication, calibrated inverse kinematics, trajectory generation, and layered failsafe mechanisms.</b>
 </p>
 
 ---
@@ -30,7 +33,7 @@ The central engineering principle is:
 
 > **Use the Jetson where computational flexibility is valuable, while keeping final real-time actuator authority on the STM32.**
 
-This makes the project more than a computer-vision demo: it is a complete **perception → estimation → control → communication → actuation → safety** pipeline.
+This makes the project more than a computer-vision demo: it is a complete **perception → estimation → control → communication → trajectory → IK → actuation → safety** pipeline.
 
 ---
 
@@ -249,8 +252,6 @@ Hard PWM limits
 
 When the target reverses, the trajectory engine can brake the current motion before accelerating toward the new target.
 
-This produces:
-
 ```text
 Target reversal
       ↓
@@ -263,7 +264,18 @@ Acceleration
 New target
 ```
 
-The same trajectory infrastructure can be reused for controlled return-to-neutral behavior during fault handling.
+The trajectory infrastructure is also reusable for controlled return-to-neutral behavior during fault handling.
+
+### Demonstrated trajectory modes
+
+The project has been exercised with multiple reference paths, including:
+
+- circular trajectory;
+- triangular trajectory;
+- hexagonal trajectory;
+- figure-8 trajectories.
+
+The screenshots below show the trajectory reference, detected ball position, platform state, roll/pitch values, and servo outputs together in the runtime visualization.
 
 ---
 
@@ -415,48 +427,122 @@ The repository is accompanied by focused engineering documents:
 
 | Document | Focus |
 |---|---|
-| `01-architecture.md` | Overall system architecture |
-| `02-stm32h723-cache-memory.md` | Cortex-M7 memory/cache considerations |
-| `03-freertos-task-design.md` | FreeRTOS task architecture |
-| `04-fdcan-protocol-en.md` | CAN protocol and communication |
-| `05-imu-mpu6500-spi-dma.md` | IMU, SPI DMA and estimation |
-| `06-tft-ui-design.md` | Embedded TFT UI architecture |
-| `07-servo-trajectory-safety.md` | Servo control and trajectory limits |
-| `08-failsafe-design.md` | Fault detection and recovery |
-| `09-ik-calibration.md` | IK calibration and persistent model |
-| `10-jetson-vision-control.md` | Jetson vision/control pipeline |
+| [`01-architecture.md`](docs/01-architecture.md) | Overall system architecture |
+| [`02-stm32h723-cache-memory.md`](docs/02-stm32h723-cache-memory.md) | Cortex-M7 memory/cache considerations |
+| [`03-freertos-task-design.md`](docs/03-freertos-task-design.md) | FreeRTOS task architecture |
+| [`04-fdcan-protocol-en.md`](docs/04-fdcan-protocol-en.md) | CAN protocol and communication |
+| [`05-imu-mpu6500-spi-dma.md`](docs/05-imu-mpu6500-spi-dma.md) | IMU, SPI DMA and estimation |
+| [`06-tft-ui-design.md`](docs/06-tft-ui-design.md) | Embedded TFT UI architecture |
+| [`07-servo-trajectory-safety.md`](docs/07-servo-trajectory-safety.md) | Servo control and trajectory limits |
+| [`08-failsafe-design.md`](docs/08-failsafe-design.md) | Fault detection and recovery |
+| [`09-ik-calibration.md`](docs/09-ik-calibration.md) | IK calibration and persistent model |
+| [`10-jetson-vision-control.md`](docs/10-jetson-vision-control.md) | Jetson vision/control pipeline |
 
 These documents focus not only on **what the code does**, but also on **why the implementation is structured this way**.
 
 ---
 
-## 12. Project Media
+## 12. Project Media & Experimental Results
+
+The repository includes hardware photos, calibration evidence, system-integration views, and recorded trajectory experiments.
 
 ### Mechanical platform
 
 <p align="center">
-  <img src="Table%20top%20(3%20hand,%20MPU6050).jpg" alt="Three-servo balancing platform" width="720">
+  <img src="docs/media/overview-balance-ball-table.jpg"
+       alt="Three-servo ball balancing platform"
+       width="850">
+</p>
+
+### Hardware and mechanical implementation
+
+<p align="center">
+  <img src="docs/media/hardware-overview-1.jpg"
+       alt="Hardware overview"
+       width="420">
+  &nbsp;&nbsp;
+  <img src="docs/media/hardware-overview-2.jpg"
+       alt="Mechanical platform overview"
+       width="420">
 </p>
 
 ### Camera calibration
 
 <p align="center">
-  <img src="Calib%20camera%20(2).jpg" alt="Camera calibration" width="800">
+  <img src="docs/media/camera-calibration.jpg"
+       alt="Camera calibration setup"
+       width="850">
 </p>
 
 ### Jetson / Camera / CAN integration
 
 <p align="center">
-  <img src="Jetson%2BCamera%2BCAN%20module.jpg" alt="Jetson camera CAN integration" width="850">
+  <img src="docs/media/jetson-camera-can.jpg"
+       alt="Jetson camera CAN integration"
+       width="850">
 </p>
-
-### Demonstration
-
-[▶ Watch the recorded demonstration: `output2.mp4`](output2.mp4)
 
 ---
 
-## 13. Technology Stack
+## 13. Trajectory Demonstrations
+
+The trajectory engine is used to generate bounded reference motion for the physical balancing platform. The runtime visualization shows the reference path together with the detected ball position and control telemetry.
+
+### Circular trajectory
+
+<p align="center">
+  <img src="docs/media/trajectory-circle.png"
+       alt="Circular trajectory demonstration"
+       width="650">
+</p>
+
+### Triangle trajectory
+
+<p align="center">
+  <img src="docs/media/trajectory-triangle.png"
+       alt="Triangle trajectory demonstration"
+       width="650">
+</p>
+
+### Hexagon trajectory
+
+<p align="center">
+  <img src="docs/media/trajectory-hexagon.png"
+       alt="Hexagon trajectory demonstration"
+       width="650">
+</p>
+
+### Figure-8 trajectory
+
+<p align="center">
+  <img src="docs/media/trajectory-figure8-1.png"
+       alt="Figure-8 trajectory demonstration, run 1"
+       width="650">
+</p>
+
+<p align="center">
+  <img src="docs/media/trajectory-figure8-2.png"
+       alt="Figure-8 trajectory demonstration, run 2"
+       width="650">
+</p>
+
+### Recorded trajectory-control demonstration
+
+<p align="center">
+  <a href="docs/media/trajectory-control-demo.mp4">
+    <img src="docs/media/trajectory-triangle.png"
+         alt="Open the recorded trajectory-control demonstration"
+         width="650">
+  </a>
+</p>
+
+<p align="center">
+  <b>▶ Click the image above to open the recorded trajectory-control demonstration.</b>
+</p>
+
+---
+
+## 14. Technology Stack
 
 ### Embedded
 
@@ -499,7 +585,7 @@ These documents focus not only on **what the code does**, but also on **why the 
 
 ---
 
-## 14. What This Project Demonstrates
+## 15. What This Project Demonstrates
 
 The strongest aspect of the project is not one isolated algorithm. It is the integration of multiple engineering layers into one physical system:
 
@@ -555,7 +641,7 @@ The final trajectory and actuator command remain under STM32 control rather than
 
 ---
 
-## 15. Recommended Reading Order
+## 16. Recommended Reading Order
 
 For a technical reviewer or hiring manager:
 
@@ -581,7 +667,7 @@ The README gives the system-level picture first; the individual documents then p
 
 ---
 
-## 16. Project Scope
+## 17. Project Scope
 
 The current project covers an integrated prototype with:
 
@@ -604,7 +690,7 @@ The repository intentionally documents engineering constraints as well as succes
 
 ---
 
-## 17. Why This Project Is Relevant to Embedded / Robotics Roles
+## 18. Why This Project Is Relevant to Embedded / Robotics Roles
 
 This project crosses several layers that are often handled by different engineers:
 
@@ -642,7 +728,7 @@ For Embedded, Robotics, Controls, or R&D positions, the repository demonstrates 
 
 ---
 
-## 18. Engineering Takeaway
+## 19. Engineering Takeaway
 
 This project evolved from a ball-balancing mechanism into an end-to-end embedded robotics system:
 
