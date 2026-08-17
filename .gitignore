@@ -1,0 +1,20 @@
+# STM32CubeIDE
+firmware-stm32h723/Debug/
+firmware-stm32h723/Release/
+**/.metadata/
+*.launch~
+
+# CMake / Jetson build (dựa đúng ảnh build/ bạn gửi)
+jetson-vision-control/build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.a
+*.o
+*.elf
+
+# OS/editor rác
+.vscode/
+Thumbs.db
+.DS_Store
