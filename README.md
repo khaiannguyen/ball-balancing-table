@@ -734,7 +734,7 @@ This project evolved from a ball-balancing mechanism into an end-to-end embedded
 
 > **Perception → Estimation → Control → Communication → Trajectory → IK → Actuation → Safety**
 
-The main engineering lesson is that a physical control system is not only an algorithm.
+The key engineering challenge is not implementing the control algorithm in isolation, but integrating it reliably with hardware, timing, communication, calibration, mechanical behavior, and fault handling.
 
 It is the interaction between:
 
