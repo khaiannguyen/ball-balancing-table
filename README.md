@@ -690,7 +690,7 @@ The repository intentionally documents engineering constraints as well as succes
 
 ---
 
-## 18. Why This Project Is Relevant to Embedded / Robotics Roles
+## 18. Technical Capabilities
 
 This project crosses several layers that are often handled by different engineers:
 
