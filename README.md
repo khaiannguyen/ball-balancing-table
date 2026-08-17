@@ -5,7 +5,7 @@
 <p align="center">
   <img src="docs/media/first.jpg"
        alt="Jetson, camera and CAN integration"
-       width="850">
+       width="500">
 </p> 
 
 <p align="center">
@@ -451,7 +451,7 @@ The repository includes hardware photos, calibration evidence, system-integratio
 <p align="center">
   <img src="docs/media/overview-balance-ball-table.jpg"
        alt="Three-servo ball balancing platform"
-       width="850">
+       width="500">
 </p>
 
 ### Hardware and mechanical implementation
@@ -459,11 +459,11 @@ The repository includes hardware photos, calibration evidence, system-integratio
 <p align="center">
   <img src="docs/media/hardware-overview-1.jpg"
        alt="Hardware overview"
-       width="420">
+       width="300">
   &nbsp;&nbsp;
   <img src="docs/media/hardware-overview-2.jpg"
        alt="Mechanical platform overview"
-       width="420">
+       width="300">
 </p>
 
 ### Camera calibration
@@ -471,7 +471,7 @@ The repository includes hardware photos, calibration evidence, system-integratio
 <p align="center">
   <img src="docs/media/camera-calibration.jpg"
        alt="Camera calibration setup"
-       width="850">
+       width="500">
 </p>
 
 ### Jetson / Camera / CAN integration
@@ -479,7 +479,7 @@ The repository includes hardware photos, calibration evidence, system-integratio
 <p align="center">
   <img src="docs/media/jetson-camera-can.jpg"
        alt="Jetson camera CAN integration"
-       width="850">
+       width="450">
 </p>
 
 ---
