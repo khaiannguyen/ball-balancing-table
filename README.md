@@ -5,7 +5,7 @@
 <p align="center">
   <img src="docs/media/first.jpg"
        alt="Jetson, camera and CAN integration"
-       width="500">
+       width="400">
 </p> 
 
 <p align="center">
