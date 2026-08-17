@@ -3,10 +3,10 @@
 ### STM32H723 + Jetson Orin Nano | Computer Vision | Real-Time Control | Robotics
 
 <p align="center">
-  <img src="docs/media/jetson-camera-can.jpg"
+  <img src="docs/media/first.jpg"
        alt="Jetson, camera and CAN integration"
        width="850">
-</p>
+</p> 
 
 <p align="center">
   <b>An end-to-end mechatronic control system combining computer vision, real-time embedded control, CAN communication, calibrated inverse kinematics, trajectory generation, and layered failsafe mechanisms.</b>
