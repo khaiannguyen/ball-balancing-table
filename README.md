@@ -587,7 +587,7 @@ The trajectory engine is used to generate bounded reference motion for the physi
 
 ## 15. What This Project Demonstrates
 
-The strongest aspect of the project is not one isolated algorithm. It is the integration of multiple engineering layers into one physical system:
+The project is not one isolated algorithm. It is the integration of multiple engineering layers into one physical system:
 
 ```text
 Mechanical system
@@ -615,8 +615,6 @@ Actuator constraints
 Failsafe
 ```
 
-Several design decisions were made to keep the system understandable and debuggable:
-
 ### Clear processor boundaries
 
 Jetson handles computationally flexible workloads.
@@ -642,8 +640,6 @@ The final trajectory and actuator command remain under STM32 control rather than
 ---
 
 ## 16. Recommended Reading Order
-
-For a technical reviewer or hiring manager:
 
 ```text
 01 Architecture
@@ -692,7 +688,7 @@ The repository intentionally documents engineering constraints as well as succes
 
 ## 18. Technical Capabilities
 
-This project crosses several layers that are often handled by different engineers:
+This project crosses several layers:
 
 ```text
 Low-level Embedded
@@ -724,7 +720,7 @@ System Integration
   └── physical actuators
 ```
 
-For Embedded, Robotics, Controls, or R&D positions, the repository demonstrates both implementation and **system-level reasoning about interfaces, timing, calibration, and failure modes**.
+The project demonstrates how these components are integrated through defined interfaces, timing constraints, calibration data, and fault-handling mechanisms to control a physical mechatronic system.
 
 ---
 
