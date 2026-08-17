@@ -728,7 +728,7 @@ For Embedded, Robotics, Controls, or R&D positions, the repository demonstrates 
 
 ---
 
-## 19. Engineering Takeaway
+## 19. Engineering Approach
 
 This project evolved from a ball-balancing mechanism into an end-to-end embedded robotics system:
 
