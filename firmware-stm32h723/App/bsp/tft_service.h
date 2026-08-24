@@ -5,18 +5,34 @@
 extern "C" {
 #endif
 
-#include "main.h"   /* lấy SPI_HandleTypeDef, GPIO_TypeDef và các define
-                        TFT_DC_Pin / TFT_RST_Pin / TFT_CS_Pin... */
+#include "main.h"
 #include <stdint.h>
+#include <stdbool.h>
 
-/* Độ phân giải vật lý của panel, theo datasheet 176RGBx220 */
-#define TFT_WIDTH   220
-#define TFT_HEIGHT  176
+/*
+ * ILI9225 display geometry.
+ *
+ * The physical panel is 176 x 220 pixels. The application exposes
+ * a logical 220 x 176 coordinate system because the display is
+ * operated in a 90-degree rotated orientation.
+ *
+ * Application-level drawing functions use:
+ *
+ *     x = 0 .. TFT_WIDTH  - 1
+ *     y = 0 .. TFT_HEIGHT - 1
+ *
+ * TFT_SetWindow() performs the logical-to-physical coordinate
+ * transformation required by the selected display orientation.
+ */
+#define TFT_WIDTH        220
+#define TFT_HEIGHT       176
 
 #define TFT_PHYS_WIDTH   176
 #define TFT_PHYS_HEIGHT  220
 
-/* Vài màu RGB565 dựng sẵn để test */
+/*
+ * Common RGB565 colors used by the UI and diagnostic functions.
+ */
 #define TFT_COLOR_BLACK     0x0000
 #define TFT_COLOR_WHITE     0xFFFF
 #define TFT_COLOR_RED       0xF800
@@ -26,113 +42,291 @@ extern "C" {
 #define TFT_COLOR_CYAN      0x07FF
 #define TFT_COLOR_MAGENTA   0xF81F
 
-/* Reset + chạy power-on sequence của ILI9225, gọi 1 lần lúc khởi động */
+/**
+ * @brief Initialize the ILI9225 display controller.
+ *
+ * Performs the hardware reset sequence and applies the controller
+ * initialization registers required by the selected panel and
+ * display orientation.
+ *
+ * This function should be called once during system initialization.
+ */
 void TFT_Init(void);
 
-/* Set vùng GRAM (x0,y0)-(x1,y1) sẽ được ghi tiếp theo */
-void TFT_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
+/**
+ * @brief Configure the active GRAM write window.
+ *
+ * Subsequent GRAM write operations are directed to the inclusive
+ * rectangle:
+ *
+ *     (x0, y0) .. (x1, y1)
+ *
+ * Coordinates use the application's logical display orientation.
+ * The function converts them to the physical ILI9225 coordinate
+ * system internally.
+ */
+void TFT_SetWindow(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1
+);
 
-/* Tô toàn màn hình 1 màu duy nhất, dùng SPI DMA (blocking tới khi xong) */
+/**
+ * @brief Fill the complete display with one RGB565 color.
+ *
+ * Pixel data is transferred using SPI DMA one display line at a time.
+ * The function blocks until all DMA transfers have completed.
+ *
+ * @param color RGB565 color value.
+ */
 void TFT_FillScreen(uint16_t color);
 
+/**
+ * @brief Draw a diagnostic pixel at a fixed display location.
+ *
+ * This function is intended for low-level display bring-up and
+ * communication diagnostics.
+ */
 void TFT_TestPixel(void);
 
-/* Gọi hàm này từ trong HAL_SPI_TxCpltCallback() của project (xem ghi chú
-   trong tft_service.c) để báo DMA đã gửi xong 1 chunk dữ liệu cho TFT */
+/**
+ * @brief Handle completion of a TFT SPI DMA transfer.
+ *
+ * This function is intended to be called from the application's
+ * HAL_SPI_TxCpltCallback().
+ *
+ * @param hspi SPI peripheral that generated the DMA completion.
+ */
 void TFT_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi);
+
+/* ------------------------------------------------------------------
+ * Basic graphics primitives
+ * ------------------------------------------------------------------ */
+
+/**
+ * @brief Draw one pixel.
+ *
+ * Coordinates outside the logical display area are ignored.
+ */
+void TFT_DrawPixel(
+    uint16_t x,
+    uint16_t y,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a line using the Bresenham rasterization algorithm.
+ */
+void TFT_DrawLine(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a rectangle outline.
+ *
+ * The rectangle coordinates are inclusive.
+ */
+void TFT_DrawRectangle(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a filled rectangle.
+ *
+ * The implementation uses a reusable line buffer and SPI DMA to
+ * reduce the number of CPU-driven SPI transactions.
+ */
+void TFT_FillRectangle(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a rounded rectangle outline.
+ */
+void TFT_DrawRoundRect(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t radius,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a filled rounded rectangle.
+ */
+void TFT_FillRoundRect(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t radius,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a circle outline using an integer midpoint algorithm.
+ */
+void TFT_DrawCircle(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t radius,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a filled circle.
+ *
+ * This is the general-purpose implementation and may perform many
+ * individual SPI transactions for larger circles.
+ *
+ * Use TFT_FillCircleFast() when the background-overwrite constraint
+ * is acceptable and higher rendering performance is required.
+ */
+void TFT_FillCircle(
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t radius,
+    uint16_t color
+);
+
+/**
+ * @brief Draw a filled circle using line-buffered SPI DMA.
+ *
+ * The circle is rendered one horizontal scanline at a time using the
+ * shared DMA line buffer. This significantly reduces the number of
+ * SPI transactions compared with TFT_FillCircle().
+ *
+ * The area inside the circle's bounding box but outside the circle
+ * is explicitly written with bgColor. Therefore this function is
+ * appropriate only when the entire bounding box may safely be
+ * overwritten.
+ *
+ * Do not use this function to draw over existing graphics that must
+ * be preserved.
+ *
+ * If the circle does not fit completely within the display or the
+ * internal line buffer, the function falls back to TFT_FillCircle()
+ * and returns false.
+ *
+ * @param cx      Circle center X coordinate.
+ * @param cy      Circle center Y coordinate.
+ * @param radius  Circle radius in pixels.
+ * @param color   Circle RGB565 color.
+ * @param bgColor  Background RGB565 color used outside the circle.
+ *
+ * @return true if the DMA-optimized implementation was used;
+ *         false if the function used the fallback implementation.
+ */
+bool TFT_FillCircleFast(
+    uint16_t cx,
+    uint16_t cy,
+    uint16_t radius,
+    uint16_t color,
+    uint16_t bgColor
+);
+
+/* ------------------------------------------------------------------
+ * Text rendering
+ * ------------------------------------------------------------------ */
+
+/*
+ * The built-in font uses a fixed 5 x 7 pixel glyph with integer
+ * scaling.
+ *
+ * Supported glyphs cover the character range required by the current
+ * UI.
+ */
+
+/**
+ * @brief Draw one character using the built-in 5 x 7 font.
+ *
+ * @param x        Character origin X coordinate.
+ * @param y        Character origin Y coordinate.
+ * @param c        Character to render.
+ * @param fgColor  Foreground RGB565 color.
+ * @param bgColor  Background RGB565 color.
+ * @param scale    Integer glyph scale. Values below 1 are treated as 1.
+ */
+void TFT_DrawChar(
+    uint16_t x,
+    uint16_t y,
+    char c,
+    uint16_t fgColor,
+    uint16_t bgColor,
+    uint8_t scale
+);
+
+/**
+ * @brief Draw a null-terminated string using the built-in font.
+ *
+ * Characters are rendered sequentially with one background column
+ * between adjacent glyphs.
+ */
+void TFT_DrawText(
+    uint16_t x,
+    uint16_t y,
+    const char *str,
+    uint16_t fgColor,
+    uint16_t bgColor,
+    uint8_t scale
+);
+
+/**
+ * @brief Draw a string using a RAM sprite and one SPI DMA transfer.
+ *
+ * The complete text region is first rendered into an internal sprite
+ * buffer and then transferred to the display as a single DMA operation.
+ *
+ * This reduces SPI transaction overhead and minimizes visible
+ * intermediate rendering when frequently changing UI values.
+ *
+ * If the requested text exceeds the internal sprite buffer or display
+ * boundaries, the function falls back to TFT_DrawText() and returns
+ * false.
+ *
+ * @return true if the sprite/DMA path was used;
+ *         false if the fallback renderer was required.
+ */
+bool TFT_DrawTextFast(
+    uint16_t x,
+    uint16_t y,
+    const char *str,
+    uint16_t fgColor,
+    uint16_t bgColor,
+    uint8_t scale
+);
+
+/**
+ * @brief Calculate the rendered dimensions of a text string.
+ *
+ * @param str   Null-terminated string.
+ * @param scale Integer font scale.
+ * @param w     Output width in pixels. May be NULL.
+ * @param h     Output height in pixels. May be NULL.
+ */
+void TFT_GetTextExtent(
+    const char *str,
+    uint8_t scale,
+    uint16_t *w,
+    uint16_t *h
+);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* TFT_SERVICE_H */
-
-/* =========================================================
- * THÊM VÀO tft_service.h
- * Các hàm graphics cơ bản: pixel, line, rect, circle, text
- * ========================================================= */
-
-#ifndef TFT_SERVICE_GFX_H
-#define TFT_SERVICE_GFX_H
-
-#include <stdint.h>
-#include <stdbool.h>
-void TFT_DrawPixel(uint16_t x, uint16_t y, uint16_t color);
-
-void TFT_DrawLine(uint16_t x0, uint16_t y0,
-                   uint16_t x1, uint16_t y1,
-                   uint16_t color);
-
-void TFT_DrawRectangle(uint16_t x0, uint16_t y0,
-                        uint16_t x1, uint16_t y1,
-                        uint16_t color);
-
-void TFT_FillRectangle(uint16_t x0, uint16_t y0,
-                        uint16_t x1, uint16_t y1,
-                        uint16_t color);
-
-void TFT_DrawRoundRect(uint16_t x0, uint16_t y0,
-                        uint16_t x1, uint16_t y1,
-                        uint16_t radius,
-                        uint16_t color);
-
-void TFT_FillRoundRect(uint16_t x0, uint16_t y0,
-                        uint16_t x1, uint16_t y1,
-                        uint16_t radius,
-                        uint16_t color);
-
-void TFT_DrawCircle(uint16_t x0, uint16_t y0,
-                     uint16_t radius,
-                     uint16_t color);
-
-void TFT_FillCircle(uint16_t x0, uint16_t y0,
-                     uint16_t radius,
-                     uint16_t color);
-
-/* Fill hinh tron NHANH - dung DMA theo tung dong (thay vi tung
- * pixel/line rieng le nhu TFT_FillCircle). Chi dung khi vung ben
- * ngoai hinh tron (trong bounding box) co the ve de bang bgColor
- * ma khong lam mat chi tiet nao khac (vd man hinh vua duoc
- * TFT_FillScreen() truoc do) - KHONG dung khi hinh tron de len
- * chi tiet co san (vd bong de len duong crosshair). Neu vuot man
- * hinh/buffer dong, tu dong fallback ve TFT_FillCircle() va tra ve
- * false. */
-bool TFT_FillCircleFast(uint16_t cx, uint16_t cy,
-                     uint16_t radius,
-                     uint16_t color,
-                     uint16_t bgColor);
-
-/* ---- Text (font 5x7, scale nguyên) ---- */
-void TFT_DrawChar(uint16_t x, uint16_t y,
-                   char c,
-                   uint16_t fgColor,
-                   uint16_t bgColor,
-                   uint8_t scale);
-
-void TFT_DrawText(uint16_t x, uint16_t y,
-                   const char *str,
-                   uint16_t fgColor,
-                   uint16_t bgColor,
-                   uint8_t scale);
-
-/* ---- GIAI DOAN 2: font sprite + 1 lan DMA ----
- * Ve ca chuoi vao 1 buffer RAM roi ghi ra panel bang DUY NHAT 1 lan
- * SPI DMA, thay vi ~35 giao dich SPI rieng le cho MOI ky tu nhu
- * TFT_DrawText() o tren. Dung cho cac vung text can cap nhat nhieu
- * (gia tri so, gia tri thay doi lien tuc...) de giam nhay.
- *
- * Neu chuoi/toa do vuot qua buffer noi bo (xem TEXT_SPRITE_MAX_W/H
- * trong tft_service.c) hoac vuot mep man hinh, ham tu dong fallback
- * ve TFT_DrawText() (cham hon nhung an toan, khong tran bo nho) va
- * tra ve false - gia tri tra ve co the bo qua neu khong can kiem tra. */
-bool TFT_DrawTextFast(uint16_t x, uint16_t y,
-                   const char *str,
-                   uint16_t fgColor,
-                   uint16_t bgColor,
-                   uint8_t scale);
-
-/* Đo kích thước chuỗi (dùng để căn giữa text trong nút) */
-void TFT_GetTextExtent(const char *str, uint8_t scale,
-                        uint16_t *w, uint16_t *h);
-
-#endif /* TFT_SERVICE_GFX_H */

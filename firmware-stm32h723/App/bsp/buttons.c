@@ -1,42 +1,53 @@
-// App/bsp/buttons.c
 #include "buttons.h"
 #include "main.h"
 #include "FreeRTOS.h"
 #include "timers.h"
 #include <stdbool.h>
 
-/* =========================================================
- * QUAN TRONG - LY DO DUNG xTimerStartFromISR() THAY VI osTimerStart():
- * Trong CMSIS-RTOS2 wrapper cua FreeRTOS (cmsis_os2.c), osTimerStart()
- * kiem tra IS_IRQ() va tra ve osErrorISR neu goi tu ISR - KHONG start
- * timer. Day la loi rat de gap va rat kho debug (khong HardFault, chi
- * don gian la nut khong bao gio phan hoi) neu goi nham trong
- * HAL_GPIO_EXTI_Callback(). Vi vay buttons_exti_handler() CHI duoc
- * goi xTimerStartFromISR() (FreeRTOS goc, ISR-safe that su).
+/*
+ * Button input handling is split into two execution contexts:
  *
- * Nguoc lai, debounce timer callback va longpress timer callback chay
- * trong context cua "Timer Service Task" (task noi bo FreeRTOS) - DAY
- * LA TASK CONTEXT BINH THUONG, khong phai ISR - nen ben trong cac
- * callback nay duoc phep goi osMessageQueuePut()/xTimerStart() binh
- * thuong (khong can ban FromISR).
- * ========================================================= */
+ * 1. EXTI interrupt context:
+ *      Detect the GPIO edge and reset the appropriate debounce timer.
+ *
+ * 2. FreeRTOS Timer Service Task context:
+ *      Validate the input state and generate the button event.
+ *
+ * This separation keeps the EXTI handler short and ensures that
+ * queue operations and timer callbacks are executed outside ISR context.
+ *
+ * The EXTI handler must therefore use only ISR-safe FreeRTOS APIs.
+ * In particular, xTimerResetFromISR() is used instead of the normal
+ * task-context timer API.
+ */
 
-/* ButtonEventQueueHandle DA duoc CubeMX dinh nghia + tao trong main.c
- * (MX_FREERTOS_Init -> osMessageQueueNew(...)). File nay CHI dung qua
- * extern osMessageQueueId_t ButtonEventQueueHandle; da khai bao trong
- * buttons.h - KHONG duoc dinh nghia lai o day (gay loi "multiple
- * definition" luc link). */
+/*
+ * ButtonEventQueueHandle is created by CubeMX in main.c during
+ * MX_FREERTOS_Init().
+ *
+ * This module uses the existing queue and does not create or redefine it.
+ */
 
-/* ---- Bang anh xa GPIO_Pin -> button_id_t va port/pin de doc lai muc logic ----
- * Khop dung theo khai bao CubeMX that (main.h):
- *   BTN1 = GPIOF1   (EXTI1_IRQn,     Rising_Falling)
- *   BTN2 = GPIOE2   (EXTI2_IRQn,     Falling)
- *   BTN3 = GPIOE3   (EXTI3_IRQn,     Falling)
- *   BTN4 = GPIOE4   (EXTI4_IRQn,     Falling)
- *   BTN5 = GPIOE5   (EXTI9_5_IRQn,   Falling)
- *   BTN6 = GPIOE6   (EXTI9_5_IRQn,   Falling)
- * Tat ca deu GPIO_PULLUP -> active-low (nhan = GPIO_PIN_RESET), dung voi
- * gia dinh ReadPressed() ben duoi. */
+/*
+ * Hardware mapping between button IDs and GPIO pins.
+ *
+ * All button inputs use GPIO pull-ups and are therefore active-low:
+ *
+ *     GPIO_PIN_RESET -> button pressed
+ *     GPIO_PIN_SET   -> button released
+ *
+ * EXTI configuration:
+ *
+ *     BTN1 -> Rising + Falling
+ *     BTN2 -> Falling
+ *     BTN3 -> Falling
+ *     BTN4 -> Falling
+ *     BTN5 -> Falling
+ *     BTN6 -> Falling
+ *
+ * BTN1 requires both edges because its short/long-press behavior
+ * depends on detecting both press and release.
+ */
 typedef struct
 {
     GPIO_TypeDef *port;
@@ -53,18 +64,35 @@ static const ButtonPin_t s_buttonPin[BTN_ID_COUNT] =
     [BTN_ID_6] = { BTN6_GPIO_Port, BTN6_Pin },
 };
 
-/* ---- Timer objects ---- */
-static TimerHandle_t s_debounceTimer[BTN_ID_COUNT];   /* 1 one-shot / nut, period = BTN_DEBOUNCE_MS */
-static TimerHandle_t s_btn1LongPressTimer;            /* rieng cho BTN_ID_1, period = BTN_LONGPRESS_MS */
+/*
+ * Each button has its own one-shot debounce timer.
+ *
+ * BTN1 also has a dedicated one-shot long-press timer.
+ */
+static TimerHandle_t s_debounceTimer[BTN_ID_COUNT];
+static TimerHandle_t s_btn1LongPressTimer;
 
-/* ---- Trang thai "da xac nhan" (sau debounce) cua tung nut, dung de
- *      chi phan ung khi TRANG THAI THAT su doi (loai bounce) ---- */
+/*
+ * Confirmed state after debounce validation.
+ *
+ * This state is used only for BTN1 because BTN1 has both press and
+ * release EXTI events and therefore requires edge-independent state
+ * tracking.
+ */
 static volatile bool s_confirmedPressed[BTN_ID_COUNT];
+
+/*
+ * Prevents BTN1 from generating both a long-press and a short-press
+ * event for the same physical button action.
+ */
 static volatile bool s_btn1LongPressFired;
 
 static inline bool ReadPressed(button_id_t id)
 {
-    return HAL_GPIO_ReadPin(s_buttonPin[id].port, s_buttonPin[id].pin) == GPIO_PIN_RESET;
+    return HAL_GPIO_ReadPin(
+        s_buttonPin[id].port,
+        s_buttonPin[id].pin
+    ) == GPIO_PIN_RESET;
 }
 
 static button_id_t PinToButtonId(uint16_t GPIO_Pin)
@@ -76,147 +104,201 @@ static button_id_t PinToButtonId(uint16_t GPIO_Pin)
             return (button_id_t)i;
         }
     }
-    return BTN_ID_COUNT;   /* khong khop -> goi la gia tri "invalid" */
+
+    return BTN_ID_COUNT;
 }
 
-/* =========================================================
- * Long-press timer callback (chi cho BTN_ID_1)
- * Chay trong Timer Service Task, KHONG phai ISR.
- * Neu timer nay no ra tuc la nut van dang bi giu lien tuc
- * (khong bi huy o Btn1DebounceCallback do tha ra som hon).
- * ========================================================= */
+/*
+ * @brief Generate the BTN1 long-press event.
+ *
+ * This callback executes in the FreeRTOS Timer Service Task context.
+ * It is invoked only after BTN1 has remained pressed for the configured
+ * long-press interval.
+ */
 static void Btn1LongPressCallback(TimerHandle_t xTimer)
 {
     (void)xTimer;
 
     s_btn1LongPressFired = true;
 
-    button_event_t evt = { .id = BTN_ID_1, .type = BTN_EVT_LONG_PRESS };
+    button_event_t evt =
+    {
+        .id   = BTN_ID_1,
+        .type = BTN_EVT_LONG_PRESS
+    };
+
     osMessageQueuePut(ButtonEventQueueHandle, &evt, 0, 0);
 }
 
-/* =========================================================
- * Debounce callback dung chung cho 5 nut thuong (LEFT/RIGHT/EXIT/UP/DOWN)
+/*
+ * @brief Validate a short press for BTN2..BTN6.
  *
- * QUAN TRONG - KHAC VOI BTN1: 5 nut nay chi cau hinh EXTI Falling
- * (xem bang anh xa GPIO o dau file), tuc la phan cung KHONG bao gio
- * sinh ngat luc tha nut ra. Vi vay KHONG the dung kieu debounce
- * "level-compare 2 chieu" (so sanh voi s_confirmedPressed[id] duoc
- * cap nhat ca luc nhan lan luc tha) nhu Btn1DebounceCallback - neu
- * lam vay s_confirmedPressed[id] se bi "ket" o gia tri true mai sau
- * lan nhan dau tien (khong co ngat nha de dua no ve false), khien
- * MOI LAN NHAN THU 2 tro di bi hieu nham la bounce va bi nuot mat
- * (trieu chung "nhan khong an" ban gap).
+ * BTN2..BTN6 use falling-edge EXTI only. Since no release interrupt is
+ * generated for these buttons, debounce is edge-based rather than
+ * state-transition based.
  *
- * Fix: coi day la debounce edge-based thuan tuy. Moi lan EXTI falling
- * that (do chinh phan cung sinh ra), buttons_exti_handler() da tu
- * Reset lai timer one-shot nay - neu bounce lien tuc, timer se lien
- * tuc bi Reset va CHI no sau khi tin hieu that su dung yen du
- * BTN_DEBOUNCE_MS (day la co che loc bounce chinh, khong can bang
- * bien state). Khi callback nay chay: neu doc lai pin van dang muc
- * "nhan" (an toan phong truong hop nhieu that qua ngan bi bo qua boi
- * NVIC/loc phan cung) thi bao SHORT_PRESS, khong can/khong duoc gan
- * lai s_confirmedPressed[id] vi bien do khong con y nghia doi voi
- * nhom nut nay nua.
- * ========================================================= */
+ * Every falling edge resets the one-shot timer. A button event is
+ * generated only when the pin is still active-low after the debounce
+ * interval.
+ *
+ * This prevents contact bounce from producing multiple button events
+ * while avoiding the need to track a release state that cannot be
+ * observed through EXTI.
+ */
 static void GenericDebounceCallback(TimerHandle_t xTimer)
 {
-    button_id_t id = (button_id_t)(uintptr_t)pvTimerGetTimerID(xTimer);
+    button_id_t id =
+        (button_id_t)(uintptr_t)pvTimerGetTimerID(xTimer);
 
     if (ReadPressed(id))
     {
-        /* 5 nut nay chi can bao su kien luc NHAN XUONG, khong can biet
-         * luc tha ra (dung cho dieu huong man hinh: 1 lan bam = 1 event) */
-        button_event_t evt = { .id = id, .type = BTN_EVT_SHORT_PRESS };
+        button_event_t evt =
+        {
+            .id   = id,
+            .type = BTN_EVT_SHORT_PRESS
+        };
+
         osMessageQueuePut(ButtonEventQueueHandle, &evt, 0, 0);
     }
-    /* neu luc nay pin da tha ra roi (VD nhan rat ngan, thoi gian nhan <
-     * BTN_DEBOUNCE_MS) thi coi nhu nhieu/qua ngan, bo qua, khong bao gi */
 }
 
-/* =========================================================
- * Debounce callback rieng cho BTN_ID_1 (co long-press)
- * ========================================================= */
+/*
+ * @brief Debounce and classify BTN1 press/release events.
+ *
+ * BTN1 supports both short-press and long-press detection.
+ *
+ * A confirmed press starts the long-press timer.
+ * A confirmed release stops the timer and generates a short-press
+ * event only if the long-press threshold has not already been reached.
+ *
+ * Once a long-press event has been generated, the subsequent release
+ * must not generate an additional short-press event.
+ */
 static void Btn1DebounceCallback(TimerHandle_t xTimer)
 {
     (void)xTimer;
 
     bool pressedNow = ReadPressed(BTN_ID_1);
 
+    /*
+     * Ignore the callback when the physical state has not changed
+     * since the last confirmed state. This filters residual bounce
+     * without generating duplicate events.
+     */
     if (pressedNow == s_confirmedPressed[BTN_ID_1])
     {
-        return;   /* bounce, bo qua */
+        return;
     }
+
     s_confirmedPressed[BTN_ID_1] = pressedNow;
 
     if (pressedNow)
     {
-        /* xac nhan vua nhan xuong that su -> bat dau dem gio long-press */
+        /*
+         * A stable press has been confirmed.
+         * Start the one-shot long-press timer.
+         */
         s_btn1LongPressFired = false;
-        xTimerStart(s_btn1LongPressTimer, 0);   /* task context binh thuong, khong can FromISR */
+
+        xTimerStart(s_btn1LongPressTimer, 0);
     }
     else
     {
-        /* xac nhan vua tha ra that su -> huy dem gio long-press neu con chay */
+        /*
+         * A stable release has been confirmed.
+         * Cancel long-press detection if it is still pending.
+         */
         xTimerStop(s_btn1LongPressTimer, 0);
 
+        /*
+         * If the long-press threshold was not reached, classify
+         * this press/release sequence as a short press.
+         */
         if (!s_btn1LongPressFired)
         {
-            /* tha ra truoc khi qua nguong giu -> day la short-press */
-            button_event_t evt = { .id = BTN_ID_1, .type = BTN_EVT_SHORT_PRESS };
+            button_event_t evt =
+            {
+                .id   = BTN_ID_1,
+                .type = BTN_EVT_SHORT_PRESS
+            };
+
             osMessageQueuePut(ButtonEventQueueHandle, &evt, 0, 0);
         }
-        /* neu s_btn1LongPressFired == true thi long-press da duoc ban
-         * (bao) ngay luc dat nguong roi, tha ra sau do KHONG ban them
-         * short-press nua (tranh 1 lan giu ban ra 2 event) */
+
+        /*
+         * If a long-press event was already generated, the release
+         * completes the same action and must not generate another event.
+         */
     }
 }
 
-/* =========================================================
- * Public API
- * ========================================================= */
+/*
+ * @brief Initialize the button input processing subsystem.
+ *
+ * Creates one-shot debounce timers for all buttons and a dedicated
+ * long-press timer for BTN1.
+ *
+ * The application event queue is intentionally not created here.
+ * It is owned by the FreeRTOS initialization generated by CubeMX.
+ */
 void buttons_init(void)
 {
-    /* KHONG goi osMessageQueueNew() o day nua - ButtonEventQueueHandle
-     * da duoc CubeMX tao san trong main.c truoc khi cac task bat dau
-     * chay (MX_FREERTOS_Init chay truoc osKernelStart). buttons_init()
-     * chi can lo phan rieng cua minh: cac debounce timer + longpress
-     * timer, khong dung toi viec tao queue. */
-
     for (int i = 0; i < BTN_ID_COUNT; i++)
     {
         s_confirmedPressed[i] = false;
 
-        TimerCallbackFunction_t cb = (i == BTN_ID_1) ? Btn1DebounceCallback : GenericDebounceCallback;
+        TimerCallbackFunction_t cb =
+            (i == BTN_ID_1)
+                ? Btn1DebounceCallback
+                : GenericDebounceCallback;
 
         s_debounceTimer[i] = xTimerCreate(
-                "btnDebounce",
-                pdMS_TO_TICKS(BTN_DEBOUNCE_MS),
-                pdFALSE,                       /* one-shot */
-                (void *)(uintptr_t)i,           /* timer ID = button_id_t, doc lai trong callback */
-                cb);
+            "btnDebounce",
+            pdMS_TO_TICKS(BTN_DEBOUNCE_MS),
+            pdFALSE,
+            (void *)(uintptr_t)i,
+            cb
+        );
     }
 
     s_btn1LongPressFired = false;
+
     s_btn1LongPressTimer = xTimerCreate(
-            "btn1LongPress",
-            pdMS_TO_TICKS(BTN_LONGPRESS_MS),
-            pdFALSE,                           /* one-shot */
-            NULL,
-            Btn1LongPressCallback);
+        "btn1LongPress",
+        pdMS_TO_TICKS(BTN_LONGPRESS_MS),
+        pdFALSE,
+        NULL,
+        Btn1LongPressCallback
+    );
 }
 
+/*
+ * @brief Handle a GPIO EXTI event generated by a button.
+ *
+ * This function executes in interrupt context.
+ *
+ * The EXTI handler does not perform debounce processing directly.
+ * Instead, it resets the corresponding one-shot timer. The timer
+ * callback later validates the stable GPIO state in task context.
+ *
+ * Using xTimerResetFromISR() keeps the interrupt handler ISR-safe
+ * and minimizes the amount of work performed at interrupt level.
+ */
 void buttons_exti_handler(uint16_t GPIO_Pin)
 {
     button_id_t id = PinToButtonId(GPIO_Pin);
+
     if (id == BTN_ID_COUNT)
     {
-        return;   /* pin khong thuoc 6 nut - khong lam gi */
+        return;
     }
 
-    /* CHI duoc goi ham FromISR o day - dung xTimerStart()/osTimerStart()
-     * se khong hoat dong (hoac tra loi osErrorISR) vi dang o ISR context. */
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    xTimerResetFromISR(s_debounceTimer[id], &xHigherPriorityTaskWoken);
+
+    xTimerResetFromISR(
+        s_debounceTimer[id],
+        &xHigherPriorityTaskWoken
+    );
+
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }

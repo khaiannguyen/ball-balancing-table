@@ -5,59 +5,151 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void imu_debug_dump_regs(void);   // debug tạm, xoá sau khi ổn định dây
-
-#define MPU6500_WHO_AM_I_REG   0x75
-#define MPU6500_WHO_AM_I_VAL   0x70   // giá trị datasheet MPU6500 (kiểm tra lại đúng chip bạn có, MPU6500 thường 0x70, một số biến thể 0x71)
-
-#define MPU6500_PWR_MGMT_1     0x6B
-#define MPU6500_ACCEL_XOUT_H   0x3B
-#define MPU6500_GYRO_XOUT_H    0x43
-#define MPU6500_SMPLRT_DIV     0x19   // dùng làm thanh ghi "scratch" test ghi/đọc SPI, an toàn để thử nghiệm
-
-#define MPU6500_CONFIG         0x1A   // DLPF_CFG nằm ở bit[2:0] thanh ghi này
-#define MPU6500_GYRO_CONFIG     0x1B
-#define MPU6500_ACCEL_CONFIG    0x1C
-
-#define MPU6500_INT_PIN_CFG    0x37
-#define MPU6500_INT_ENABLE     0x38
-#define MPU6500_INT_STATUS     0x3A
-
-#define MPU6500_H_RESET_BIT     0x80   // bit7 của PWR_MGMT_1
-
-/* ---- FIX QUAN TRỌNG ----
- * Theo datasheet MPU-6500 register map, thanh ghi INT_ENABLE (0x38):
- *   bit4 = WOM_EN
- *   bit3 = FIFO_OFLOW_EN
- *   bit0 = RAW_RDY_EN   <-- bit bật ngắt "Data Ready", đây mới là bit cần cho xung 1kHz
- * Code cũ ghi 0x02 (bit1) — bit1 là reserved, không làm gì cả, nên INT Data Ready
- * không bao giờ được bật dù ghi "thành công".
+/*
+ * MPU-6500 register definitions.
+ *
+ * The device is accessed through SPI. Register read transactions
+ * require the MSB of the register address to be set, while register
+ * write transactions require the MSB to be cleared.
  */
-#define MPU6500_INT_ENABLE_RAW_RDY   0x01
 
-/* ---- FIX QUAN TRỌNG #2: bật DLPF để SMPLRT_DIV có tác dụng ----
- * Sau H_RESET, CONFIG (0x1A) mặc định = 0x00 (DLPF_CFG=0 = bypass filter).
- * Ở chế độ bypass, accelerometer bị giới hạn CỨNG ở 4kHz (không đổi được bằng
- * SMPLRT_DIV), và cờ RAW_DATA_RDY chỉ set khi accel+gyro đều sẵn sàng -> bị
- * kẹt ở tốc độ của đường chậm hơn (accel) = 4kHz. Đây là lý do sample rate
- * đo được đúng ~4000Hz dù không ai chủ động set giá trị đó.
- * DLPF_CFG = 3 đưa internal sample rate về 1kHz cho cả accel & gyro (băng
- * thông ~41-44Hz, hợp lý cho control loop cân bằng), sau đó SMPLRT_DIV mới
- * thật sự có tác dụng chia tần số như ý.
+#define MPU6500_WHO_AM_I_REG       0x75
+#define MPU6500_WHO_AM_I_VAL       0x70
+
+#define MPU6500_PWR_MGMT_1         0x6B
+
+#define MPU6500_ACCEL_XOUT_H       0x3B
+#define MPU6500_GYRO_XOUT_H        0x43
+
+/*
+ * Sample-rate divider register.
+ *
+ * When the DLPF is enabled, the MPU-6500 internal sample rate is
+ * divided according to:
+ *
+ *     Sample Rate = Internal Sample Rate / (1 + SMPLRT_DIV)
  */
-#define MPU6500_DLPF_CFG_1KHZ   0x03
+#define MPU6500_SMPLRT_DIV         0x19
 
+/*
+ * Digital Low-Pass Filter configuration.
+ *
+ * DLPF_CFG is located in CONFIG[2:0].
+ */
+#define MPU6500_CONFIG             0x1A
+#define MPU6500_GYRO_CONFIG        0x1B
+#define MPU6500_ACCEL_CONFIG       0x1C
+
+#define MPU6500_INT_PIN_CFG        0x37
+#define MPU6500_INT_ENABLE         0x38
+#define MPU6500_INT_STATUS         0x3A
+
+/*
+ * PWR_MGMT_1[7]:
+ * Hardware reset command.
+ */
+#define MPU6500_H_RESET_BIT        0x80
+
+/*
+ * INT_ENABLE[0]:
+ * Enables the Raw Data Ready interrupt.
+ *
+ * This interrupt is used as the sampling trigger for the STM32
+ * acquisition path.
+ */
+#define MPU6500_INT_ENABLE_RAW_RDY 0x01
+
+/*
+ * DLPF configuration used by this application.
+ *
+ * Enabling the DLPF establishes the intended internal sampling
+ * behavior and allows SMPLRT_DIV to control the output data rate.
+ *
+ * The selected bandwidth is appropriate for the platform
+ * stabilization control loop.
+ */
+#define MPU6500_DLPF_CFG_1KHZ      0x03
+
+/*
+ * @brief Initialize the MPU-6500 and configure its SPI interface.
+ *
+ * The initialization sequence performs a software reset, wakes the
+ * device, verifies WHO_AM_I, configures the interrupt source, sensor
+ * full-scale ranges, DLPF, and sample-rate divider.
+ *
+ * The IMU EXTI interrupt is disabled during initialization because
+ * initialization uses blocking SPI transactions on the same SPI
+ * peripheral used by the DMA acquisition path.
+ *
+ * @param hspi SPI peripheral handle connected to the MPU-6500.
+ *
+ * @return true if all required register writes are verified
+ *         successfully; otherwise false.
+ */
 bool imu_mpu6500_init(SPI_HandleTypeDef *hspi);
+
+/*
+ * @brief Verify the MPU-6500 device identity.
+ *
+ * Reads WHO_AM_I and compares it with the expected MPU-6500 value.
+ *
+ * @return true when the expected device ID is detected.
+ */
 bool imu_mpu6500_who_am_i_check(void);
-void imu_mpu6500_read_raw(int16_t *accel, int16_t *gyro); // polling, blocking
+
+/*
+ * @brief Read raw accelerometer and gyroscope samples.
+ *
+ * This function performs a blocking SPI transaction and is intended
+ * for initialization, diagnostics, or low-rate polling.
+ *
+ * The DMA acquisition path should be used for normal real-time
+ * sampling.
+ *
+ * @param accel Output array containing raw X/Y/Z accelerometer data.
+ * @param gyro  Output array containing raw X/Y/Z gyroscope data.
+ */
+void imu_mpu6500_read_raw(int16_t *accel, int16_t *gyro);
+
+/*
+ * @brief Start one DMA acquisition of accelerometer and gyroscope data.
+ *
+ * The function is normally triggered by the MPU-6500 Data Ready EXTI.
+ * It returns immediately after starting the SPI DMA transaction.
+ *
+ * If the SPI peripheral is still busy with the previous transaction,
+ * the new acquisition is discarded rather than overlapping two DMA
+ * transfers on the same SPI peripheral.
+ */
 void imu_read_dma_start(void);
 
+/*
+ * @brief Return the number of completed DMA samples and reset the counter.
+ *
+ * This counter is intended for acquisition-rate monitoring and
+ * diagnostics.
+ *
+ * @return Number of successfully completed DMA acquisitions since
+ *         the previous call.
+ */
+uint32_t imu_get_and_reset_sample_count(void);
 
-uint32_t imu_get_and_reset_sample_count(void); // debug tạm, đo tần số DMA/EXTI — xoá sau khi đo xong
-
-// debug tạm: in số lần EXTI gọi tới imu_read_dma_start(), số lần bị skip vì SPI
-// bận, và số lần HAL_SPI_TransmitReceive_DMA thất bại — giúp xác định vì sao
-// sample rate = 0Hz đang xảy ra ở khâu nào (EXTI không tới, hay DMA start lỗi).
+/*
+ * @brief Print SPI/DMA acquisition diagnostics.
+ *
+ * Reports DMA start attempts, transfers skipped because SPI was busy,
+ * DMA start failures, SPI error callbacks, and the most recent
+ * HAL SPI error code.
+ */
 void imu_debug_print_dma_counters(void);
 
-#endif
+/*
+ * @brief Print selected MPU-6500 registers for diagnostics.
+ *
+ * The IMU EXTI interrupt is temporarily disabled while the register
+ * dump is performed to prevent a new DMA acquisition from starting
+ * concurrently with the blocking SPI transactions.
+ */
+void imu_debug_dump_regs(void);
+
+#endif /* IMU_MPU6500_H */

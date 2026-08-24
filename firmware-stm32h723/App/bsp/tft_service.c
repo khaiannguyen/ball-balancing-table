@@ -10,359 +10,485 @@
 extern SPI_HandleTypeDef hspi1;
 
 #define TFT_SPI (&hspi1)
-
 #define ILI9225_GRAM_WRITE 0x22
 
-volatile uint8_t dmaDone=0;
+volatile uint8_t dmaDone = 0;
 
-
-/* =========================================================
- * Semaphore bao SPI-DMA line complete.
+/* ------------------------------------------------------------------
+ * SPI DMA completion synchronization.
  *
- * LY DO doi tu bien co "dmaDone" + vong lap spin (busy-wait/taskYIELD)
- * sang osSemaphoreId_t: ca 2 cach cu deu sai trong truong hop nay.
+ * TFT rendering functions start an SPI DMA transfer and then wait
+ * for the corresponding completion event before reusing the shared
+ * DMA buffer.
  *
- *  - osDelay(1) (ban dau): task bi dua RA KHOI ready-list hoan toan
- *    trong it nhat 1 tick -> moi task khac (bat ke priority nao) chac
- *    chan co co hoi chay. Nhung cham: toi thieu 1ms/dong du DMA that
- *    su chi mat vai chuc us.
+ * A semaphore is used instead of busy-waiting so that the rendering
+ * task leaves the Ready state while waiting for DMA completion.
+ * This prevents the display task from unnecessarily consuming CPU
+ * time or starving lower-priority RTOS services.
  *
- *  - busy-wait / taskYIELD (ban sua truoc): task VAN nam trong
- *    ready-list, chi "nhuong luot". Neu Task_Display co priority >=
- *    Timer Service Task (noi chay debounce timer callback cua nut
- *    bam), taskYIELD() VO DUNG - scheduler van chon lai Task_Display
- *    ngay vi no la task ready co priority cao nhat. Timer Service Task
- *    khong bao gio duoc chay -> debounce callback khong chay -> nut
- *    bam khong bao gio duoc enqueue -> toan bo he thong nut "chet".
- *    Day chinh la nguyen nhan that cua loi "nap firmware moi thi bam
- *    nut khong con tac dung".
+ * The completion callback executes in interrupt context. The native
+ * FreeRTOS xSemaphoreGiveFromISR() API is therefore used directly
+ * instead of the CMSIS-RTOS wrapper.
  *
- * Semaphore giai quyet dut diem: osSemaphoreAcquire() dua task RA
- * KHOI ready-list (giong osDelay ve mat "nhuong CPU that"), nhung
- * thuc day NGAY khi DMA callback release semaphore - khong can cho
- * du 1 tick nhu osDelay(1). Vua nhanh vua khong phu thuoc priority
- * cua task nao khac.
- *
- * QUAN TRONG - TAI SAO PHAI DUNG xSemaphoreGiveFromISR() CHU KHONG
- * PHAI osSemaphoreRelease(): dung Y HET ly do buttons.c da giai thich
- * cho xTimerStartFromISR() vs osTimerStart() - CMSIS-RTOS2 wrapper
- * (cmsis_os2.c) trong project nay KHONG tu dong chuyen sang ban
- * "FromISR" khi phat hien dang chay trong ISR (IS_IRQ()), ma mot so
- * ham (da xac nhan voi osTimerStart, gia dinh tuong tu voi
- * osSemaphoreRelease) se TRA VE LOI va KHONG thuc hien hanh dong that
- * su neu bi goi tu ISR. HAL_SPI_TxCpltCallback() chay trong ISR context
- * (DMA complete interrupt) - neu goi osSemaphoreRelease() o day, no co
- * the am tham that bai (semaphore khong bao gio duoc release that),
- * khien TFT_WaitDmaLine() LUON LUON phai cho het timeout 50ms moi dong
- * thay vi duoc danh thuc ngay khi DMA xong - ket qua: ve 1 man hinh
- * (176 dong FillScreen + nhieu FillRectangle khac) co the mat toi HANG
- * CHUC GIAY, tao cam giac "bam nut khong an" du thuc ra MCU van dang
- * chay, chi cuc ky cham.
- *
- * Fix: goi thang ham FreeRTOS goc xSemaphoreGiveFromISR() (bypass CMSIS
- * wrapper hoan toan), dung portYIELD_FROM_ISR de context-switch ngay
- * neu can - day la cach ISR-safe THAT SU, khong phu thuoc hanh vi cua
- * wrapper.
- * ========================================================= */
+ * portYIELD_FROM_ISR() allows an awakened higher-priority task to
+ * resume immediately after the DMA interrupt when required.
+ * ------------------------------------------------------------------ */
 static osSemaphoreId_t s_tftDmaSem;
-static osSemaphoreAttr_t s_tftDmaSemAttr = { .name = "tftDmaSem" };
 
-/* Goi 1 lan duy nhat truoc khi dung TFT_FillScreen/TFT_FillRectangle
- * (vd trong TFT_Init()). Neu chua goi, cac ham do se tu tao lazy o
- * lan dau (xem TFT_WaitDmaLine() ben duoi) de tranh crash neu ai quen
- * goi TFT_Init() truoc. */
+static osSemaphoreAttr_t s_tftDmaSemAttr =
+{
+    .name = "tftDmaSem"
+};
+
+/**
+ * @brief Ensure that the TFT DMA completion semaphore exists.
+ *
+ * The semaphore is created lazily as a defensive measure so that
+ * DMA-based drawing functions remain safe even if they are called
+ * before TFT_Init().
+ */
 static inline void TFT_EnsureDmaSemCreated(void)
 {
     if (s_tftDmaSem == NULL)
     {
-        s_tftDmaSem = osSemaphoreNew(1, 0, &s_tftDmaSemAttr);
+        s_tftDmaSem =
+            osSemaphoreNew(
+                1,
+                0,
+                &s_tftDmaSemAttr
+            );
     }
 }
 
-/* Cho 1 dong DMA xong - dung o ca TFT_FillScreen va TFT_FillRectangle */
+/**
+ * @brief Wait for completion of one SPI DMA transfer.
+ *
+ * A finite timeout prevents the calling task from remaining blocked
+ * indefinitely if the SPI peripheral or DMA controller fails.
+ */
 static inline void TFT_WaitDmaLine(void)
 {
     TFT_EnsureDmaSemCreated();
-    osSemaphoreAcquire(s_tftDmaSem, 50);   /* timeout 50ms - tranh treo cung neu DMA loi */
+
+    osSemaphoreAcquire(
+        s_tftDmaSem,
+        50
+    );
 }
 
-/* buffer 1 dòng */
+/*
+ * Shared line buffer used by DMA-based rendering functions.
+ *
+ * The buffer is aligned to a 32-byte Cortex-M7 cache line because
+ * SPI DMA transfers require explicit D-Cache maintenance on systems
+ * where the data cache is enabled.
+ */
 static uint16_t lineBuffer[TFT_WIDTH]
 __attribute__((aligned(32)));
 
 
-/*=========================================================
-GPIO
-=========================================================*/
+/* ------------------------------------------------------------------
+ * Display control signals
+ * ------------------------------------------------------------------ */
 
 static inline void TFT_CS_LOW(void)
 {
     HAL_GPIO_WritePin(
-            TFT_CS_GPIO_Port,
-            TFT_CS_Pin,
-            GPIO_PIN_RESET);
+        TFT_CS_GPIO_Port,
+        TFT_CS_Pin,
+        GPIO_PIN_RESET
+    );
 }
 
 static inline void TFT_CS_HIGH(void)
 {
     HAL_GPIO_WritePin(
-            TFT_CS_GPIO_Port,
-            TFT_CS_Pin,
-            GPIO_PIN_SET);
+        TFT_CS_GPIO_Port,
+        TFT_CS_Pin,
+        GPIO_PIN_SET
+    );
 }
 
 static inline void TFT_DC_LOW(void)
 {
     HAL_GPIO_WritePin(
-            TFT_DC_GPIO_Port,
-            TFT_DC_Pin,
-            GPIO_PIN_RESET);
+        TFT_DC_GPIO_Port,
+        TFT_DC_Pin,
+        GPIO_PIN_RESET
+    );
 }
 
 static inline void TFT_DC_HIGH(void)
 {
     HAL_GPIO_WritePin(
-            TFT_DC_GPIO_Port,
-            TFT_DC_Pin,
-            GPIO_PIN_SET);
+        TFT_DC_GPIO_Port,
+        TFT_DC_Pin,
+        GPIO_PIN_SET
+    );
 }
 
 static inline void TFT_RST_LOW(void)
 {
     HAL_GPIO_WritePin(
-            TFT_RST_GPIO_Port,
-            TFT_RST_Pin,
-            GPIO_PIN_RESET);
+        TFT_RST_GPIO_Port,
+        TFT_RST_Pin,
+        GPIO_PIN_RESET
+    );
 }
 
 static inline void TFT_RST_HIGH(void)
 {
     HAL_GPIO_WritePin(
-            TFT_RST_GPIO_Port,
-            TFT_RST_Pin,
-            GPIO_PIN_SET);
+        TFT_RST_GPIO_Port,
+        TFT_RST_Pin,
+        GPIO_PIN_SET
+    );
 }
 
 
-/*=========================================================
-DMA callback
-=========================================================*/
+/* ------------------------------------------------------------------
+ * SPI DMA completion callback
+ * ------------------------------------------------------------------ */
 
+/**
+ * @brief Handle completion of an SPI DMA transfer for the TFT.
+ *
+ * This callback executes in interrupt context.
+ *
+ * The DMA completion semaphore is therefore released through the
+ * ISR-safe FreeRTOS API. If a higher-priority task is waiting for
+ * the transfer, the scheduler is requested to switch to it
+ * immediately.
+ */
 void HAL_SPI_TxCpltCallback(
-        SPI_HandleTypeDef *hspi)
+    SPI_HandleTypeDef *hspi)
 {
-    if(hspi==TFT_SPI)
+    if (hspi == TFT_SPI)
     {
-        dmaDone=1;
+        dmaDone = 1;
 
-        /* ISR context - PHAI dung ham FreeRTOS goc xSemaphoreGiveFromISR(),
-         * KHONG dung osSemaphoreRelease() (CMSIS wrapper co the am tham
-         * fail khi goi tu ISR - xem giai thich chi tiet o dinh file, cung
-         * loai loi voi osTimerStart() ma buttons.c da gap). s_tftDmaSem
-         * (osSemaphoreId_t) chinh la SemaphoreHandle_t goc trong CMSIS-
-         * RTOS2-cho-FreeRTOS nen cast thang duoc, khong can ham chuyen doi. */
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        xSemaphoreGiveFromISR((SemaphoreHandle_t)s_tftDmaSem, &xHigherPriorityTaskWoken);
-        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+        xSemaphoreGiveFromISR(
+            (SemaphoreHandle_t)s_tftDmaSem,
+            &xHigherPriorityTaskWoken
+        );
+
+        portYIELD_FROM_ISR(
+            xHigherPriorityTaskWoken
+        );
     }
 }
 
 
-/*=========================================================
-SPI register write
-=========================================================*/
+/* ------------------------------------------------------------------
+ * ILI9225 register write
+ * ------------------------------------------------------------------ */
 
 static void TFT_WriteRegister(
-        uint8_t reg,
-        uint16_t value)
+    uint8_t reg,
+    uint16_t value)
 {
     uint8_t cmd[2];
     uint8_t data[2];
 
-    cmd[0]=0;
-    cmd[1]=reg;
+    cmd[0] = 0;
+    cmd[1] = reg;
 
-    data[0]=(value>>8);
-    data[1]=(value&0xFF);
+    data[0] = (value >> 8);
+    data[1] = (value & 0xFF);
 
     TFT_CS_LOW();
 
     TFT_DC_LOW();
 
     HAL_SPI_Transmit(
-            TFT_SPI,
-            cmd,
-            2,
-            HAL_MAX_DELAY);
+        TFT_SPI,
+        cmd,
+        2,
+        HAL_MAX_DELAY
+    );
 
     TFT_DC_HIGH();
 
     HAL_SPI_Transmit(
-            TFT_SPI,
-            data,
-            2,
-            HAL_MAX_DELAY);
+        TFT_SPI,
+        data,
+        2,
+        HAL_MAX_DELAY
+    );
 
     TFT_CS_HIGH();
 }
 
 
-/*=========================================================
-GRAM write
-=========================================================*/
+/* ------------------------------------------------------------------
+ * GRAM write
+ *
+ * Starts a sequential write transaction to the ILI9225 display RAM.
+ * The caller must configure the active address window before starting
+ * the GRAM write.
+ * ------------------------------------------------------------------ */
 
 static void TFT_BeginGramWrite(void)
 {
     uint8_t cmd[2];
 
-    cmd[0]=0;
-    cmd[1]=ILI9225_GRAM_WRITE;
+    cmd[0] = 0;
+    cmd[1] = ILI9225_GRAM_WRITE;
 
     TFT_CS_LOW();
 
     TFT_DC_LOW();
 
     HAL_SPI_Transmit(
-            TFT_SPI,
-            cmd,
-            2,
-            HAL_MAX_DELAY);
+        TFT_SPI,
+        cmd,
+        2,
+        HAL_MAX_DELAY
+    );
 
     TFT_DC_HIGH();
 }
 
 
-/*=========================================================
-Window
-=========================================================*/
+/* ------------------------------------------------------------------
+ * Display address window
+ *
+ * The application uses a logical 220 x 176 coordinate system while
+ * the physical ILI9225 panel is 176 x 220 pixels.
+ *
+ * The current display orientation applies a 90-degree coordinate
+ * transformation:
+ *
+ *     physical_x = logical_y
+ *     physical_y = (physical_height - 1) - logical_x
+ *
+ * The transformed coordinates are written to the ILI9225 GRAM
+ * address registers.
+ * ------------------------------------------------------------------ */
 
 void TFT_SetWindow(
-        uint16_t x0,
-        uint16_t y0,
-        uint16_t x1,
-        uint16_t y1)
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1)
 {
-    /* ---- xoay 90 độ: logic (x,y) ngang -> vật lý (px,py) dọc ----
-     * physical_x = logic_y
-     * physical_y = (PHYS_HEIGHT-1) - logic_x
-     *
-     * Nếu màn hình hiện ra bị NGƯỢC (úp ngược) hoặc LẬT GƯƠNG,
-     * đổi 2 dòng dưới sang bản "rotation khác" ở cuối file (xem chú thích).
-     */
     uint16_t px0 = y0;
     uint16_t px1 = y1;
 
-    uint16_t py0 = (TFT_PHYS_HEIGHT-1) - x1;
-    uint16_t py1 = (TFT_PHYS_HEIGHT-1) - x0;
+    uint16_t py0 =
+        (TFT_PHYS_HEIGHT - 1) - x1;
 
-    TFT_WriteRegister(0x36,px1);
-    TFT_WriteRegister(0x37,px0);
+    uint16_t py1 =
+        (TFT_PHYS_HEIGHT - 1) - x0;
 
-    TFT_WriteRegister(0x38,py1);
-    TFT_WriteRegister(0x39,py0);
+    TFT_WriteRegister(
+        0x36,
+        px1
+    );
 
-    TFT_WriteRegister(0x20,px0);
-    TFT_WriteRegister(0x21,py0);
+    TFT_WriteRegister(
+        0x37,
+        px0
+    );
+
+    TFT_WriteRegister(
+        0x38,
+        py1
+    );
+
+    TFT_WriteRegister(
+        0x39,
+        py0
+    );
+
+    TFT_WriteRegister(
+        0x20,
+        px0
+    );
+
+    TFT_WriteRegister(
+        0x21,
+        py0
+    );
 }
 
 
-/*=========================================================
-INIT
-=========================================================*/
+/* ------------------------------------------------------------------
+ * ILI9225 initialization
+ * ------------------------------------------------------------------ */
 
+/**
+ * @brief Initialize the ILI9225 display controller.
+ *
+ * Performs the required hardware reset sequence and applies the
+ * controller configuration used by the current panel.
+ *
+ * The register configuration establishes the required power,
+ * timing, entry-mode and display-operation settings.
+ */
 void TFT_Init(void)
 {
-    //printf("TFT START\r\n");
-
     TFT_RST_HIGH();
+
     HAL_Delay(1);
 
     TFT_RST_LOW();
+
     HAL_Delay(50);
 
     TFT_RST_HIGH();
+
     HAL_Delay(150);
 
-    TFT_WriteRegister(0x10,0x0000);
-    TFT_WriteRegister(0x11,0x0000);
-    TFT_WriteRegister(0x12,0x0000);
-    TFT_WriteRegister(0x13,0x0000);
-    TFT_WriteRegister(0x14,0x0000);
+    TFT_WriteRegister(
+        0x10,
+        0x0000
+    );
+
+    TFT_WriteRegister(
+        0x11,
+        0x0000
+    );
+
+    TFT_WriteRegister(
+        0x12,
+        0x0000
+    );
+
+    TFT_WriteRegister(
+        0x13,
+        0x0000
+    );
+
+    TFT_WriteRegister(
+        0x14,
+        0x0000
+    );
 
     HAL_Delay(40);
 
-    TFT_WriteRegister(0x11,0x0018);
-    TFT_WriteRegister(0x12,0x6121);
-    TFT_WriteRegister(0x13,0x006F);
-    TFT_WriteRegister(0x14,0x495F);
-    TFT_WriteRegister(0x10,0x0800);
+    TFT_WriteRegister(
+        0x11,
+        0x0018
+    );
+
+    TFT_WriteRegister(
+        0x12,
+        0x6121
+    );
+
+    TFT_WriteRegister(
+        0x13,
+        0x006F
+    );
+
+    TFT_WriteRegister(
+        0x14,
+        0x495F
+    );
+
+    TFT_WriteRegister(
+        0x10,
+        0x0800
+    );
 
     HAL_Delay(10);
 
-    TFT_WriteRegister(0x11,0x103B);
+    TFT_WriteRegister(
+        0x11,
+        0x103B
+    );
 
     HAL_Delay(50);
 
-    TFT_WriteRegister(0x01,0x011C);
-    TFT_WriteRegister(0x02,0x0100);
-    TFT_WriteRegister(0x03,0x1038);
+    TFT_WriteRegister(
+        0x01,
+        0x011C
+    );
 
-    TFT_WriteRegister(0x07,0x0012);
+    TFT_WriteRegister(
+        0x02,
+        0x0100
+    );
+
+    TFT_WriteRegister(
+        0x03,
+        0x1038
+    );
+
+    TFT_WriteRegister(
+        0x07,
+        0x0012
+    );
 
     HAL_Delay(50);
 
-    TFT_WriteRegister(0x07,0x1017);
+    TFT_WriteRegister(
+        0x07,
+        0x1017
+    );
 
     HAL_Delay(50);
-
-
-    //printf("TFT INIT DONE\r\n");
 }
 
 
-/*=========================================================
-FillScreen
-=========================================================*/
+/* ------------------------------------------------------------------
+ * Full-screen fill
+ *
+ * A single line buffer is reused for every display row.
+ *
+ * The CPU prepares one complete row, cleans the corresponding
+ * D-Cache region, and then transfers the row through SPI DMA.
+ * ------------------------------------------------------------------ */
 
 void TFT_FillScreen(
-        uint16_t color)
+    uint16_t color)
 {
     uint32_t y;
     uint32_t i;
 
-    color=
-    (color<<8)|
-    (color>>8);
+    color =
+        (color << 8) |
+        (color >> 8);
 
-    for(i=0;i<TFT_WIDTH;i++)
+    for (i = 0; i < TFT_WIDTH; i++)
     {
-        lineBuffer[i]=color;
+        lineBuffer[i] = color;
     }
 
-#if (__DCACHE_PRESENT==1)
+#if (__DCACHE_PRESENT == 1)
 
+    /*
+     * The line buffer is written by the CPU and consumed by SPI DMA.
+     * Clean the D-Cache so that DMA reads the latest buffer contents.
+     */
     SCB_CleanDCache_by_Addr(
-            (uint32_t*)lineBuffer,
-            sizeof(lineBuffer));
+        (uint32_t *)lineBuffer,
+        sizeof(lineBuffer)
+    );
 
 #endif
 
     TFT_SetWindow(
-            0,
-            0,
-            TFT_WIDTH-1,
-            TFT_HEIGHT-1);
+        0,
+        0,
+        TFT_WIDTH - 1,
+        TFT_HEIGHT - 1
+    );
 
     TFT_BeginGramWrite();
 
-    for(y=0;y<TFT_HEIGHT;y++)
+    for (y = 0; y < TFT_HEIGHT; y++)
     {
-        dmaDone=0;
+        dmaDone = 0;
 
         HAL_SPI_Transmit_DMA(
-                TFT_SPI,
-                (uint8_t*)lineBuffer,
-                TFT_WIDTH*2);
+            TFT_SPI,
+            (uint8_t *)lineBuffer,
+            TFT_WIDTH * 2
+        );
 
         TFT_WaitDmaLine();
     }
@@ -371,108 +497,140 @@ void TFT_FillScreen(
 }
 
 
+/* ------------------------------------------------------------------
+ * Low-level display communication diagnostic
+ * ------------------------------------------------------------------ */
 
-/*=========================================================
-Pixel test
-=========================================================*/
-
+/**
+ * @brief Draw one red diagnostic pixel at a fixed location.
+ *
+ * This function is intended for low-level display bring-up and SPI
+ * communication verification.
+ */
 void TFT_TestPixel(void)
 {
     TFT_SetWindow(
-            50,
-            50,
-            50,
-            50);
+        50,
+        50,
+        50,
+        50
+    );
 
     TFT_BeginGramWrite();
 
     uint8_t pixel[2];
 
-    pixel[0]=0xF8;
-    pixel[1]=0x00;
+    pixel[0] = 0xF8;
+    pixel[1] = 0x00;
 
     HAL_SPI_Transmit(
-            TFT_SPI,
-            pixel,
-            2,
-            HAL_MAX_DELAY);
+        TFT_SPI,
+        pixel,
+        2,
+        HAL_MAX_DELAY
+    );
 
     TFT_CS_HIGH();
 }
-/* =========================================================
- * THÊM VÀO tft_service.c
- * (đặt sau các hàm TFT_SetWindow / TFT_BeginGramWrite hiện có)
- * ========================================================= */
 
 
+/* ------------------------------------------------------------------
+ * Basic graphics primitives
+ * ------------------------------------------------------------------ */
 
-/*=========================================================
-  Ghi 1 pixel trực tiếp (không DMA, dùng cho hình nhỏ)
-=========================================================*/
-
+/**
+ * @brief Draw one pixel directly to the display.
+ *
+ * This primitive uses a blocking SPI transfer and is intended for
+ * small or infrequent drawing operations.
+ *
+ * Coordinates outside the logical display area are ignored.
+ */
 void TFT_DrawPixel(
-        uint16_t x,
-        uint16_t y,
-        uint16_t color)
+    uint16_t x,
+    uint16_t y,
+    uint16_t color)
 {
-    if((x>=TFT_WIDTH)||(y>=TFT_HEIGHT))
+    if ((x >= TFT_WIDTH) ||
+        (y >= TFT_HEIGHT))
     {
         return;
     }
 
     uint8_t data[2];
 
-    /* swap byte giống TFT_FillScreen đang làm */
-    data[0]=(color>>8);
-    data[1]=(color&0xFF);
+    data[0] = (color >> 8);
+    data[1] = (color & 0xFF);
 
-    TFT_SetWindow(x,y,x,y);
+    TFT_SetWindow(
+        x,
+        y,
+        x,
+        y
+    );
 
     TFT_BeginGramWrite();
 
     HAL_SPI_Transmit(
-            TFT_SPI,
-            data,
-            2,
-            HAL_MAX_DELAY);
+        TFT_SPI,
+        data,
+        2,
+        HAL_MAX_DELAY
+    );
 
     TFT_CS_HIGH();
 }
 
 
-/*=========================================================
-  Line - Bresenham
-=========================================================*/
-
+/**
+ * @brief Draw a line using Bresenham rasterization.
+ *
+ * The algorithm uses integer arithmetic and therefore avoids
+ * floating-point operations in the pixel-generation path.
+ */
 void TFT_DrawLine(
-        uint16_t x0,
-        uint16_t y0,
-        uint16_t x1,
-        uint16_t y1,
-        uint16_t color)
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t color)
 {
-    int16_t dx = (int16_t)x1-(int16_t)x0;
-    int16_t dy = (int16_t)y1-(int16_t)y0;
+    int16_t dx =
+        (int16_t)x1 -
+        (int16_t)x0;
 
-    int16_t sx = (dx>=0)?1:-1;
-    int16_t sy = (dy>=0)?1:-1;
+    int16_t dy =
+        (int16_t)y1 -
+        (int16_t)y0;
 
-    dx=abs(dx);
-    dy=abs(dy);
+    int16_t sx =
+        (dx >= 0) ? 1 : -1;
 
-    int16_t err = (dx>dy)?dx:dy;
+    int16_t sy =
+        (dy >= 0) ? 1 : -1;
 
-    int16_t x=x0;
-    int16_t y=y0;
+    dx = abs(dx);
+    dy = abs(dy);
 
-    int16_t ex=0;
-    int16_t ey=0;
+    int16_t err =
+        (dx > dy) ? dx : dy;
 
-    for(;;)
+    int16_t x = x0;
+    int16_t y = y0;
+
+    int16_t ex = 0;
+    int16_t ey = 0;
+
+    for (;;)
     {
-        TFT_DrawPixel((uint16_t)x,(uint16_t)y,color);
+        TFT_DrawPixel(
+            (uint16_t)x,
+            (uint16_t)y,
+            color
+        );
 
-        if(x==(int16_t)x1 && y==(int16_t)y1)
+        if ((x == (int16_t)x1) &&
+            (y == (int16_t)y1))
         {
             break;
         }
@@ -480,13 +638,13 @@ void TFT_DrawLine(
         ex += dx;
         ey += dy;
 
-        if(ex > err)
+        if (ex > err)
         {
             x += sx;
             ex -= err;
         }
 
-        if(ey > err)
+        if (ey > err)
         {
             y += sy;
             ey -= err;
@@ -495,70 +653,129 @@ void TFT_DrawLine(
 }
 
 
-/*=========================================================
-  Rectangle (viền)
-=========================================================*/
-
+/**
+ * @brief Draw a rectangle outline.
+ *
+ * The rectangle edges are rendered using the Bresenham line
+ * primitive.
+ */
 void TFT_DrawRectangle(
-        uint16_t x0,
-        uint16_t y0,
-        uint16_t x1,
-        uint16_t y1,
-        uint16_t color)
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t color)
 {
-    TFT_DrawLine(x0,y0,x1,y0,color);
-    TFT_DrawLine(x0,y1,x1,y1,color);
-    TFT_DrawLine(x0,y0,x0,y1,color);
-    TFT_DrawLine(x1,y0,x1,y1,color);
+    TFT_DrawLine(
+        x0,
+        y0,
+        x1,
+        y0,
+        color
+    );
+
+    TFT_DrawLine(
+        x0,
+        y1,
+        x1,
+        y1,
+        color
+    );
+
+    TFT_DrawLine(
+        x0,
+        y0,
+        x0,
+        y1,
+        color
+    );
+
+    TFT_DrawLine(
+        x1,
+        y0,
+        x1,
+        y1,
+        color
+    );
 }
 
 
-/*=========================================================
-  Rectangle (đặc) - dùng buffer 1 dòng + DMA cho nhanh
-=========================================================*/
-
+/**
+ * @brief Draw a filled rectangle using a reusable DMA line buffer.
+ *
+ * The rectangle is rendered one horizontal row at a time. The shared
+ * line buffer avoids allocating memory proportional to the complete
+ * rectangle area.
+ *
+ * D-Cache maintenance is performed before DMA reads the buffer.
+ */
 void TFT_FillRectangle(
-        uint16_t x0,
-        uint16_t y0,
-        uint16_t x1,
-        uint16_t y1,
-        uint16_t color)
+    uint16_t x0,
+    uint16_t y0,
+    uint16_t x1,
+    uint16_t y1,
+    uint16_t color)
 {
-    uint16_t xs = (x0<x1)?x0:x1;
-    uint16_t xe = (x0<x1)?x1:x0;
-    uint16_t ys = (y0<y1)?y0:y1;
-    uint16_t ye = (y0<y1)?y1:y0;
+    uint16_t xs =
+        (x0 < x1) ? x0 : x1;
 
-    uint16_t w = xe-xs+1;
+    uint16_t xe =
+        (x0 < x1) ? x1 : x0;
+
+    uint16_t ys =
+        (y0 < y1) ? y0 : y1;
+
+    uint16_t ye =
+        (y0 < y1) ? y1 : y0;
+
+    uint16_t w =
+        xe - xs + 1;
+
     uint16_t y;
     uint16_t i;
 
-    uint16_t swapped = (color<<8)|(color>>8);
+    uint16_t swapped =
+        (color << 8) |
+        (color >> 8);
 
-    /* dùng lineBuffer tĩnh sẵn có trong tft_service.c */
-    for(i=0;i<w;i++)
+    /*
+     * Prepare one complete horizontal row.
+     */
+    for (i = 0; i < w; i++)
     {
-        lineBuffer[i]=swapped;
+        lineBuffer[i] = swapped;
     }
 
-#if (__DCACHE_PRESENT==1)
+#if (__DCACHE_PRESENT == 1)
+
+    /*
+     * Ensure that SPI DMA sees the CPU-written pixel data.
+     */
     SCB_CleanDCache_by_Addr(
-            (uint32_t*)lineBuffer,
-            w*sizeof(uint16_t));
+        (uint32_t *)lineBuffer,
+        w * sizeof(uint16_t)
+    );
+
 #endif
 
-    TFT_SetWindow(xs,ys,xe,ye);
+    TFT_SetWindow(
+        xs,
+        ys,
+        xe,
+        ye
+    );
 
     TFT_BeginGramWrite();
 
-    for(y=ys;y<=ye;y++)
+    for (y = ys; y <= ye; y++)
     {
-        dmaDone=0;
+        dmaDone = 0;
 
         HAL_SPI_Transmit_DMA(
-                TFT_SPI,
-                (uint8_t*)lineBuffer,
-                w*2);
+            TFT_SPI,
+            (uint8_t *)lineBuffer,
+            w * 2
+        );
 
         TFT_WaitDmaLine();
     }
@@ -566,10 +783,12 @@ void TFT_FillRectangle(
     TFT_CS_HIGH();
 }
 
-
 /*=========================================================
-  Rounded rectangle - viền và đặc (góc tròn bằng cung tròn)
-=========================================================*/
+ * Rounded rectangle rendering
+ *
+ * The corner geometry is generated using the midpoint-circle
+ * algorithm. A bit mask selects which corner arcs are rendered.
+ *=========================================================*/
 
 static void TFT_DrawCircleHelper(
         uint16_t x0, uint16_t y0,
@@ -591,32 +810,37 @@ static void TFT_DrawCircleHelper(
             ddF_y+=2;
             f+=ddF_y;
         }
+
         x++;
         ddF_x+=2;
         f+=ddF_x;
 
-        if(cornermask & 0x1) /* top-right */
+        if(cornermask & 0x1) /* Top-right corner */
         {
             TFT_DrawPixel(x0+x,y0-y,color);
             TFT_DrawPixel(x0+y,y0-x,color);
         }
-        if(cornermask & 0x2) /* top-left */
+
+        if(cornermask & 0x2) /* Top-left corner */
         {
             TFT_DrawPixel(x0-x,y0-y,color);
             TFT_DrawPixel(x0-y,y0-x,color);
         }
-        if(cornermask & 0x4) /* bottom-right */
+
+        if(cornermask & 0x4) /* Bottom-right corner */
         {
             TFT_DrawPixel(x0+x,y0+y,color);
             TFT_DrawPixel(x0+y,y0+x,color);
         }
-        if(cornermask & 0x8) /* bottom-left */
+
+        if(cornermask & 0x8) /* Bottom-left corner */
         {
             TFT_DrawPixel(x0-x,y0+y,color);
             TFT_DrawPixel(x0-y,y0+x,color);
         }
     }
 }
+
 
 void TFT_DrawRoundRect(
         uint16_t x0, uint16_t y0,
@@ -627,18 +851,66 @@ void TFT_DrawRoundRect(
     uint16_t w = x1-x0+1;
     uint16_t h = y1-y0+1;
 
-    TFT_DrawLine(x0+radius, y0, x1-radius, y0, color);          /* top    */
-    TFT_DrawLine(x0+radius, y1, x1-radius, y1, color);          /* bottom */
-    TFT_DrawLine(x0, y0+radius, x0, y1-radius, color);          /* left   */
-    TFT_DrawLine(x1, y0+radius, x1, y1-radius, color);          /* right  */
+    TFT_DrawLine(
+            x0+radius,
+            y0,
+            x1-radius,
+            y0,
+            color);          /* Top */
 
-    (void)w;(void)h;
+    TFT_DrawLine(
+            x0+radius,
+            y1,
+            x1-radius,
+            y1,
+            color);          /* Bottom */
 
-    TFT_DrawCircleHelper(x0+radius, y0+radius, radius, 0x2, color); /* top-left  */
-    TFT_DrawCircleHelper(x1-radius, y0+radius, radius, 0x1, color); /* top-right */
-    TFT_DrawCircleHelper(x0+radius, y1-radius, radius, 0x8, color); /* bot-left  */
-    TFT_DrawCircleHelper(x1-radius, y1-radius, radius, 0x4, color); /* bot-right */
+    TFT_DrawLine(
+            x0,
+            y0+radius,
+            x0,
+            y1-radius,
+            color);          /* Left */
+
+    TFT_DrawLine(
+            x1,
+            y0+radius,
+            x1,
+            y1-radius,
+            color);          /* Right */
+
+    (void)w;
+    (void)h;
+
+    TFT_DrawCircleHelper(
+            x0+radius,
+            y0+radius,
+            radius,
+            0x2,
+            color);          /* Top-left */
+
+    TFT_DrawCircleHelper(
+            x1-radius,
+            y0+radius,
+            radius,
+            0x1,
+            color);          /* Top-right */
+
+    TFT_DrawCircleHelper(
+            x0+radius,
+            y1-radius,
+            radius,
+            0x8,
+            color);          /* Bottom-left */
+
+    TFT_DrawCircleHelper(
+            x1-radius,
+            y1-radius,
+            radius,
+            0x4,
+            color);          /* Bottom-right */
 }
+
 
 static void TFT_FillCircleHelper(
         uint16_t x0, uint16_t y0,
@@ -661,22 +933,47 @@ static void TFT_FillCircleHelper(
             ddF_y+=2;
             f+=ddF_y;
         }
+
         x++;
         ddF_x+=2;
         f+=ddF_x;
 
         if(cornermask & 0x1)
         {
-            TFT_DrawLine(x0+x, y0-y, x0+x, y0+y+delta, color);
-            TFT_DrawLine(x0+y, y0-x, x0+y, y0+x+delta, color);
+            TFT_DrawLine(
+                    x0+x,
+                    y0-y,
+                    x0+x,
+                    y0+y+delta,
+                    color);
+
+            TFT_DrawLine(
+                    x0+y,
+                    y0-x,
+                    x0+y,
+                    y0+x+delta,
+                    color);
         }
+
         if(cornermask & 0x2)
         {
-            TFT_DrawLine(x0-x, y0-y, x0-x, y0+y+delta, color);
-            TFT_DrawLine(x0-y, y0-x, x0-y, y0+x+delta, color);
+            TFT_DrawLine(
+                    x0-x,
+                    y0-y,
+                    x0-x,
+                    y0+y+delta,
+                    color);
+
+            TFT_DrawLine(
+                    x0-y,
+                    y0-x,
+                    x0-y,
+                    y0+x+delta,
+                    color);
         }
     }
 }
+
 
 void TFT_FillRoundRect(
         uint16_t x0, uint16_t y0,
@@ -686,18 +983,41 @@ void TFT_FillRoundRect(
 {
     uint16_t h = y1-y0+1;
 
-    TFT_FillRectangle(x0+radius, y0, x1-radius, y1, color);
+    /*
+     * Fill the central rectangular region first. The corner helpers
+     * then extend the fill into the rounded end regions.
+     */
+    TFT_FillRectangle(
+            x0+radius,
+            y0,
+            x1-radius,
+            y1,
+            color);
 
-    TFT_FillCircleHelper(x1-radius, y0+radius, radius, 0x1,
-            (int16_t)h-2*(int16_t)radius-1, color);
-    TFT_FillCircleHelper(x0+radius, y0+radius, radius, 0x2,
-            (int16_t)h-2*(int16_t)radius-1, color);
+    TFT_FillCircleHelper(
+            x1-radius,
+            y0+radius,
+            radius,
+            0x1,
+            (int16_t)h-2*(int16_t)radius-1,
+            color);
+
+    TFT_FillCircleHelper(
+            x0+radius,
+            y0+radius,
+            radius,
+            0x2,
+            (int16_t)h-2*(int16_t)radius-1,
+            color);
 }
 
 
 /*=========================================================
-  Circle - midpoint algorithm
-=========================================================*/
+ * Circle rendering
+ *
+ * Uses the integer midpoint-circle algorithm to avoid
+ * floating-point operations in the rasterization path.
+ *=========================================================*/
 
 void TFT_DrawCircle(
         uint16_t x0,
@@ -711,10 +1031,25 @@ void TFT_DrawCircle(
     int16_t x = 0;
     int16_t y = radius;
 
-    TFT_DrawPixel(x0, y0+radius, color);
-    TFT_DrawPixel(x0, y0-radius, color);
-    TFT_DrawPixel(x0+radius, y0, color);
-    TFT_DrawPixel(x0-radius, y0, color);
+    TFT_DrawPixel(
+            x0,
+            y0+radius,
+            color);
+
+    TFT_DrawPixel(
+            x0,
+            y0-radius,
+            color);
+
+    TFT_DrawPixel(
+            x0+radius,
+            y0,
+            color);
+
+    TFT_DrawPixel(
+            x0-radius,
+            y0,
+            color);
 
     while(x<y)
     {
@@ -724,20 +1059,53 @@ void TFT_DrawCircle(
             ddF_y+=2;
             f+=ddF_y;
         }
+
         x++;
         ddF_x+=2;
         f+=ddF_x;
 
-        TFT_DrawPixel(x0+x, y0+y, color);
-        TFT_DrawPixel(x0-x, y0+y, color);
-        TFT_DrawPixel(x0+x, y0-y, color);
-        TFT_DrawPixel(x0-x, y0-y, color);
-        TFT_DrawPixel(x0+y, y0+x, color);
-        TFT_DrawPixel(x0-y, y0+x, color);
-        TFT_DrawPixel(x0+y, y0-x, color);
-        TFT_DrawPixel(x0-y, y0-x, color);
+        TFT_DrawPixel(
+                x0+x,
+                y0+y,
+                color);
+
+        TFT_DrawPixel(
+                x0-x,
+                y0+y,
+                color);
+
+        TFT_DrawPixel(
+                x0+x,
+                y0-y,
+                color);
+
+        TFT_DrawPixel(
+                x0-x,
+                y0-y,
+                color);
+
+        TFT_DrawPixel(
+                x0+y,
+                y0+x,
+                color);
+
+        TFT_DrawPixel(
+                x0-y,
+                y0+x,
+                color);
+
+        TFT_DrawPixel(
+                x0+y,
+                y0-x,
+                color);
+
+        TFT_DrawPixel(
+                x0-y,
+                y0-x,
+                color);
     }
 }
+
 
 void TFT_FillCircle(
         uint16_t x0,
@@ -745,36 +1113,48 @@ void TFT_FillCircle(
         uint16_t radius,
         uint16_t color)
 {
-    TFT_DrawLine(x0, y0-radius, x0, y0+radius, color);
+    TFT_DrawLine(
+            x0,
+            y0-radius,
+            x0,
+            y0+radius,
+            color);
 
-    TFT_FillCircleHelper(x0, y0, radius, 0x3, 0, color);
+    TFT_FillCircleHelper(
+            x0,
+            y0,
+            radius,
+            0x3,
+            0,
+            color);
 }
 
 
 /* =========================================================
- * FILL CIRCLE NHANH - dung DMA theo tung dong thay vi ve tung
- * pixel/line rieng le.
+ * DMA-optimized filled circle
  *
- * TFT_FillCircle() ban goc dung TFT_DrawLine (ve tung pixel qua
- * TFT_DrawPixel, moi pixel 1 lan SetWindow+SPI_Transmit rieng) lap
- * lai nhieu lan qua TFT_FillCircleHelper - voi ban kinh vai chuc
- * pixel se ton HANG NGAN giao dich SPI rieng le, rat cham va de
- * gay nhay/giat khi ve (dac biet man hinh STOP thay doi toan bo
- * ngay khi vao, khong co dirty-update nao giup duoc o day).
+ * The optimized path renders one horizontal scanline at a time
+ * using the shared DMA line buffer.
  *
- * TFT_FillCircleFast() tinh san moi "dong ngang" cua hinh tron
- * (dua vao phuong trinh duong tron, x^2+y^2<=r^2, chi dung so
- * nguyen - khong can <math.h>/sqrt), dung 1 buffer dong (lineBuffer
- * co san) roi GUI 1 LAN DMA CHO CA DONG - giam tu hang ngan giao
- * dich xuong con (2*r+1) lan DMA (vd r=50 -> 101 lan, thay vi hang
- * ngan lan).
+ * Compared with the general TFT_FillCircle() implementation,
+ * this reduces the number of individual SPI transactions by
+ * transferring one complete scanline per DMA operation.
  *
- * Yeu cau: vung ben ngoai hinh tron nhung nam TRONG hinh vuong bao
- * (bounding box) se bi ve DE bang bgColor - chi dung ham nay khi
- * nen xung quanh la mau dac biet trong (vd sau TFT_FillScreen()),
- * KHONG dung cho hinh tron ve chong len chi tiet khac (vd bong ban
- * ping-pong de len duong crosshair) vi se de mat chi tiet do.
+ * The horizontal extent of each scanline is calculated from:
+ *
+ *     x^2 + y^2 <= r^2
+ *
+ * using integer arithmetic only.
+ *
+ * Pixels inside the circle are written with color. Pixels inside
+ * the bounding box but outside the circle are written with
+ * bgColor.
+ *
+ * Therefore, the complete bounding box is overwritten. Callers
+ * must only use this function when replacing the background inside
+ * that region is acceptable.
  * ========================================================= */
+
 bool TFT_FillCircleFast(
         uint16_t cx, uint16_t cy,
         uint16_t radius,
@@ -788,51 +1168,98 @@ bool TFT_FillCircleFast(
 
     uint16_t diameter = 2*radius + 1;
 
+    /*
+     * The optimized path requires the complete bounding box to
+     * remain inside the display and fit inside the shared line
+     * buffer. The general implementation is used as a safe fallback
+     * when these constraints are not satisfied.
+     */
     if ((cx < radius) || (cy < radius) ||
         ((uint32_t)cx + radius >= TFT_WIDTH) ||
         ((uint32_t)cy + radius >= TFT_HEIGHT) ||
         (diameter > TFT_WIDTH))
     {
-        /* vuot man hinh hoac vuot buffer dong - fallback ve ham cu
-         * (cham hon nhung an toan, khong tran bo nho) */
-        TFT_FillCircle(cx, cy, radius, color);
+        TFT_FillCircle(
+                cx,
+                cy,
+                radius,
+                color);
+
         return false;
     }
 
     uint16_t x0 = cx - radius;
     uint16_t y0 = cy - radius;
 
-    uint16_t colorSwapped = (color<<8)|(color>>8);
-    uint16_t bgSwapped    = (bgColor<<8)|(bgColor>>8);
+    uint16_t colorSwapped =
+            (color<<8)|(color>>8);
 
-    TFT_SetWindow(x0, y0, x0+diameter-1, y0+diameter-1);
+    uint16_t bgSwapped =
+            (bgColor<<8)|(bgColor>>8);
+
+    TFT_SetWindow(
+            x0,
+            y0,
+            x0+diameter-1,
+            y0+diameter-1);
+
     TFT_BeginGramWrite();
 
-    int32_t r2 = (int32_t)radius * (int32_t)radius;
+    int32_t r2 =
+            (int32_t)radius *
+            (int32_t)radius;
 
-    for (int16_t dy = -(int16_t)radius; dy <= (int16_t)radius; dy++)
+    for (int16_t dy = -(int16_t)radius;
+         dy <= (int16_t)radius;
+         dy++)
     {
-        int32_t dy2 = (int32_t)dy * (int32_t)dy;
+        int32_t dy2 =
+                (int32_t)dy *
+                (int32_t)dy;
 
-        /* tim dx lon nhat sao cho dx^2+dy^2 <= r^2 - vong lap don
-         * gian dung so nguyen, tong chi phi ca vong ngoai ~O(r^2),
-         * qua nho so voi thoi gian truyen SPI nen khong dang lo */
+        /*
+         * Determine the maximum horizontal extent satisfying the
+         * circle equation. The calculation intentionally uses
+         * integer arithmetic to avoid floating-point dependencies.
+         */
         int16_t dxMax = 0;
+
         while (((int32_t)(dxMax+1)*(dxMax+1) + dy2) <= r2)
         {
             dxMax++;
         }
 
-        uint16_t left  = (uint16_t)(radius - dxMax);
-        uint16_t right = (uint16_t)(radius + dxMax);
+        uint16_t left =
+                (uint16_t)(radius-dxMax);
 
-        for (uint16_t i = 0; i < diameter; i++)
+        uint16_t right =
+                (uint16_t)(radius+dxMax);
+
+        /*
+         * Populate the complete scanline. Pixels outside the circle
+         * receive the caller-provided background color.
+         */
+        for (uint16_t i = 0;
+             i < diameter;
+             i++)
         {
-            lineBuffer[i] = ((i >= left) && (i <= right)) ? colorSwapped : bgSwapped;
+            lineBuffer[i] =
+                    ((i >= left) && (i <= right))
+                    ? colorSwapped
+                    : bgSwapped;
         }
 
 #if (__DCACHE_PRESENT==1)
-        SCB_CleanDCache_by_Addr((uint32_t*)lineBuffer, diameter*sizeof(uint16_t));
+
+        /*
+         * The line buffer is modified by the CPU and consumed by
+         * the SPI DMA controller. Clean the D-Cache before transfer
+         * so that DMA reads the latest buffer contents.
+         */
+        SCB_CleanDCache_by_Addr(
+                (uint32_t*)lineBuffer,
+                diameter*sizeof(uint16_t));
+
 #endif
 
         dmaDone = 0;
@@ -852,11 +1279,14 @@ bool TFT_FillCircleFast(
 
 
 /*=========================================================
-  FONT 5x7 (chuẩn GLCD, mỗi ký tự 5 byte, bit0=trên)
-  Chỉ gồm ký tự thường dùng cho UI: space, số, hoa, thường,
-  thêm vào nếu cần ký tự khác.
-=========================================================*/
-
+ * 5x7 bitmap font
+ *
+ * Each glyph contains five columns. Bit 0 represents the
+ * top pixel of the corresponding column.
+ *
+ * The table contains the character set required by the
+ * embedded user interface.
+ *=========================================================*/
 
 static const uint8_t font5x7[][5] = {
     {0x00,0x00,0x00,0x00,0x00}, /* ' ' 0x20 */
@@ -918,14 +1348,17 @@ static const uint8_t font5x7[][5] = {
     {0x63,0x14,0x08,0x14,0x63}, /* 'X' */
     {0x07,0x08,0x70,0x08,0x07}, /* 'Y' */
     {0x61,0x51,0x49,0x45,0x43}, /* 'Z' */
-    {0x00,0x1C,0x22,0x41,0x00}, /* '[' (dùng tạm hình '(' ) */
+    {0x00,0x1C,0x22,0x41,0x00}, /* '[' - mapped to parenthesis glyph */
     {0x02,0x04,0x08,0x10,0x20}, /* '\' */
-    {0x00,0x41,0x22,0x1C,0x00}, /* ']' (dùng tạm hình ')' ) */
+    {0x00,0x41,0x22,0x1C,0x00}, /* ']' - mapped to parenthesis glyph */
     {0x04,0x02,0x01,0x02,0x04}, /* '^' */
     {0x40,0x40,0x40,0x40,0x40}, /* '_' */
     {0x00,0x01,0x02,0x04,0x00}, /* '`' */
 
-    /* ---- chữ thường a-z: dùng lại glyph chữ hoa tương ứng ---- */
+    /*
+     * Lowercase glyphs intentionally reuse the corresponding
+     * uppercase bitmap to keep the font representation compact.
+     */
     {0x7E,0x11,0x11,0x11,0x7E}, /* 'a' */
     {0x7F,0x49,0x49,0x49,0x36}, /* 'b' */
     {0x3E,0x41,0x41,0x41,0x22}, /* 'c' */
@@ -955,13 +1388,17 @@ static const uint8_t font5x7[][5] = {
 };
 
 #define FONT_FIRST_CHAR 0x20
-#define FONT_LAST_CHAR  0x7A  /* 'z' - đã mở rộng từ 0x5A */
+#define FONT_LAST_CHAR  0x7A  /* 'z' */
 #define FONT_W 5
 #define FONT_H 7
 
 /*=========================================================
-  Vẽ 1 ký tự, scale = phóng to nguyên lần (1,2,3...)
-=========================================================*/
+ * Character rendering
+ *
+ * Draws one 5x7 bitmap glyph with an integer scale factor.
+ * A scale of 1 renders individual pixels; larger scales expand
+ * each glyph pixel into a square block.
+ *=========================================================*/
 
 void TFT_DrawChar(
         uint16_t x, uint16_t y,
@@ -974,7 +1411,6 @@ void TFT_DrawChar(
     {
         scale=1;
     }
-
     if((c<FONT_FIRST_CHAR)||(c>FONT_LAST_CHAR))
     {
         c=' ';
@@ -989,7 +1425,6 @@ void TFT_DrawChar(
         for(uint8_t row=0; row<FONT_H; row++)
         {
             uint16_t color = (line & (1<<row)) ? fgColor : bgColor;
-
             if(scale==1)
             {
                 TFT_DrawPixel(x+col, y+row, color);
@@ -1006,10 +1441,18 @@ void TFT_DrawChar(
         }
     }
 
-    /* cột đệm giữa ký tự (bg) */
+    /*
+     * Add one background-colored column between adjacent glyphs.
+     * The spacing column is scaled together with the character.
+     */
     if(scale==1)
     {
-        TFT_DrawLine(x+FONT_W, y, x+FONT_W, y+FONT_H-1, bgColor);
+        TFT_DrawLine(
+                x+FONT_W,
+                y,
+                x+FONT_W,
+                y+FONT_H-1,
+                bgColor);
     }
     else
     {
@@ -1039,7 +1482,13 @@ void TFT_DrawText(
 
     while(*str)
     {
-        TFT_DrawChar(cx, y, *str, fgColor, bgColor, scale);
+        TFT_DrawChar(
+                cx,
+                y,
+                *str,
+                fgColor,
+                bgColor,
+                scale);
 
         cx += (FONT_W+1)*scale;
 
@@ -1066,61 +1515,82 @@ void TFT_GetTextExtent(
         len++;
     }
 
-    if(w) { *w = len*(FONT_W+1)*scale; }
-    if(h) { *h = FONT_H*scale; }
+    if(w)
+    {
+        *w = len*(FONT_W+1)*scale;
+    }
+
+    if(h)
+    {
+        *h = FONT_H*scale;
+    }
 }
 
 
 /* =========================================================
- * GIAI DOAN 2 - FONT SPRITE + 1 LAN DMA
+ * Sprite-based text rendering
  *
- * TFT_DrawChar/TFT_DrawText (ban goc, van giu nguyen o tren, dung
- * lam fallback) ve tung pixel (scale=1) hoac tung o (scale>1) bang
- * TFT_DrawPixel/TFT_FillRectangle rieng le - moi ky tu scale=1 ton
- * toi 35 giao dich SPI (SetWindow+Transmit) tach roi nhau. Vi
- * ILI9225 khong co chan TE/VSYNC dong bo voi MCU, thoi gian ve keo
- * dai kieu nay lam "lo" trang thai ve dang do ra man hinh -> nhay.
+ * TFT_DrawChar() and TFT_DrawText() provide the general-purpose
+ * rendering path, but each glyph is transferred through multiple
+ * small SPI operations.
  *
- * TFT_DrawTextFast() dung 1 buffer RAM (sprite) de dung san CA
- * CHUOI ky tu (gom ca cot dem giua chu = mau nen), roi chi
- * TFT_SetWindow() + 1 LAN DMA DUY NHAT cho toan bo chuoi - giam so
- * giao dich SPI tu ~35*len xuong con 1 lan transmit.
+ * TFT_DrawTextFast() instead builds the complete text region in
+ * RAM and transfers the resulting pixel buffer in a single DMA
+ * transaction. This reduces SPI transaction overhead and avoids
+ * exposing partially rendered text to the display.
  *
- * Gioi han: buffer sprite kich thuoc co dinh
- * TEXT_SPRITE_MAX_W x TEXT_SPRITE_MAX_H (du cho toan bo label/
- * value-field dang dung trong UI hien tai, TFT_WIDTH ngang x
- * FONT_H*3 cao - du du cho scale 1..3). Neu chuoi/toa do vuot qua
- * (vd goi voi scale qua lon hoac x+w > TFT_WIDTH), ham se KHONG
- * tran buffer - tu dong fallback ve TFT_DrawText() (cham hon nhung
- * an toan) va tra ve false de noi goi biet neu can kiem tra.
+ * The sprite buffer includes the background-colored spacing column
+ * between characters so that the complete text bounding box is
+ * rendered deterministically.
+ *
+ * The buffer dimensions are fixed to the display width and three
+ * font heights, covering the text sizes currently required by the
+ * user interface.
+ *
+ * If the requested text exceeds the sprite buffer or display
+ * boundaries, TFT_DrawTextFast() falls back to TFT_DrawText().
+ * This preserves memory safety at the cost of lower rendering
+ * performance.
  * ========================================================= */
 
 #define TEXT_SPRITE_MAX_W   TFT_WIDTH
 #define TEXT_SPRITE_MAX_H   (FONT_H*3)
 
+
 /* =========================================================
- * FIX LAT/NGUOC CHU
+ * Sprite orientation compensation
  *
- * TFT_FillRectangle dung MAU DONG NHAT cho ca dong nen du thu tu
- * auto-increment that cua GRAM (quyet dinh boi thanh ghi Entry Mode
- * 0x03 = 0x1038 trong TFT_Init(), phoi hop voi phep xoay 90 do trong
- * TFT_SetWindow) co bi dao nguoc so voi gia dinh ban dau, anh van
- * dung (moi pixel cung mau). TFT_DrawTextFast ghi du lieu KHAC NHAU
- * theo tung pixel nen thu tu sai se lo ra ngay - day chinh la ly do
- * chu bi nguoc/lat khi test tren panel that.
+ * The ILI9225 GRAM address increment direction is coupled to the
+ * Entry Mode configuration and the logical-to-physical coordinate
+ * transformation used by TFT_SetWindow().
  *
- * Thay vi phai doc datasheet de tinh chinh xac AM/ID bit, dung 1 co
- * co the thu-sai truc tiep tren board that: doi so duoi day roi build
- * lai, thu tuan tu 0 -> 1 -> 2 -> 3 cho den khi chu hien DUNG CHIEU:
- *   0 = khong lat gi ca
- *   1 = chi lat NGANG (trai-phai) - DA XAC NHAN DUNG tren board that
- *   2 = chi lat DOC (tren-duoi)
- *   3 = lat CA HAI (xoay 180 do)
+ * Solid-color rendering does not expose an incorrect pixel ordering
+ * because every transferred pixel has the same value. Text rendering
+ * does expose the ordering because neighboring pixels contain
+ * different values.
+ *
+ * TEXT_SPRITE_FLIP_MODE compensates for this relationship when the
+ * sprite is mapped into the display memory.
+ *
+ * Supported modes:
+ *
+ *   0 = no axis inversion
+ *   1 = horizontal inversion
+ *   2 = vertical inversion
+ *   3 = horizontal and vertical inversion
+ *
+ * The selected mode is part of the display-orientation configuration
+ * and must remain consistent with the TFT_SetWindow() coordinate
+ * mapping and ILI9225 Entry Mode configuration.
  * ========================================================= */
+
 #define TEXT_SPRITE_FLIP_MODE   1
 
-static uint16_t textSpriteBuf[TEXT_SPRITE_MAX_W * TEXT_SPRITE_MAX_H]
-__attribute__((aligned(32)));
+
+static uint16_t textSpriteBuf[
+        TEXT_SPRITE_MAX_W * TEXT_SPRITE_MAX_H]
+        __attribute__((aligned(32)));
+
 
 bool TFT_DrawTextFast(
         uint16_t x, uint16_t y,
@@ -1135,6 +1605,7 @@ bool TFT_DrawTextFast(
     }
 
     uint16_t len = 0;
+
     while (str[len] != '\0')
     {
         len++;
@@ -1142,91 +1613,208 @@ bool TFT_DrawTextFast(
 
     if (len == 0)
     {
-        return true; /* chuoi rong - khong co gi de ve */
+        /* Empty string: no display update is required. */
+        return true;
     }
 
-    uint16_t charAdvance = (FONT_W + 1) * scale;
-    uint16_t w = len * charAdvance;
-    uint16_t h = FONT_H * scale;
+    uint16_t charAdvance =
+            (FONT_W + 1) * scale;
 
-    if ((w > TEXT_SPRITE_MAX_W) || (h > TEXT_SPRITE_MAX_H) ||
-        ((uint32_t)x + w > TFT_WIDTH) || ((uint32_t)y + h > TFT_HEIGHT))
+    uint16_t w =
+            len * charAdvance;
+
+    uint16_t h =
+            FONT_H * scale;
+
+    /*
+     * Validate both the sprite-buffer capacity and the requested
+     * display region before writing any pixel data.
+     *
+     * Falling back to the non-sprite renderer prevents buffer
+     * overruns and keeps the API safe for unexpected text sizes
+     * or coordinates.
+     */
+    if ((w > TEXT_SPRITE_MAX_W) ||
+        (h > TEXT_SPRITE_MAX_H) ||
+        ((uint32_t)x + w > TFT_WIDTH) ||
+        ((uint32_t)y + h > TFT_HEIGHT))
     {
-        /* vuot buffer/man hinh - fallback an toan, khong tran bo nho */
-        TFT_DrawText(x, y, str, fgColor, bgColor, scale);
+        TFT_DrawText(
+                x,
+                y,
+                str,
+                fgColor,
+                bgColor,
+                scale);
+
         return false;
     }
 
+
 #if   (TEXT_SPRITE_FLIP_MODE == 1)
+
     #define SPRITE_R(r)  (r)
     #define SPRITE_C(c)  ((w-1)-(c))
+
 #elif (TEXT_SPRITE_FLIP_MODE == 2)
+
     #define SPRITE_R(r)  ((h-1)-(r))
     #define SPRITE_C(c)  (c)
+
 #elif (TEXT_SPRITE_FLIP_MODE == 3)
+
     #define SPRITE_R(r)  ((h-1)-(r))
     #define SPRITE_C(c)  ((w-1)-(c))
+
 #else
+
     #define SPRITE_R(r)  (r)
     #define SPRITE_C(c)  (c)
+
 #endif
 
-    uint16_t fgSwapped = (fgColor << 8) | (fgColor >> 8);
-    uint16_t bgSwapped = (bgColor << 8) | (bgColor >> 8);
 
+    /*
+     * Convert RGB565 values to the byte order expected by the SPI
+     * transfer path. The converted values can then be written
+     * directly into the DMA source buffer.
+     */
+    uint16_t fgSwapped =
+            (fgColor << 8) |
+            (fgColor >> 8);
+
+    uint16_t bgSwapped =
+            (bgColor << 8) |
+            (bgColor >> 8);
+
+
+    /*
+     * Rasterize every character directly into the sprite buffer.
+     *
+     * Each logical font pixel is expanded according to the requested
+     * scale factor. The orientation macros map the logical text
+     * coordinates into the memory order required by the display.
+     */
     for (uint16_t ci = 0; ci < len; ci++)
     {
         char c = str[ci];
-        if ((c < FONT_FIRST_CHAR) || (c > FONT_LAST_CHAR))
+
+        if ((c < FONT_FIRST_CHAR) ||
+            (c > FONT_LAST_CHAR))
         {
             c = ' ';
         }
-        const uint8_t *glyph = font5x7[c - FONT_FIRST_CHAR];
 
-        uint16_t colBase = ci * charAdvance;
+        const uint8_t *glyph =
+                font5x7[c - FONT_FIRST_CHAR];
 
-        for (uint8_t col = 0; col < FONT_W; col++)
+        uint16_t colBase =
+                ci * charAdvance;
+
+        for (uint8_t col = 0;
+             col < FONT_W;
+             col++)
         {
-            uint8_t line = glyph[col];
+            uint8_t line =
+                    glyph[col];
 
-            for (uint8_t row = 0; row < FONT_H; row++)
+            for (uint8_t row = 0;
+                 row < FONT_H;
+                 row++)
             {
-                uint16_t px = (line & (1 << row)) ? fgSwapped : bgSwapped;
+                uint16_t px =
+                        (line & (1 << row))
+                        ? fgSwapped
+                        : bgSwapped;
 
-                for (uint8_t sy = 0; sy < scale; sy++)
+                /*
+                 * Expand one bitmap pixel into a scale x scale
+                 * block while applying the selected sprite
+                 * orientation mapping.
+                 */
+                for (uint8_t sy = 0;
+                     sy < scale;
+                     sy++)
                 {
-                    uint16_t rowIdx = row * scale + sy;
+                    uint16_t rowIdx =
+                            row * scale + sy;
 
-                    for (uint8_t sx = 0; sx < scale; sx++)
+                    for (uint8_t sx = 0;
+                         sx < scale;
+                         sx++)
                     {
-                        uint16_t colIdx = colBase + col * scale + sx;
-                        textSpriteBuf[(uint32_t)SPRITE_R(rowIdx) * w + SPRITE_C(colIdx)] = px;
+                        uint16_t colIdx =
+                                colBase +
+                                col * scale +
+                                sx;
+
+                        textSpriteBuf[
+                            (uint32_t)SPRITE_R(rowIdx) * w +
+                            SPRITE_C(colIdx)
+                        ] = px;
                     }
                 }
             }
         }
 
-        /* cot dem giua ky tu - luon la mau nen, tren toan bo chieu cao */
-        for (uint16_t row = 0; row < h; row++)
+
+        /*
+         * Fill the inter-character spacing column with the background
+         * color across the complete text height. This guarantees that
+         * the sprite contains a deterministic background between glyphs
+         * instead of leaving stale data from a previous rendering.
+         */
+        for (uint16_t row = 0;
+             row < h;
+             row++)
         {
-            for (uint8_t sx = 0; sx < scale; sx++)
+            for (uint8_t sx = 0;
+                 sx < scale;
+                 sx++)
             {
-                uint16_t colIdx = colBase + FONT_W * scale + sx;
-                textSpriteBuf[(uint32_t)SPRITE_R(row) * w + SPRITE_C(colIdx)] = bgSwapped;
+                uint16_t colIdx =
+                        colBase +
+                        FONT_W * scale +
+                        sx;
+
+                textSpriteBuf[
+                    (uint32_t)SPRITE_R(row) * w +
+                    SPRITE_C(colIdx)
+                ] = bgSwapped;
             }
         }
     }
 
+
 #undef SPRITE_R
 #undef SPRITE_C
 
+
 #if (__DCACHE_PRESENT==1)
+
+    /*
+     * The sprite buffer is written by the CPU and subsequently read
+     * by the SPI DMA controller. Clean the D-Cache so that DMA sees
+     * the latest pixel data in memory.
+     */
     SCB_CleanDCache_by_Addr(
             (uint32_t*)textSpriteBuf,
             (uint32_t)w * h * sizeof(uint16_t));
+
 #endif
 
-    TFT_SetWindow(x, y, x + w - 1, y + h - 1);
+
+    /*
+     * Configure one display window covering the complete rendered
+     * text region, then transfer the entire sprite through one DMA
+     * transaction.
+     */
+    TFT_SetWindow(
+            x,
+            y,
+            x + w - 1,
+            y + h - 1);
+
     TFT_BeginGramWrite();
 
     dmaDone = 0;
@@ -1242,3 +1830,5 @@ bool TFT_DrawTextFast(
 
     return true;
 }
+
+

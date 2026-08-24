@@ -1,20 +1,31 @@
 /**
  * @file    servo_test.h
- * @brief   Test mode doc lap cho B2 - xac nhan Tang 1/2/3 servo bang mat
- *          tren phan cung that, KHONG can IK (muc 5), KHONG can CAN/Jetson,
- *          KHONG can Task_Button_UI (chua co toi B.4).
+ * @brief   Servo actuator test and characterization interface.
  *
- * Code trong file nay la CODE TAM (giong pattern imu debug o B1) - se bi
- * xoa/thay the hoan toan khi ghep Task_ControlLoop that (B.6). Khi do chi
- * giu lai servo_actuator_step(dt) o cuoi chu ky, con lenh set_target/
- * apply_delta duoc thay bang output that cua IK/PID.
+ * This module provides deterministic test routines for validating the
+ * three-servo actuator system on the physical platform.
  *
- * Cach dung: goi servo_test_init() 1 lan luc khoi dong, roi goi
- * servo_test_step() moi 10ms (100Hz) trong vong lap StartControlLoop tam
- * (vd bang osDelay(10) hoac 1 TIM 100Hz rieng).
+ * Two test interfaces are provided:
  *
- * Tham chieu: PingpongTable_ProfessionalDesign muc B.2.6, B.2.8.
+ * 1. Legacy cyclic test:
+ *      servo_test_init()
+ *      servo_test_step()
+ *
+ *    This routine executes a predefined sequence covering neutral hold,
+ *    absolute positioning, incremental positioning, and trajectory return.
+ *
+ * 2. Controlled test sessions:
+ *      servo_test_start()
+ *      servo_test_step_dt()
+ *      servo_test_stop()
+ *
+ *    These modes support manual actuator adjustment and synchronized
+ *    servo sweep logging for calibration and characterization.
+ *
+ * The test layer operates above servo_actuator and therefore does not
+ * access PWM hardware directly.
  */
+
 #ifndef SERVO_TEST_H
 #define SERVO_TEST_H
 
@@ -26,79 +37,153 @@ extern "C" {
 #endif
 
 /**
- * @brief Khoi tao actuator layer va trang thai test. Goi 1 lan luc dau
- *        StartControlLoop, TRUOC vong lap goi servo_test_step().
+ * @brief Initialize the legacy servo test sequence.
+ *
+ * Initializes the actuator layer and resets the internal state of the
+ * predefined four-phase test sequence.
+ *
+ * This function should be called once before the first call to
+ * servo_test_step().
  */
 void servo_test_init(void);
 
 /**
- * @brief Chay 1 buoc test, PHAI goi dung nhip co dinh dt = 0.01f (100Hz).
- *        Tu dong chay tuan tu qua 4 giai doan (B.2.8):
- *          1. TEST_HOLD_NEUTRAL      - giu neutral 2s, xac nhan khong rung
- *          2. TEST_ABSOLUTE_SWEEP    - quet vi tri tuyet doi S1 (slew-rate)
- *          3. TEST_INCREMENTAL       - cong don incremental S2 (anti-windup)
- *          4. TEST_TRAJECTORY_HOME   - trajectory hinh thang S3 (ve neutral)
- *        roi lap lai tu dau. In log qua debug moi 0.5s.
+ * @brief Execute one step of the legacy servo test sequence.
+ *
+ * The legacy test is designed for a fixed 100 Hz execution rate
+ * with dt = 10 ms per call.
+ *
+ * The sequence consists of:
+ *
+ *     1. HOLD_NEUTRAL
+ *        Verify that all three servos remain stable at neutral.
+ *
+ *     2. ABSOLUTE_SWEEP
+ *        Exercise absolute positioning on S1 while the actuator
+ *        layer applies its configured slew-rate limiting.
+ *
+ *     3. INCREMENTAL
+ *        Apply incremental commands to S2 and verify boundary
+ *        handling and actuator limiting.
+ *
+ *     4. TRAJECTORY_HOME
+ *        Move S3 away from neutral and return it using the
+ *        trajectory generator.
+ *
+ * The sequence repeats continuously.
  */
 void servo_test_step(void);
 
-/* ==========================================================================
- * PHẦN THÊM CHO GIAI ĐOẠN 3 (B6) — dùng bởi control_mode_manual.c
- * (App/control/), KHÔNG dùng bởi control_mode_calib.c (mode đó chỉ đọc kết
- * quả deadband đã đo sẵn qua control_mode_manual_get_deadband_result(),
- * xem B6_Control.md mục 0 + 5.3-5.4).
- * ========================================================================== */
-
-typedef enum {
-    SERVO_TEST_MODE_LEGACY_B2 = 0,     // servo_test_init()/servo_test_step() cũ ở trên
-    SERVO_TEST_MODE_MANUAL_STEP,       // (1) chỉnh tay us từng servo, log roll/pitch
-    SERVO_TEST_MODE_SWEEP_LOG,         // (2) quét toàn dải, log CSV
-    /* SERVO_TEST_MODE_DEADBAND_SCAN đã BỎ - cảm biến nhiễu, đo không chính
-     * xác, xem trao đổi Giai đoạn 4. Nếu sau này cần lại, làm phương pháp
-     * khác (không dựa vào ngưỡng cứng so IMU). */
+/**
+ * @brief Servo test operating modes.
+ *
+ * SERVO_TEST_MODE_LEGACY_B2:
+ *     Selects the predefined legacy test sequence driven by
+ *     servo_test_init() and servo_test_step().
+ *
+ * SERVO_TEST_MODE_MANUAL_STEP:
+ *     Allows the selected servo to be adjusted incrementally
+ *     through explicit commands.
+ *
+ * SERVO_TEST_MODE_SWEEP_LOG:
+ *     Performs a synchronized multi-servo sweep and records the
+ *     resulting servo positions together with roll/pitch measurements.
+ */
+typedef enum
+{
+    SERVO_TEST_MODE_LEGACY_B2 = 0,
+    SERVO_TEST_MODE_MANUAL_STEP,
+    SERVO_TEST_MODE_SWEEP_LOG
 } servo_test_mode_t;
 
 /**
- * @brief Bắt đầu 1 phiên test mới (Giai đoạn 3). Reset toàn bộ state nội bộ
- *        của phiên trước, gọi servo_test_log_csv_header() 1 lần.
- * @param mode      1 trong 3 mode mới ở trên (KHÔNG dùng LEGACY_B2 ở đây -
- *                  legacy dùng servo_test_init()/servo_test_step() riêng).
- * @param servo_ch  0 = quét/test tuần tự cả 3 servo (S1->S2->S3, dùng cho
- *                  DEADBAND_SCAN/SWEEP_LOG); 1/2/3 = chỉ 1 servo cụ thể
- *                  (dùng cho MANUAL_STEP, hoặc test riêng 1 trục).
+ * @brief Start a new controlled servo test session.
+ *
+ * Resets all state associated with the previous session, initializes
+ * the requested test mode, builds the active servo-channel list, and
+ * emits the CSV header used by the logging interface.
+ *
+ * @param mode      Test mode to execute. The legacy mode is normally
+ *                  controlled through servo_test_init()/servo_test_step().
+ *
+ * @param servo_ch  Channel selection:
+ *                  0 = test all three servos sequentially,
+ *                  1 = S1,
+ *                  2 = S2,
+ *                  3 = S3.
  */
 void servo_test_start(servo_test_mode_t mode, uint8_t servo_ch);
 
-/** @brief Dừng phiên test hiện tại (nếu đang chạy), servo giữ nguyên vị trí. */
+/**
+ * @brief Stop the current controlled test session.
+ *
+ * No new test commands are generated after this call. The actuator
+ * remains at its current commanded position.
+ */
 void servo_test_stop(void);
 
-/** @brief true khi phiên DEADBAND_SCAN/SWEEP_LOG đã quét xong hết kênh yêu
- *         cầu. MANUAL_STEP không bao giờ tự "done" - luôn chờ lệnh dừng tay. */
+/**
+ * @brief Check whether the current test session has completed.
+ *
+ * Sweep-based tests report completion after all requested channels
+ * have been scanned. Manual-step mode does not complete automatically
+ * and remains active until explicitly stopped.
+ *
+ * @return true if the test session has completed; otherwise false.
+ */
 bool servo_test_is_done(void);
 
 /**
- * @brief Gọi mỗi chu kỳ Task_ControlLoop khi đang trong OPMODE_MANUAL,
- *        THAY cho servo_test_step() không tham số (bản legacy hard-code
- *        dt=0.01f nội bộ) - dt lấy từ chính Task_ControlLoop thật, không
- *        giả định tần số cố định.
+ * @brief Execute one controlled test-cycle update.
+ *
+ * This function should be called once per control-loop cycle using
+ * the actual elapsed time of that cycle.
+ *
+ * Unlike the legacy servo_test_step(), this interface does not assume
+ * a fixed control-loop frequency.
+ *
+ * @param dt  Actual control-loop period in seconds.
  */
 void servo_test_step_dt(float dt);
 
 /**
- * @brief Chỉnh tay us cho kênh đang chọn (SERVO_TEST_MODE_MANUAL_STEP).
- *        Gọi từ task_button_ui.c (qua control_mode_manual_adjust()) khi
- *        người dùng bấm LEFT/RIGHT trên màn Manual. Tự log 1 dòng CSV mỗi
- *        lần gọi (mỗi lần bấm nút = 1 điểm dữ liệu roll/pitch tương ứng).
+ * @brief Apply an incremental command to the selected servo.
+ *
+ * Intended for manual actuator characterization. The command is
+ * forwarded to the actuator layer and the resulting actuator state
+ * is logged together with the current IMU roll/pitch measurements.
+ *
+ * @param delta_us  Incremental servo command in microseconds.
  */
 void servo_test_manual_adjust(int16_t delta_us);
 
-/** @brief Đổi kênh đang chỉnh tay (1/2/3) trong SERVO_TEST_MODE_MANUAL_STEP. */
+/**
+ * @brief Select the servo used by manual-step mode.
+ *
+ * @param servo_ch  Servo number:
+ *                  1 = S1,
+ *                  2 = S2,
+ *                  3 = S3.
+ */
 void servo_test_manual_select_channel(uint8_t servo_ch);
 
-/** @brief In dòng tiêu đề CSV 1 lần: "t_ms,S1_us,S2_us,S3_us,roll_deg,pitch_deg". */
+/**
+ * @brief Print the CSV column header used by the test logger.
+ *
+ * Output format:
+ *
+ *     t_ms,S1_us,S2_us,S3_us,roll_deg,pitch_deg
+ */
 void servo_test_log_csv_header(void);
 
-/** @brief In 1 dòng CSV với giá trị S1/S2/S3/roll/pitch hiện tại. */
+/**
+ * @brief Print one CSV measurement row.
+ *
+ * The row contains the current actuator positions and IMU attitude
+ * measurements.
+ *
+ * @param t_ms  Test elapsed time in milliseconds.
+ */
 void servo_test_log_csv_row(uint32_t t_ms);
 
 #ifdef __cplusplus
