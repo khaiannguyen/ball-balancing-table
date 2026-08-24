@@ -3,14 +3,14 @@
 #include "tft_service.h"
 #include "ui_data.h"
 #include "system_state.h"
-#include "control_mode_manual.h"   /* THÊM Giai đoạn 3 - điều khiển Mode Manual qua UI */
+#include "control_mode_manual.h"   /* ADDED Phase 3 - Manual mode control via UI */
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 
 /* =========================================================
- * LAYOUT - 220x176 (ngang), không đổi so với bản gốc, chỉ
- * thêm 1 field hiển thị trạng thái SEL/NAV.
+ * LAYOUT - 220x176 (landscape), unchanged from the original,
+ * only adds one field to show SEL/NAV state.
  * ========================================================= */
 
 #define COLOR_BG      0x0000
@@ -49,15 +49,15 @@
 #define BTN_SHUTDOWN_X1 218
 #define BTN_SHUTDOWN_Y1 175
 
-/* THÊM Giai đoạn 3 - bước chỉnh us mỗi lần bấm LEFT/RIGHT ở Mode Manual
- * (MANUAL_SUB_MANUAL_STEP), khớp SERVO_TEST_MANUAL_STEP_US trong
- * B6_Control.md mục 4. */
+/* ADDED Phase 3 - us step applied per LEFT/RIGHT press in Manual mode
+ * (MANUAL_SUB_MANUAL_STEP), matches SERVO_TEST_MANUAL_STEP_US in
+ * B6_Control.md section 4. */
 #define MANUAL_STEP_US   10
 
-/* ---- trạng thái điều hướng: SELECTED (đã chọn, robot đang dùng mode
- * này) <-> BROWSE (đang duyệt để đổi mode, LEFT/RIGHT mới có tác dụng
- * chuyển screen). Dùng chung 1 biến static cho cả 5 gauge screen vì
- * tại 1 thời điểm chỉ 1 trong 5 đang active. ---- */
+/* ---- Navigation state: SELECTED (committed, robot is actually running
+ * this mode) <-> BROWSE (browsing to switch mode; LEFT/RIGHT only change
+ * screens while in this state). One static variable shared across all
+ * 5 gauge screens since only one of the five is ever active at a time. ---- */
 typedef enum { NAV_SELECTED = 0, NAV_BROWSE } NavState_t;
 static NavState_t navState = NAV_SELECTED;
 
@@ -68,28 +68,29 @@ static bool    ballWasDrawn = false;
 static int16_t lastBallPx = 0, lastBallPy = 0;
 
 /* =========================================================
- * STOP OVERLAY (THÊM) - thay cho việc chuyển sang ScreenStop
- * riêng: khi BTN1-long dừng khẩn cấp, vẽ ĐÈ hình tròn đỏ đặc +
- * chữ "STOP" trắng lên đúng vòng tròn (CIRCLE_CX/CY/R) đang có
- * trên gauge screen hiện tại, KHÔNG đổi currentScreen trong
- * ScreenManager (không GotoAndRemember/GoBack nữa). Lý do: người
- * dùng muốn vẫn thấy toàn bộ số liệu (Roll/Pitch/S1-3...) trong
- * lúc dừng khẩn cấp, chỉ có vùng vòng tròn đổi sang báo STOP.
+ * STOP OVERLAY (ADDED) - replaces the old approach of switching to a
+ * separate ScreenStop: on a BTN1-long emergency stop, a solid red
+ * circle + white "STOP" text is drawn ON TOP of the existing circle
+ * (CIRCLE_CX/CY/R) on the current gauge screen, WITHOUT changing
+ * ScreenManager's currentScreen (no more GotoAndRemember/GoBack).
+ * Reason: the user wants to keep seeing all the readouts (Roll/Pitch/
+ * S1-3...) during an emergency stop - only the circle area switches
+ * to the STOP indicator.
  * ========================================================= */
-#define STOP_CIRCLE_R  (CIRCLE_R - 25)   /* nhỏ hơn viền tròn 1 chút, không đè ra ngoài */
+#define STOP_CIRCLE_R  (CIRCLE_R - 25)   /* slightly smaller than the ring so it doesn't spill over */
 static bool stopOverlayActive = false;
 
 /* =========================================================
- * GIAI DOAN 1 - DIRTY UPDATE
+ * PHASE 1 - DIRTY UPDATE
  *
- * Cache lai gia tri da ve len man hinh lan truoc. Moi lan
- * DrawRealtimePart() duoc goi, chi field nao THAY DOI so voi
- * cache moi bi FillRectangle+DrawText lai - giam manh so lan
- * ghi SPI (nguyen nhan chinh gay nhay khi ve dong).
+ * Caches the values last drawn to the screen. On each call to
+ * DrawRealtimePart(), only the fields that CHANGED relative to the
+ * cache get FillRectangle+DrawText'd again - this sharply cuts down
+ * the number of SPI writes (the main cause of flicker on redraw).
  *
- * cacheValid = false bat buoc ve LAI TOAN BO field mot lan (vd
- * ngay sau khi vao screen / DrawStaticPart() chay) de dam bao
- * khong bi "thieu" gia tri do so sanh voi cache rac.
+ * cacheValid = false forces every field to be redrawn once (e.g.
+ * right after entering the screen / after DrawStaticPart() runs) so
+ * nothing is "missed" by comparing against stale cache data.
  * ========================================================= */
 typedef struct
 {
@@ -103,9 +104,9 @@ typedef struct
     int16_t  imuPitch;
     uint8_t  ballOn;
 
-    int16_t  ballXShown;    /* gia tri da hien (desired hoac do thuc, tuy mode) */
+    int16_t  ballXShown;    /* value currently shown (desired or measured, depending on mode) */
     int16_t  ballYShown;
-    uint8_t  showDesired;   /* de phat hien doi nguon x/y (desired <-> do thuc) */
+    uint8_t  showDesired;   /* to detect a switch of x/y source (desired <-> measured) */
 
     int16_t  ballVx;
     int16_t  ballVy;
@@ -124,8 +125,8 @@ static inline void InvalidateUiCache(void)
     lastUi.valid = false;
 }
 
-/* toạ độ ball desired đang chỉnh ở mode Position - chỉ có ý nghĩa khi
- * activeMode == MODE_POSITION && navState == NAV_SELECTED */
+/* Desired ball coordinates currently being adjusted in Position mode -
+ * only meaningful when activeMode == MODE_POSITION && navState == NAV_SELECTED */
 static float ballXDesired = 0.0f;
 static float ballYDesired = 0.0f;
 
@@ -160,33 +161,36 @@ static void MapBallToPixel(float x, float y, int16_t *px, int16_t *py)
     *py = CIRCLE_CY - (int16_t)(fy * CIRCLE_R);
 }
 
-/* ---- Toa do 6 dinh luc giac, tinh 1 LAN duy nhat (dung chung giua
- * DrawStaticPart() va RepairStaticNear() ben duoi - khong tinh lai
- * trig moi frame). 1 dinh nam tren truc Y (dinh tren cung, goc -90 do). */
+/* ---- Coordinates of the 6 hexagon vertices, computed ONCE (shared
+ * between DrawStaticPart() and RepairStaticNear() below - avoids
+ * redoing trig every frame). One vertex sits on the Y axis (topmost
+ * vertex, -90 degrees). ---- */
 static int16_t s_hexX[6], s_hexY[6];
 static bool    s_hexReady = false;
 
 static void ComputeHexVertices(void)
 {
     if (s_hexReady) return;
-    static const float HEX_ANGLE0 = -1.5707963f; /* -90 deg, tren truc Y */
+    static const float HEX_ANGLE0 = -1.5707963f; /* -90 deg, on the Y axis */
     int i;
     for (i = 0; i < 6; i++)
     {
-        float ang = HEX_ANGLE0 + i * (3.14159265f / 3.0f); /* +60 deg moi buoc */
-        /* Dung lroundf() thay vi "+0.5f roi ep kieu int" - cach cu lam tron
-         * sai voi so am (cac dinh ben trai co cosf(ang) < 0), khien dinh
-         * trai bi keo gan tam hon 1 pixel so voi dinh phai => luc giac
-         * bi lech, canh phai trong xa tam hon canh trai. */
+        float ang = HEX_ANGLE0 + i * (3.14159265f / 3.0f); /* +60 deg per step */
+        /* Use lroundf() instead of "+0.5f then cast to int" - the old
+         * rounding was wrong for negative values (left-side vertices have
+         * cosf(ang) < 0), which pulled the left vertices 1 pixel closer to
+         * center than the right ones, skewing the hexagon so the right
+         * edge sat farther from center than the left. */
         s_hexX[i] = CIRCLE_CX + (int16_t)lroundf(55.0f * cosf(ang));
         s_hexY[i] = CIRCLE_CY + (int16_t)lroundf(55.0f * sinf(ang));
     }
     s_hexReady = true;
 }
 
-/* Khoang cach tu diem (px,py) toi doan thang (ax,ay)-(bx,by) - dung de
- * biet 1 canh luc giac co bi vung xoa bong de len hay khong, tranh phai
- * ve lai CA 6 canh khi chi 1 canh (hoac khong canh nao) bi anh huong. */
+/* Distance from point (px,py) to the line segment (ax,ay)-(bx,by) - used
+ * to check whether a hexagon edge was overwritten by the ball-erase area,
+ * so we don't have to redraw ALL 6 edges when only one (or none) was
+ * actually affected. */
 static float PointSegDist(float px, float py, float ax, float ay, float bx, float by)
 {
     float dx = bx - ax, dy = by - ay;
@@ -203,41 +207,44 @@ static float PointSegDist(float px, float py, float ax, float ay, float bx, floa
     return sqrtf(ex*ex + ey*ey);
 }
 
-/* ---- VA LAI phan tinh (crosshair/vong tron/luc giac) CHI TAI VUNG
- * bi TFT_FillCircleFast() xoa de len khi bong roi khoi 1 vi tri (bx,by)
- * ban kinh BALL_RADIUS - KHONG ve lai toan bo moi frame nua. Chi goi
- * ham nay dung 1 lan ngay sau khi xoa bong cu (xem GIAI DOAN 1 ben duoi),
- * va chi ve lai DUNG canh/duong thuc su bi vung xoa do de len. */
+/* ---- REPAIRS the static drawing (crosshair/circle/hexagon) ONLY IN THE
+ * AREA that TFT_FillCircleFast() overwrote when the ball moved away from
+ * position (bx,by), radius BALL_RADIUS - no more full redraw every frame.
+ * Called exactly once right after erasing the old ball (see PHASE 1
+ * below), and only redraws the specific edges/lines actually covered
+ * by that erase area. */
 static void RepairStaticNear(int16_t bx, int16_t by)
 {
-    const float R = (float)(BALL_RADIUS + 1); /* +1 chong sai so lam tron */
+    const float R = (float)(BALL_RADIUS + 1); /* +1 to absorb rounding error */
 
-    /* QUAN TRONG: thu tu ve lai o day phai KHOP voi thu tu ve trong
-     * DrawStaticPart() - vong tron do (duoi cung) -> crosshair trang
-     * (de len vong tron) -> luc giac do (tren cung). Neu dao nguoc thu
-     * tu (vd ve crosshair truoc roi vong tron sau), tai 4 diem giao
-     * giua crosshair va vong tron (dinh tren/duoi/trai/phai cua vong
-     * tron) mau sac se bi LAT NGUOC: dang le phai la trang thi lai bi
-     * ve de thanh do, de lai vet loi vinh vien tai dung 4 diem do. */
+    /* IMPORTANT: the redraw order here must MATCH the draw order in
+     * DrawStaticPart() - red circle (bottom) -> white crosshair (drawn
+     * over the circle) -> red hexagon (top). If the order were reversed
+     * (e.g. crosshair first, then circle), the 4 points where the
+     * crosshair crosses the circle (its top/bottom/left/right vertices)
+     * would have their colors FLIPPED: what should be white would get
+     * painted red instead, leaving a permanent artifact at those exact
+     * 4 points. */
 
-    /* vong tron vien: chi ve lai (ca duong tron) neu vung xoa dung sat
-     * bien - hiem khi xay ra vi bong thuong o gan giua, khong sat bien. */
+    /* Circle outline: only redraw (the arc) if the erase area sits right
+     * against the border - rare, since the ball usually stays near center,
+     * not right at the edge. */
     float distToCenter = sqrtf((float)(bx-CIRCLE_CX)*(bx-CIRCLE_CX) + (float)(by-CIRCLE_CY)*(by-CIRCLE_CY));
     if (fabsf(distToCenter - (float)CIRCLE_R) <= R)
     {
         TFT_DrawCircle(CIRCLE_CX, CIRCLE_CY, CIRCLE_R, TFT_COLOR_RED);
     }
-    /* crosshair ngang: y = CIRCLE_CY */
+    /* horizontal crosshair: y = CIRCLE_CY */
     if (fabsf((float)by - (float)CIRCLE_CY) <= R)
     {
         TFT_DrawLine(bx-BALL_RADIUS-1, CIRCLE_CY, bx+BALL_RADIUS+1, CIRCLE_CY, COLOR_WHITE);
     }
-    /* crosshair doc: x = CIRCLE_CX */
+    /* vertical crosshair: x = CIRCLE_CX */
     if (fabsf((float)bx - (float)CIRCLE_CX) <= R)
     {
         TFT_DrawLine(CIRCLE_CX, by-BALL_RADIUS-1, CIRCLE_CX, by+BALL_RADIUS+1, COLOR_WHITE);
     }
-    /* luc giac: chi ve lai DUNG canh nao bi de len, khong ve ca 6 canh */
+    /* hexagon: only redraw the SPECIFIC edge(s) that were overwritten */
     ComputeHexVertices();
     {
         int i;
@@ -264,7 +271,7 @@ static void DrawStaticPart(void)
     TFT_DrawLine(CIRCLE_CX-CIRCLE_R-4, CIRCLE_CY, CIRCLE_CX+CIRCLE_R+4, CIRCLE_CY, COLOR_WHITE);
     TFT_DrawLine(CIRCLE_CX, CIRCLE_CY-CIRCLE_R-4, CIRCLE_CX, CIRCLE_CY+CIRCLE_R+4, COLOR_WHITE);
 
-    /* ---- Luc giac deu mau do, 1 dinh nam tren truc Y (dinh tren cung) ---- */
+    /* ---- Regular red hexagon, one vertex on the Y axis (topmost) ---- */
     ComputeHexVertices();
     {
         int i;
@@ -313,8 +320,8 @@ static void DrawStaticPart(void)
 
     ballWasDrawn = false;
 
-    /* man hinh tinh vua duoc ve lai toan bo -> cache cu khong con
-     * dung nua, bat DrawRealtimePart() ve lai TOAN BO field 1 lan */
+    /* the static screen was just fully redrawn -> the old cache is no
+     * longer valid, force DrawRealtimePart() to redraw EVERY field once */
     InvalidateUiCache();
 }
 
@@ -336,7 +343,7 @@ static void DrawRealtimePart(void)
         lastUi.mode = g_uiData.mode;
     }
 
-    /* ---- chỉ báo trạng thái điều hướng: NAV / SEL ---- */
+    /* ---- navigation state indicator: NAV / SEL ---- */
     uint8_t navBrowse = (navState == NAV_BROWSE) ? 1 : 0;
     if (force || (lastUi.navBrowse != navBrowse))
     {
@@ -360,7 +367,7 @@ static void DrawRealtimePart(void)
 
     /* ---- Roll ---- */
     {
-        int16_t rollI = (int16_t)g_uiData.imuRoll;   /* so sanh theo gia tri se HIEN (da lam tron) */
+        int16_t rollI = (int16_t)g_uiData.imuRoll;   /* compare against the value that will be DISPLAYED (already rounded) */
         if (force || (lastUi.imuRoll != rollI))
         {
             snprintf(buf,sizeof(buf),"%.0f",g_uiData.imuRoll);
@@ -390,14 +397,16 @@ static void DrawRealtimePart(void)
     }
     y+=TXT_LINE_H;
 
-    /* x/y: ở mode Position + đang SELECTED, hiện setpoint đang chỉnh
-     * (ballXDesired/ballYDesired) thay vì vị trí bóng đo được, để
-     * người dùng thấy ngay giá trị mình vừa bấm - các mode khác vẫn
-     * hiện toạ độ bóng thật như cũ. */
+    /* x/y: in Position mode while SELECTED, show the setpoint currently
+     * being adjusted (ballXDesired/ballYDesired) instead of the measured
+     * ball position, so the user immediately sees the value they just
+     * changed - other modes still show the real ball coordinates as
+     * before. */
     bool showDesired = (activeMode == MODE_POSITION) && (navState == NAV_SELECTED);
     uint8_t showDesiredFlag = showDesired ? 1 : 0;
-    /* nguon du lieu doi (desired <-> do thuc) -> phai coi la "thay doi"
-     * du gia tri so lam tron co the trung, de tranh hien nham gia tri cu. */
+    /* the data source switched (desired <-> measured) -> must be treated
+     * as "changed" even if the rounded value happens to match, to avoid
+     * showing a stale value. */
     bool sourceChanged = (lastUi.showDesired != showDesiredFlag);
 
     /* ---- x ---- */
@@ -460,7 +469,7 @@ static void DrawRealtimePart(void)
     }
     y+=TXT_LINE_H;
 
-    /* ---- S1/S2/S3: giá trị servo thật (µs) ---- */
+    /* ---- S1/S2/S3: actual servo values (µs) ---- */
     for (uint8_t i = 0; i < 3; i++)
     {
         int16_t sv = (int16_t)g_uiData.servoUs[i];
@@ -482,20 +491,23 @@ static void DrawRealtimePart(void)
         lastUi.guideText[sizeof(lastUi.guideText)-1] = '\0';
     }
 
-    /* GHI CHU: crosshair + luc giac da duoc ve san trong DrawStaticPart()
-     * (chi 1 lan khi vao man hinh), nen KHONG ve lai o day (ham chay
-     * lap 25Hz) - tranh ton thoi gian SPI moi frame va giu Task_Button_UI
-     * bi cho lau khi tranh chap ScreenManager_Lock(). */
+    /* NOTE: the crosshair + hexagon were already drawn in DrawStaticPart()
+     * (once, on screen entry), so they are NOT redrawn here (this
+     * function runs in a 25Hz loop) - avoids burning SPI time every
+     * frame and keeps Task_Button_UI from waiting too long when it
+     * contends for ScreenManager_Lock(). */
 
-    /* ---- GIAI DOAN 1: DIRTY BALL ----
-     * Chi xoa+ve lai bong neu VI TRI PIXEL thuc su thay doi, hoac
-     * trang thai ballOn vua bat/tat. Neu bong dung yen (px/py khong
-     * doi giua 2 lan goi) thi KHONG ghi gi len man hinh ca - day chinh
-     * la nguyen nhan chinh gay "nhay" khi xoa cu roi ve moi trong luc
-     * bong khong di chuyen (hoac di chuyen rat cham). */
-    /* Khi STOP overlay đang bật, vùng vòng tròn đang là hình tròn đỏ +
-     * chữ STOP - KHÔNG được vẽ/xoá bóng đè lên đó, để dành nguyên vẹn
-     * cho tới khi ClearStopOverlay() vẽ lại từ đầu. */
+    /* ---- PHASE 1: DIRTY BALL ----
+     * Only erases+redraws the ball if its PIXEL POSITION actually
+     * changed, or ballOn was just toggled. If the ball is stationary
+     * (px/py unchanged between calls), NOTHING is written to the
+     * screen at all - this is exactly what was causing the flicker
+     * from erase-then-redraw while the ball wasn't moving (or moving
+     * very slowly). */
+    /* While the STOP overlay is active, the circle area currently shows
+     * the red circle + STOP text - the ball must NOT be drawn/erased
+     * over it, so it stays intact until ClearStopOverlay() redraws
+     * from scratch. */
     if (!stopOverlayActive)
     {
         if (g_uiData.ballOn)
@@ -514,10 +526,11 @@ static void DrawRealtimePart(void)
                 	                   BALL_RADIUS,
                 	                   COLOR_BG,
                 	                   COLOR_BG);
-                	/* Vung vua xoa (COLOR_BG) co the da de len crosshair/vong
-                	 * tron/luc giac - VA LAI CHI DUNG phan bi de, khong ve lai
-                	 * toan bo (xem RepairStaticNear). Neu bong dung yen thi
-                	 * khoi nay khong chay - dung nguyen ly dirty ball da co. */
+                	/* The area just erased (COLOR_BG) may have overwritten the
+                	 * crosshair/circle/hexagon - REPAIR ONLY the affected part,
+                	 * not a full redraw (see RepairStaticNear). If the ball is
+                	 * stationary this block doesn't run at all - it relies on
+                	 * the dirty-ball logic already in place. */
                 	RepairStaticNear(lastBallPx, lastBallPy);
                 }
                 TFT_FillCircleFast(px,
@@ -527,11 +540,11 @@ static void DrawRealtimePart(void)
                                    COLOR_BG);
                 lastBallPx = px; lastBallPy = py; ballWasDrawn = true;
             }
-            /* posChanged == false -> bong dung yen, khong dong gi den SPI */
+            /* posChanged == false -> ball is stationary, no SPI traffic at all */
         }
         else if (ballWasDrawn)
         {
-            /* ballOn vua tat -> xoa bong 1 lan duy nhat, sau do thoi */
+            /* ballOn was just turned off -> erase the ball exactly once, then stop */
         	TFT_FillCircleFast(lastBallPx,
         	                   lastBallPy,
         	                   BALL_RADIUS,
@@ -546,13 +559,14 @@ static void DrawRealtimePart(void)
 }
 
 /* =========================================================
- * STOP OVERLAY - vẽ / xoá (THÊM)
+ * STOP OVERLAY - draw / clear (ADDED)
  * ========================================================= */
 static void DrawStopOverlay(void)
 {
-    /* Cùng kỹ thuật với screen_stop.c cũ: FillCircleFast nền đặc +
-     * DrawTextFast đè giữa - đủ nhanh để không nhấp nháy, và đè kín
-     * hoàn toàn crosshair + bóng cũ trong vùng vòng tròn. */
+    /* Same technique as the old screen_stop.c: solid FillCircleFast
+     * background + centered DrawTextFast on top - fast enough to avoid
+     * flicker, and fully covers the crosshair + old ball inside the
+     * circle area. */
     TFT_FillCircleFast(CIRCLE_CX, CIRCLE_CY, STOP_CIRCLE_R, TFT_COLOR_RED, COLOR_BG);
 
     uint16_t tw, th;
@@ -560,29 +574,32 @@ static void DrawStopOverlay(void)
     TFT_DrawTextFast(CIRCLE_CX - tw/2, CIRCLE_CY - th/2, "stop",
                       TFT_COLOR_WHITE, TFT_COLOR_RED, 2);
 
-    /* bóng/crosshair trong vùng này coi như "chưa từng vẽ" - tránh vẽ
-     * nhầm lên hình STOP nếu update() bị gọi trước khi overlay tắt */
+    /* treat the ball/crosshair in this area as "never drawn" - avoids
+     * accidentally drawing over the STOP graphic if update() gets called
+     * before the overlay is cleared */
     ballWasDrawn = false;
 }
 
 static void ClearStopOverlay(void)
 {
-    /* FillCircleFast(STOP) đã xoá mất viền tròn đỏ + crosshair trắng
-     * trong vùng đó -> phải vẽ lại TOÀN BỘ phần tĩnh (DrawStaticPart
-     * tự InvalidateUiCache() bên trong), rồi ép realtime vẽ lại hết. */
+    /* FillCircleFast(STOP) wiped out the red ring + white crosshair in
+     * that area -> the entire static part must be redrawn (DrawStaticPart
+     * calls InvalidateUiCache() internally), then force a full realtime
+     * redraw as well. */
     DrawStaticPart();
     DrawRealtimePart();
 }
 
-/* API công khai - gọi từ Task_Button_UI (HandleBtn1Long) thay cho
- * ScreenManager_GotoAndRemember(ScreenStop_Get()) / ScreenManager_GoBack()
- * cũ. Tự khoá ScreenManager mutex (screen.h) vì hàm này được gọi từ
- * Task_Button_UI, khác task với Task_Display đang gọi ScreenManager_Update()
- * 25Hz - không khoá sẽ tái diễn đúng race chồng chéo hình đã gặp ở B5
- * (xem comment đầu screen_manager.c). */
+/* Public API - called from Task_Button_UI (HandleBtn1Long) in place of
+ * the old ScreenManager_GotoAndRemember(ScreenStop_Get()) /
+ * ScreenManager_GoBack(). Locks the ScreenManager mutex (screen.h)
+ * itself, since this function is called from Task_Button_UI, a
+ * different task than Task_Display which calls ScreenManager_Update()
+ * at 25Hz - without the lock, the same overlapping-draw race seen in
+ * B5 would resurface (see the comment at the top of screen_manager.c). */
 void ScreenGauge_SetStopped(bool stopped)
 {
-    if (stopped == stopOverlayActive) return;   /* không đổi trạng thái - bỏ qua */
+    if (stopped == stopOverlayActive) return;   /* state unchanged - nothing to do */
 
     ScreenManager_Lock();
 
@@ -599,8 +616,9 @@ static void EnterForMode(uint8_t mode)
 
     if (mode == MODE_POSITION)
     {
-        /* nạp lại setpoint thật đang có (vd sau khi reset MCU, hoặc do
-         * CAN 0x204/nơi khác đã set trước đó) thay vì luôn bắt đầu từ 0 */
+        /* reload the real setpoint currently in effect (e.g. after an
+         * MCU reset, or if CAN 0x204/something else already set it)
+         * instead of always starting from 0 */
         setpoint_t sp;
         if (setpoint_get(&sp))
         {
@@ -612,9 +630,10 @@ static void EnterForMode(uint8_t mode)
     DrawStaticPart();
     DrawRealtimePart();
 
-    /* Khôi phục STOP overlay nếu đang dừng khẩn cấp và ta vừa quay lại
-     * gauge screen (vd GoBack() sau khi Fault tự hết) - onEnter() không
-     * đi qua ScreenGauge_SetStopped() nên phải tự vẽ lại ở đây. */
+    /* Restore the STOP overlay if an emergency stop is active and we
+     * just returned to a gauge screen (e.g. GoBack() after a Fault
+     * cleared on its own) - onEnter() doesn't go through
+     * ScreenGauge_SetStopped(), so it has to be redrawn here explicitly. */
     if (stopOverlayActive) DrawStopOverlay();
 }
 
@@ -622,11 +641,12 @@ static void OnEnter0(void) { EnterForMode(0); }
 static void OnEnter1(void) { EnterForMode(1); }
 static void OnEnter2(void) { EnterForMode(2); }
 static void OnEnter3(void) { EnterForMode(3); }
-/* THÊM Giai đoạn 3 - Mode Manual (index 4). guideText ban đầu do
- * control_mode_manual_enter() (Task_ControlLoop, khi setpoint.mode vừa đổi
- * sang OPMODE_MANUAL) tự ghi qua g_uiData.guideText - EnterForMode() ở đây
- * chỉ lo phần vẽ màn hình, không tự đặt guideText để tránh 2 nơi cùng ghi
- * đè nhau (UI thread vs Task_ControlLoop thread). */
+/* ADDED Phase 3 - Manual mode (index 4). The initial guideText is written
+ * by control_mode_manual_enter() itself (Task_ControlLoop, when
+ * setpoint.mode just switched to OPMODE_MANUAL) via g_uiData.guideText -
+ * EnterForMode() here only handles drawing the screen and does not set
+ * guideText itself, to avoid two sides writing it at the same time (UI
+ * thread vs Task_ControlLoop thread). */
 static void OnEnter4(void) { EnterForMode(4); }
 
 static void Update(void) { DrawRealtimePart(); }
@@ -640,10 +660,12 @@ static inline float ClampBall(float v)
     return v;
 }
 
-/* Ghi ballXDesired/ballYDesired (đã clamp) ra setpoint_t thật (system_state.h),
- * giữ nguyên mode/Roll_d/Pitch_d/Height_d đang có (read-modify-write, giống
- * cách task_can_rx.c xử lý CAN_ID_ATTITUDE_DESIRED). Nếu miss mutex (busy),
- * bỏ qua lần này - lần bấm nút kế tiếp sẽ thử lại, không áp dụng nửa vời. */
+/* Writes ballXDesired/ballYDesired (already clamped) out to the real
+ * setpoint_t (system_state.h), preserving the existing mode/Roll_d/
+ * Pitch_d/Height_d (read-modify-write, same approach task_can_rx.c uses
+ * for CAN_ID_ATTITUDE_DESIRED). If the mutex is missed (busy), this
+ * update is simply skipped - the next button press will retry, so
+ * nothing gets applied half-way. */
 static void PublishBallDesired(void)
 {
     setpoint_t sp;
@@ -655,27 +677,29 @@ static void PublishBallDesired(void)
     }
 }
 
-/* ---- THÊM Giai đoạn 3: điều khiển Mode Manual qua nút UI ----
- * Quy ước (đề xuất, CẦN BẠN XÁC NHẬN lại theo cảm giác bấm thật trên bàn):
- *   - Sub-state đang IDLE/DONE (chưa chạy việc gì / vừa xong 1 việc):
- *       UP/DOWN  = duyệt qua lại 3 việc {Deadband, Manual step, Sweep log}
- *                  và BẮT ĐẦU CHẠY NGAY việc vừa chọn (không cần bước
- *                  "commit" riêng, khác hẳn cơ chế NAV/SEL đổi mode ở
- *                  trên vì đây là 3 CÔNG CỤ trong cùng 1 mode, không phải
- *                  đổi mode robot).
- *   - Sub-state đang MANUAL_SUB_MANUAL_STEP (đang chỉnh tay):
- *       LEFT/RIGHT = -/+ MANUAL_STEP_US cho servo đang chọn
- *       UP/DOWN    = đổi servo đang chỉnh (S1 -> S2 -> S3 -> S1)
- *   - Sub-state đang DEADBAND_SCAN/SWEEP_LOG (đang tự động chạy):
- *       mọi nút (trừ ENTER/EXIT vốn dùng cho điều hướng mode) không có
- *       tác dụng - đợi tự xong (chuyển về DONE). */
+/* ---- ADDED Phase 3: Manual mode control via UI buttons ----
+ * Convention (proposed - NEEDS YOUR CONFIRMATION against how it actually
+ * feels pressing the real buttons on the table):
+ *   - Sub-state is IDLE/DONE (nothing running / a task just finished):
+ *       UP/DOWN  = cycle through the 3 tasks {Deadband, Manual step,
+ *                  Sweep log} and START RUNNING the newly selected task
+ *                  IMMEDIATELY (no separate "commit" step, unlike the
+ *                  NAV/SEL mode-switch mechanism above, since these are
+ *                  3 TOOLS within the same mode, not a robot mode
+ *                  change).
+ *   - Sub-state is MANUAL_SUB_MANUAL_STEP (manual adjustment in progress):
+ *       LEFT/RIGHT = -/+ MANUAL_STEP_US on the currently selected servo
+ *       UP/DOWN    = switch which servo is being adjusted (S1 -> S2 -> S3 -> S1)
+ *   - Sub-state is DEADBAND_SCAN/SWEEP_LOG (running automatically):
+ *       no button (other than ENTER/EXIT, reserved for mode navigation)
+ *       has any effect - wait for it to finish on its own (back to DONE). */
 static void HandleManualButton(ButtonState_t evt)
 {
     manual_sub_state_t sub = control_mode_manual_get_sub_state();
 
     if (sub == MANUAL_SUB_MANUAL_STEP)
     {
-        static uint8_t s_manual_ch = 1;   /* 1..3, chỉ dùng để hiển thị thứ tự xoay vòng ở UI */
+        static uint8_t s_manual_ch = 1;   /* 1..3, only used to track the UI's round-robin order */
 
         switch (evt.button)
         {
@@ -687,7 +711,7 @@ static void HandleManualButton(ButtonState_t evt)
             break;
         case BUTTON_UP:
         case BUTTON_DOWN:
-            s_manual_ch = (s_manual_ch % 3) + 1;   /* 1->2->3->1, cả UP/DOWN đều xoay tới - đơn giản hoá vì chỉ có 3 lựa chọn */
+            s_manual_ch = (s_manual_ch % 3) + 1;   /* 1->2->3->1, both UP and DOWN advance - simplified since there are only 3 choices */
             control_mode_manual_select_channel(s_manual_ch);
             break;
         default:
@@ -702,8 +726,9 @@ static void HandleManualButton(ButtonState_t evt)
 
         if (evt.button == BUTTON_UP || evt.button == BUTTON_DOWN)
         {
-            /* Chỉ còn 2 lựa chọn (Deadband Scan đã bỏ - Giai đoạn 4, cảm
-             * biến nhiễu đo không chính xác) - UP/DOWN xoay qua lại 2 việc. */
+            /* Only 2 choices remain (Deadband Scan was dropped in Phase 4 -
+             * the sensor's measurement noise made it unreliable) - UP/DOWN
+             * toggles between the 2 remaining tasks. */
             switch (s_pick)
             {
                 case MANUAL_SUB_MANUAL_STEP: s_pick = MANUAL_SUB_MANUAL_STEP;   break;
@@ -712,7 +737,7 @@ static void HandleManualButton(ButtonState_t evt)
             control_mode_manual_select_substate(s_pick);
         }
     }
-    /* sub == DEADBAND_SCAN/SWEEP_LOG: không xử lý nút gì, đang tự động chạy */
+    /* sub == DEADBAND_SCAN/SWEEP_LOG: no buttons handled, running automatically */
 }
 
 static void OnButton(ButtonState_t evt)
@@ -722,11 +747,12 @@ static void OnButton(ButtonState_t evt)
         return;
     }
 
-    /* THÊM Giai đoạn 3: khi đang ở Mode Manual + đã SELECTED (robot đang
-     * thật sự dùng mode này, không phải đang browse để đổi mode khác),
-     * chuyển hướng LEFT/RIGHT/UP/DOWN sang điều khiển Manual thay vì hành
-     * vi mặc định (vốn dành cho Ball X/Y ở Position). ENTER/EXIT vẫn xử lý
-     * như cũ bên dưới (đổi mode / shutdown) - không chặn ở đây. */
+    /* ADDED Phase 3: while in Manual mode and SELECTED (the robot is
+     * actually running this mode, not just browsing to switch to another
+     * one), redirect LEFT/RIGHT/UP/DOWN to Manual mode control instead of
+     * the default behavior (which is meant for Ball X/Y in Position mode).
+     * ENTER/EXIT still fall through to the handling below as usual
+     * (mode switch / shutdown) - not intercepted here. */
     if (activeMode == MODE_MANUAL && navState == NAV_SELECTED &&
         (evt.button == BUTTON_LEFT || evt.button == BUTTON_RIGHT ||
          evt.button == BUTTON_UP   || evt.button == BUTTON_DOWN))
@@ -741,23 +767,24 @@ static void OnButton(ButtonState_t evt)
     case BUTTON_ENTER:
         if (navState == NAV_SELECTED)
         {
-            /* SELECTED -> BROWSE: bắt đầu cho phép LEFT/RIGHT đổi screen */
+            /* SELECTED -> BROWSE: start allowing LEFT/RIGHT to change screens */
             navState = NAV_BROWSE;
         }
         else
         {
-            /* BROWSE -> SELECTED: COMMIT mode hiện tại - đây là điểm
-             * DUY NHẤT ghi mode thật ra ngoài (setpoint_set),
-             * đúng nguyên tắc "chỉ đổi state robot khi đã xác nhận". */
+            /* BROWSE -> SELECTED: COMMIT the current mode - this is the
+             * ONE place that writes the real mode out (setpoint_set),
+             * following the rule "only change robot state once confirmed". */
             navState = NAV_SELECTED;
-            g_uiData.mode = activeMode;   /* cache hiển thị - sẽ bị ghi đè đúng giá
-                                              trị bởi UiData_SyncFromSystemState()
-                                              mỗi vòng Task_Display, không sao */
+            g_uiData.mode = activeMode;   /* display cache - will be overwritten with
+                                              the correct value by
+                                              UiData_SyncFromSystemState() on the
+                                              next Task_Display loop, which is fine */
             {
-                /* COMMIT mode thật vào setpoint_t.mode (system_state.h) - đây là
-                 * điểm DUY NHẤT ghi mode ra ngoài UI, đúng khi đã xác nhận
-                 * (BROWSE -> SELECTED). Task_CAN_TX (0x103) và Task_ControlLoop
-                 * đọc field này qua setpoint_get(). */
+                /* COMMIT the real mode into setpoint_t.mode (system_state.h) -
+                 * this is the ONE place the UI writes mode out, and only once
+                 * confirmed (BROWSE -> SELECTED). Task_CAN_TX (0x103) and
+                 * Task_ControlLoop read this field via setpoint_get(). */
                 setpoint_t sp;
                 if (setpoint_get(&sp))
                 {
@@ -804,7 +831,7 @@ static void OnButton(ButtonState_t evt)
             PublishBallDesired();
             DrawRealtimePart();
         }
-        /* NAV_BROWSE hoặc mode khác Position: không làm gì, đúng chốt #1 */
+        /* NAV_BROWSE or a mode other than Position: no-op, matches checkpoint #1 */
         break;
 
     case BUTTON_DOWN:
@@ -830,7 +857,7 @@ static const Screen_t gaugeScreens[MODE_COUNT] = {
     { .onEnter=OnEnter1, .onExit=NULL, .update=Update, .onButton=OnButton },
     { .onEnter=OnEnter2, .onExit=NULL, .update=Update, .onButton=OnButton },
     { .onEnter=OnEnter3, .onExit=NULL, .update=Update, .onButton=OnButton },
-    { .onEnter=OnEnter4, .onExit=NULL, .update=Update, .onButton=OnButton },   /* THÊM Giai đoạn 3 */
+    { .onEnter=OnEnter4, .onExit=NULL, .update=Update, .onButton=OnButton },   /* ADDED Phase 3 */
 };
 
 static const Screen_t* GaugeScreenArray(uint8_t mode)

@@ -4,16 +4,24 @@
 
 #define MSG_Y 90
 
-/* =========================================================
- * system_state.h hiện CHỈ có 1 bit EVT_BIT_FAULT (bool), CHƯA có
- * message text kèm theo (khác bản nháp ui_system_state.c cũ mình
- * từng đưa msg buffer - nay bỏ). Nếu sau này bạn muốn hiện rõ
- * NGUYÊN NHÂN lỗi (vd "Mat heartbeat CAN" khác với 1 lỗi khác),
- * cần thêm 1 buffer nhỏ + hàm ghi trong system_state.c (tương tự
- * cách UiState_SetFault(bool,msg) bản cũ làm) rồi Task_CAN_RX/
- * Task_Safety gọi kèm chuỗi mô tả lúc set EVT_BIT_FAULT.
- * Hiện tại chỉ hiện chữ "FAULT" chung, đủ dùng để test Fault
- * screen goto/goback đúng chưa. ========================================================= */
+/*
+ * Fault message detail.
+ *
+ * system_state.h currently exposes only a single boolean,
+ * EVT_BIT_FAULT, with no accompanying message text. An earlier draft
+ * (ui_system_state.c) carried a message buffer alongside the fault
+ * flag, but that has since been removed.
+ *
+ * To show the specific cause of a fault (e.g. distinguishing a lost
+ * CAN heartbeat from another error), a small text buffer and a setter
+ * function would need to be added to system_state.c - similar to the
+ * old UiState_SetFault(bool, msg) - with Task_CAN_RX / Task_Safety
+ * passing a description string when they set EVT_BIT_FAULT.
+ *
+ * For now this screen only shows a generic "FAULT" message, which is
+ * enough to verify that the Fault screen's goto/goback behavior works
+ * correctly.
+ */
 
 static void OnEnter(void)
 {
@@ -28,13 +36,17 @@ static void OnEnter(void)
 
 static void Update(void)
 {
-    /* màn hình tĩnh trong lúc fault - chưa có message động để cập nhật */
+    /* Static screen while a fault is active - no dynamic content to update yet */
 }
 
 static void OnButton(ButtonState_t evt)
 {
     (void)evt;
-    /* Cố ý không xử lý nút trong lúc Fault - thoát tự động khi hết lỗi */
+
+    /*
+     * Button input is intentionally ignored while a fault is active.
+     * This screen exits automatically once the fault clears.
+     */
 }
 
 static const Screen_t screenFault = {
