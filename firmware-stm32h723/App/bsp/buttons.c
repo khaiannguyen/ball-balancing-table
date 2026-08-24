@@ -89,10 +89,7 @@ static volatile bool s_btn1LongPressFired;
 
 static inline bool ReadPressed(button_id_t id)
 {
-    return HAL_GPIO_ReadPin(
-        s_buttonPin[id].port,
-        s_buttonPin[id].pin
-    ) == GPIO_PIN_RESET;
+    return HAL_GPIO_ReadPin(s_buttonPin[id].port, s_buttonPin[id].pin) == GPIO_PIN_RESET;
 }
 
 static button_id_t PinToButtonId(uint16_t GPIO_Pin)
@@ -252,24 +249,12 @@ void buttons_init(void)
                 ? Btn1DebounceCallback
                 : GenericDebounceCallback;
 
-        s_debounceTimer[i] = xTimerCreate(
-            "btnDebounce",
-            pdMS_TO_TICKS(BTN_DEBOUNCE_MS),
-            pdFALSE,
-            (void *)(uintptr_t)i,
-            cb
-        );
+        s_debounceTimer[i] = xTimerCreate("btnDebounce", pdMS_TO_TICKS(BTN_DEBOUNCE_MS), pdFALSE, (void *)(uintptr_t)i, cb);
     }
 
     s_btn1LongPressFired = false;
 
-    s_btn1LongPressTimer = xTimerCreate(
-        "btn1LongPress",
-        pdMS_TO_TICKS(BTN_LONGPRESS_MS),
-        pdFALSE,
-        NULL,
-        Btn1LongPressCallback
-    );
+    s_btn1LongPressTimer = xTimerCreate("btn1LongPress", pdMS_TO_TICKS(BTN_LONGPRESS_MS), pdFALSE, NULL, Btn1LongPressCallback);
 }
 
 /*
@@ -295,10 +280,7 @@ void buttons_exti_handler(uint16_t GPIO_Pin)
 
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    xTimerResetFromISR(
-        s_debounceTimer[id],
-        &xHigherPriorityTaskWoken
-    );
+    xTimerResetFromISR(s_debounceTimer[id], &xHigherPriorityTaskWoken);
 
     portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }

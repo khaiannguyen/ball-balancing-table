@@ -38,20 +38,12 @@ static uint8_t s_dma_rx_buf[IMU_DMA_BUF_LEN_ALIGNED];
 
 static inline void imu_cs_low(void)
 {
-    HAL_GPIO_WritePin(
-        IMU_CS_GPIO_Port,
-        IMU_CS_Pin,
-        GPIO_PIN_RESET
-    );
+    HAL_GPIO_WritePin(IMU_CS_GPIO_Port, IMU_CS_Pin, GPIO_PIN_RESET);
 }
 
 static inline void imu_cs_high(void)
 {
-    HAL_GPIO_WritePin(
-        IMU_CS_GPIO_Port,
-        IMU_CS_Pin,
-        GPIO_PIN_SET
-    );
+    HAL_GPIO_WritePin(IMU_CS_GPIO_Port, IMU_CS_Pin, GPIO_PIN_SET);
 }
 
 static volatile uint32_t s_imu_sample_count = 0;
@@ -124,10 +116,7 @@ void imu_read_dma_start(void)
      * Clean the D-Cache before starting the transfer so that the DMA
      * engine observes the latest CPU-written buffer contents.
      */
-    SCB_CleanDCache_by_Addr(
-        (uint32_t *)s_dma_tx_buf,
-        IMU_DMA_BUF_LEN_ALIGNED
-    );
+    SCB_CleanDCache_by_Addr((uint32_t *)s_dma_tx_buf, IMU_DMA_BUF_LEN_ALIGNED);
 
     /*
      * The remaining transmit bytes are fixed dummy values.
@@ -137,12 +126,7 @@ void imu_read_dma_start(void)
     imu_cs_low();
 
     HAL_StatusTypeDef st =
-        HAL_SPI_TransmitReceive_DMA(
-            s_hspi,
-            s_dma_tx_buf,
-            s_dma_rx_buf,
-            IMU_DMA_BUF_LEN
-        );
+        HAL_SPI_TransmitReceive_DMA(s_hspi, s_dma_tx_buf, s_dma_rx_buf, IMU_DMA_BUF_LEN);
 
     if (st != HAL_OK)
     {
@@ -155,11 +139,7 @@ void imu_read_dma_start(void)
 
         imu_cs_high();
 
-        printf(
-            "DMA start FAIL: st=%d hal_error=%lu\r\n",
-            st,
-            HAL_SPI_GetError(s_hspi)
-        );
+        printf("DMA start FAIL: st=%d hal_error=%lu\r\n", st, HAL_SPI_GetError(s_hspi));
     }
 }
 
@@ -196,15 +176,7 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
  */
 void imu_debug_print_dma_counters(void)
 {
-    printf(
-        "DMA attempts=%lu busy_skip=%lu fail=%lu spi_error=%lu "
-        "last_err_code=0x%08lX\r\n",
-        s_dma_start_attempts,
-        s_dma_start_busy_skip,
-        s_dma_start_fail,
-        s_dma_error_count,
-        s_last_spi_error_code
-    );
+    printf("DMA attempts=%lu busy_skip=%lu fail=%lu spi_error=%lu last_err_code=0x%08lX\r\n", s_dma_start_attempts, s_dma_start_busy_skip, s_dma_start_fail, s_dma_error_count, s_last_spi_error_code);
 }
 
 /*
@@ -222,24 +194,13 @@ static uint8_t imu_read_reg(uint8_t reg)
     imu_cs_low();
 
     HAL_StatusTypeDef st =
-        HAL_SPI_TransmitReceive(
-            s_hspi,
-            tx,
-            rx,
-            2,
-            HAL_MAX_DELAY
-        );
+        HAL_SPI_TransmitReceive(s_hspi, tx, rx, 2, HAL_MAX_DELAY);
 
     imu_cs_high();
 
     if (st != HAL_OK)
     {
-        printf(
-            "SPI read err reg 0x%02X: st=%d, hal_error=%lu\r\n",
-            reg,
-            st,
-            HAL_SPI_GetError(s_hspi)
-        );
+        printf("SPI read err reg 0x%02X: st=%d, hal_error=%lu\r\n", reg, st, HAL_SPI_GetError(s_hspi));
     }
 
     return rx[1];
@@ -258,24 +219,13 @@ static bool imu_write_reg(uint8_t reg, uint8_t value)
     imu_cs_low();
 
     HAL_StatusTypeDef st =
-        HAL_SPI_TransmitReceive(
-            s_hspi,
-            tx,
-            rx,
-            2,
-            HAL_MAX_DELAY
-        );
+        HAL_SPI_TransmitReceive(s_hspi, tx, rx, 2, HAL_MAX_DELAY);
 
     imu_cs_high();
 
     if (st != HAL_OK)
     {
-        printf(
-            "SPI write err reg 0x%02X: st=%d, hal_error=%lu\r\n",
-            reg,
-            st,
-            HAL_SPI_GetError(s_hspi)
-        );
+        printf("SPI write err reg 0x%02X: st=%d, hal_error=%lu\r\n", reg, st, HAL_SPI_GetError(s_hspi));
 
         return false;
     }
@@ -303,22 +253,12 @@ static bool imu_write_reg_verify(uint8_t reg, uint8_t value)
 
     if (rb != value)
     {
-        printf(
-            "IMU write-verify FAIL: reg 0x%02X wrote 0x%02X, "
-            "read back 0x%02X\r\n",
-            reg,
-            value,
-            rb
-        );
+        printf("IMU write-verify FAIL: reg 0x%02X wrote 0x%02X, read back 0x%02X\r\n", reg, value, rb);
 
         return false;
     }
 
-    printf(
-        "IMU write-verify OK: reg 0x%02X = 0x%02X\r\n",
-        reg,
-        value
-    );
+    printf("IMU write-verify OK: reg 0x%02X = 0x%02X\r\n", reg, value);
 
     return true;
 }
@@ -371,10 +311,7 @@ bool imu_mpu6500_init(SPI_HandleTypeDef *hspi)
     /*
      * Perform a hardware-level software reset of the MPU-6500.
      */
-    imu_write_reg(
-        MPU6500_PWR_MGMT_1,
-        MPU6500_H_RESET_BIT
-    );
+    imu_write_reg(MPU6500_PWR_MGMT_1, MPU6500_H_RESET_BIT);
 
     /*
      * The MPU-6500 requires a delay after reset before register access.
@@ -384,10 +321,7 @@ bool imu_mpu6500_init(SPI_HandleTypeDef *hspi)
     /*
      * Clear the sleep state and return the device to normal operation.
      */
-    imu_write_reg(
-        MPU6500_PWR_MGMT_1,
-        0x00
-    );
+    imu_write_reg(MPU6500_PWR_MGMT_1, 0x00);
 
     HAL_Delay(10);
 
@@ -410,10 +344,7 @@ bool imu_mpu6500_init(SPI_HandleTypeDef *hspi)
      * Configure the interrupt pin behavior.
      */
     bool ok1 =
-        imu_write_reg_verify(
-            MPU6500_INT_PIN_CFG,
-            0x00
-        );
+        imu_write_reg_verify(MPU6500_INT_PIN_CFG, 0x00);
 
     /*
      * Enable the Raw Data Ready interrupt.
@@ -422,28 +353,19 @@ bool imu_mpu6500_init(SPI_HandleTypeDef *hspi)
      * STM32 acquisition pipeline.
      */
     bool ok2 =
-        imu_write_reg_verify(
-            MPU6500_INT_ENABLE,
-            MPU6500_INT_ENABLE_RAW_RDY
-        );
+        imu_write_reg_verify(MPU6500_INT_ENABLE, MPU6500_INT_ENABLE_RAW_RDY);
 
     /*
      * Configure the gyroscope full-scale range to ±500 dps.
      */
     bool ok3 =
-        imu_write_reg_verify(
-            MPU6500_GYRO_CONFIG,
-            0x08
-        );
+        imu_write_reg_verify(MPU6500_GYRO_CONFIG, 0x08);
 
     /*
      * Configure the accelerometer full-scale range to ±4 g.
      */
     bool ok4 =
-        imu_write_reg_verify(
-            MPU6500_ACCEL_CONFIG,
-            0x08
-        );
+        imu_write_reg_verify(MPU6500_ACCEL_CONFIG, 0x08);
 
     /*
      * Enable the selected digital low-pass filter configuration.
@@ -452,19 +374,13 @@ bool imu_mpu6500_init(SPI_HandleTypeDef *hspi)
      * behavior used by the selected control-loop data rate.
      */
     bool ok5 =
-        imu_write_reg_verify(
-            MPU6500_CONFIG,
-            MPU6500_DLPF_CFG_1KHZ
-        );
+        imu_write_reg_verify(MPU6500_CONFIG, MPU6500_DLPF_CFG_1KHZ);
 
     /*
      * SMPLRT_DIV = 0 gives the selected 1 kHz output data rate.
      */
     bool ok6 =
-        imu_write_reg_verify(
-            MPU6500_SMPLRT_DIV,
-            0x00
-        );
+        imu_write_reg_verify(MPU6500_SMPLRT_DIV, 0x00);
 
     /*
      * Read back the key configuration values for diagnostic output.
@@ -472,22 +388,9 @@ bool imu_mpu6500_init(SPI_HandleTypeDef *hspi)
     uint8_t who_recheck =
         imu_read_reg(MPU6500_WHO_AM_I_REG);
 
-    printf(
-        "INT=%d EN=%d GYRO=%d ACCEL=%d CONFIG=%d "
-        "SMPLRT=%d WHO=0x%02X\r\n",
-        ok1,
-        ok2,
-        ok3,
-        ok4,
-        ok5,
-        ok6,
-        who_recheck
-    );
+    printf("INT=%d EN=%d GYRO=%d ACCEL=%d CONFIG=%d SMPLRT=%d WHO=0x%02X\r\n", ok1, ok2, ok3, ok4, ok5, ok6, who_recheck);
 
-    printf(
-        "PWR_MGMT_2 (0x6C) = 0x%02X\r\n",
-        imu_read_reg(0x6C)
-    );
+    printf("PWR_MGMT_2 (0x6C) = 0x%02X\r\n", imu_read_reg(0x6C));
 
     /*
      * A pending EXTI request may have been generated while the
@@ -534,13 +437,7 @@ void imu_mpu6500_read_raw(int16_t *accel, int16_t *gyro)
 
     imu_cs_low();
 
-    HAL_SPI_TransmitReceive(
-        s_hspi,
-        tx,
-        rx,
-        15,
-        HAL_MAX_DELAY
-    );
+    HAL_SPI_TransmitReceive(s_hspi, tx, rx, 15, HAL_MAX_DELAY);
 
     imu_cs_high();
 
@@ -582,10 +479,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
          * the Cortex-M7 D-Cache. Invalidate the corresponding cache
          * lines before the CPU reads the received data.
          */
-        SCB_InvalidateDCache_by_Addr(
-            (uint32_t *)s_dma_rx_buf,
-            IMU_DMA_BUF_LEN_ALIGNED
-        );
+        SCB_InvalidateDCache_by_Addr((uint32_t *)s_dma_rx_buf, IMU_DMA_BUF_LEN_ALIGNED);
 
         int16_t accel[3];
         int16_t gyro[3];
@@ -618,11 +512,7 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
          * Publish the sample before notifying the fusion task so that
          * the task always observes a complete and consistent sample.
          */
-        imu_raw_state_write(
-            system_state_get_imu_raw_ptr(),
-            accel,
-            gyro
-        );
+        imu_raw_state_write(system_state_get_imu_raw_ptr(), accel, gyro);
 
         s_imu_sample_count++;
 
@@ -634,14 +524,9 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
          */
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-        vTaskNotifyGiveFromISR(
-            (TaskHandle_t)ImuFusionTaskHandle,
-            &xHigherPriorityTaskWoken
-        );
+        vTaskNotifyGiveFromISR((TaskHandle_t)ImuFusionTaskHandle, &xHigherPriorityTaskWoken);
 
-        portYIELD_FROM_ISR(
-            xHigherPriorityTaskWoken
-        );
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
 }
 
@@ -698,30 +583,15 @@ void imu_debug_dump_regs(void)
 
     printf("--- IMU register dump ---\r\n");
 
-    printf(
-        "WHO_AM_I     (0x75) = 0x%02X\r\n",
-        imu_read_reg(MPU6500_WHO_AM_I_REG)
-    );
+    printf("WHO_AM_I     (0x75) = 0x%02X\r\n", imu_read_reg(MPU6500_WHO_AM_I_REG));
 
-    printf(
-        "PWR_MGMT_1   (0x6B) = 0x%02X\r\n",
-        imu_read_reg(MPU6500_PWR_MGMT_1)
-    );
+    printf("PWR_MGMT_1   (0x6B) = 0x%02X\r\n", imu_read_reg(MPU6500_PWR_MGMT_1));
 
-    printf(
-        "INT_PIN_CFG  (0x37) = 0x%02X\r\n",
-        imu_read_reg(MPU6500_INT_PIN_CFG)
-    );
+    printf("INT_PIN_CFG  (0x37) = 0x%02X\r\n", imu_read_reg(MPU6500_INT_PIN_CFG));
 
-    printf(
-        "INT_ENABLE   (0x38) = 0x%02X\r\n",
-        imu_read_reg(MPU6500_INT_ENABLE)
-    );
+    printf("INT_ENABLE   (0x38) = 0x%02X\r\n", imu_read_reg(MPU6500_INT_ENABLE));
 
-    printf(
-        "INT_STATUS   (0x3A) = 0x%02X\r\n",
-        imu_read_reg(MPU6500_INT_STATUS)
-    );
+    printf("INT_STATUS   (0x3A) = 0x%02X\r\n", imu_read_reg(MPU6500_INT_STATUS));
 
     printf("-------------------------\r\n");
 

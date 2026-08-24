@@ -65,12 +65,7 @@ void TFT_Init(void);
  * The function converts them to the physical ILI9225 coordinate
  * system internally.
  */
-void TFT_SetWindow(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1
-);
+void TFT_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 
 /**
  * @brief Fill the complete display with one RGB565 color.
@@ -109,35 +104,19 @@ void TFT_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi);
  *
  * Coordinates outside the logical display area are ignored.
  */
-void TFT_DrawPixel(
-    uint16_t x,
-    uint16_t y,
-    uint16_t color
-);
+void TFT_DrawPixel(uint16_t x, uint16_t y, uint16_t color);
 
 /**
  * @brief Draw a line using the Bresenham rasterization algorithm.
  */
-void TFT_DrawLine(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t color
-);
+void TFT_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
 
 /**
  * @brief Draw a rectangle outline.
  *
  * The rectangle coordinates are inclusive.
  */
-void TFT_DrawRectangle(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t color
-);
+void TFT_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
 
 /**
  * @brief Draw a filled rectangle.
@@ -145,47 +124,22 @@ void TFT_DrawRectangle(
  * The implementation uses a reusable line buffer and SPI DMA to
  * reduce the number of CPU-driven SPI transactions.
  */
-void TFT_FillRectangle(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t color
-);
+void TFT_FillRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
 
 /**
  * @brief Draw a rounded rectangle outline.
  */
-void TFT_DrawRoundRect(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t radius,
-    uint16_t color
-);
+void TFT_DrawRoundRect(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t radius, uint16_t color);
 
 /**
  * @brief Draw a filled rounded rectangle.
  */
-void TFT_FillRoundRect(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t radius,
-    uint16_t color
-);
+void TFT_FillRoundRect(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t radius, uint16_t color);
 
 /**
  * @brief Draw a circle outline using an integer midpoint algorithm.
  */
-void TFT_DrawCircle(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t radius,
-    uint16_t color
-);
+void TFT_DrawCircle(uint16_t x0, uint16_t y0, uint16_t radius, uint16_t color);
 
 /**
  * @brief Draw a filled circle.
@@ -196,12 +150,7 @@ void TFT_DrawCircle(
  * Use TFT_FillCircleFast() when the background-overwrite constraint
  * is acceptable and higher rendering performance is required.
  */
-void TFT_FillCircle(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t radius,
-    uint16_t color
-);
+void TFT_FillCircle(uint16_t x0, uint16_t y0, uint16_t radius, uint16_t color);
 
 /**
  * @brief Draw a filled circle using line-buffered SPI DMA.
@@ -231,13 +180,7 @@ void TFT_FillCircle(
  * @return true if the DMA-optimized implementation was used;
  *         false if the function used the fallback implementation.
  */
-bool TFT_FillCircleFast(
-    uint16_t cx,
-    uint16_t cy,
-    uint16_t radius,
-    uint16_t color,
-    uint16_t bgColor
-);
+bool TFT_FillCircleFast(uint16_t cx, uint16_t cy, uint16_t radius, uint16_t color, uint16_t bgColor);
 
 /* ------------------------------------------------------------------
  * Text rendering
@@ -261,14 +204,7 @@ bool TFT_FillCircleFast(
  * @param bgColor  Background RGB565 color.
  * @param scale    Integer glyph scale. Values below 1 are treated as 1.
  */
-void TFT_DrawChar(
-    uint16_t x,
-    uint16_t y,
-    char c,
-    uint16_t fgColor,
-    uint16_t bgColor,
-    uint8_t scale
-);
+void TFT_DrawChar(uint16_t x, uint16_t y, char c, uint16_t fgColor, uint16_t bgColor, uint8_t scale);
 
 /**
  * @brief Draw a null-terminated string using the built-in font.
@@ -276,14 +212,7 @@ void TFT_DrawChar(
  * Characters are rendered sequentially with one background column
  * between adjacent glyphs.
  */
-void TFT_DrawText(
-    uint16_t x,
-    uint16_t y,
-    const char *str,
-    uint16_t fgColor,
-    uint16_t bgColor,
-    uint8_t scale
-);
+void TFT_DrawText(uint16_t x, uint16_t y, const char *str, uint16_t fgColor, uint16_t bgColor, uint8_t scale);
 
 /**
  * @brief Draw a string using a RAM sprite and one SPI DMA transfer.
@@ -301,14 +230,7 @@ void TFT_DrawText(
  * @return true if the sprite/DMA path was used;
  *         false if the fallback renderer was required.
  */
-bool TFT_DrawTextFast(
-    uint16_t x,
-    uint16_t y,
-    const char *str,
-    uint16_t fgColor,
-    uint16_t bgColor,
-    uint8_t scale
-);
+bool TFT_DrawTextFast(uint16_t x, uint16_t y, const char *str, uint16_t fgColor, uint16_t bgColor, uint8_t scale);
 
 /**
  * @brief Calculate the rendered dimensions of a text string.
@@ -318,12 +240,7 @@ bool TFT_DrawTextFast(
  * @param w     Output width in pixels. May be NULL.
  * @param h     Output height in pixels. May be NULL.
  */
-void TFT_GetTextExtent(
-    const char *str,
-    uint8_t scale,
-    uint16_t *w,
-    uint16_t *h
-);
+void TFT_GetTextExtent(const char *str, uint8_t scale, uint16_t *w, uint16_t *h);
 
 #ifdef __cplusplus
 }

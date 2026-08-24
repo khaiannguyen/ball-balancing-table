@@ -52,11 +52,7 @@ static inline void TFT_EnsureDmaSemCreated(void)
     if (s_tftDmaSem == NULL)
     {
         s_tftDmaSem =
-            osSemaphoreNew(
-                1,
-                0,
-                &s_tftDmaSemAttr
-            );
+            osSemaphoreNew(1, 0, &s_tftDmaSemAttr);
     }
 }
 
@@ -70,10 +66,7 @@ static inline void TFT_WaitDmaLine(void)
 {
     TFT_EnsureDmaSemCreated();
 
-    osSemaphoreAcquire(
-        s_tftDmaSem,
-        50
-    );
+    osSemaphoreAcquire(s_tftDmaSem, 50);
 }
 
 /*
@@ -93,56 +86,32 @@ __attribute__((aligned(32)));
 
 static inline void TFT_CS_LOW(void)
 {
-    HAL_GPIO_WritePin(
-        TFT_CS_GPIO_Port,
-        TFT_CS_Pin,
-        GPIO_PIN_RESET
-    );
+    HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_RESET);
 }
 
 static inline void TFT_CS_HIGH(void)
 {
-    HAL_GPIO_WritePin(
-        TFT_CS_GPIO_Port,
-        TFT_CS_Pin,
-        GPIO_PIN_SET
-    );
+    HAL_GPIO_WritePin(TFT_CS_GPIO_Port, TFT_CS_Pin, GPIO_PIN_SET);
 }
 
 static inline void TFT_DC_LOW(void)
 {
-    HAL_GPIO_WritePin(
-        TFT_DC_GPIO_Port,
-        TFT_DC_Pin,
-        GPIO_PIN_RESET
-    );
+    HAL_GPIO_WritePin(TFT_DC_GPIO_Port, TFT_DC_Pin, GPIO_PIN_RESET);
 }
 
 static inline void TFT_DC_HIGH(void)
 {
-    HAL_GPIO_WritePin(
-        TFT_DC_GPIO_Port,
-        TFT_DC_Pin,
-        GPIO_PIN_SET
-    );
+    HAL_GPIO_WritePin(TFT_DC_GPIO_Port, TFT_DC_Pin, GPIO_PIN_SET);
 }
 
 static inline void TFT_RST_LOW(void)
 {
-    HAL_GPIO_WritePin(
-        TFT_RST_GPIO_Port,
-        TFT_RST_Pin,
-        GPIO_PIN_RESET
-    );
+    HAL_GPIO_WritePin(TFT_RST_GPIO_Port, TFT_RST_Pin, GPIO_PIN_RESET);
 }
 
 static inline void TFT_RST_HIGH(void)
 {
-    HAL_GPIO_WritePin(
-        TFT_RST_GPIO_Port,
-        TFT_RST_Pin,
-        GPIO_PIN_SET
-    );
+    HAL_GPIO_WritePin(TFT_RST_GPIO_Port, TFT_RST_Pin, GPIO_PIN_SET);
 }
 
 
@@ -160,8 +129,7 @@ static inline void TFT_RST_HIGH(void)
  * the transfer, the scheduler is requested to switch to it
  * immediately.
  */
-void HAL_SPI_TxCpltCallback(
-    SPI_HandleTypeDef *hspi)
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
     if (hspi == TFT_SPI)
     {
@@ -169,14 +137,9 @@ void HAL_SPI_TxCpltCallback(
 
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-        xSemaphoreGiveFromISR(
-            (SemaphoreHandle_t)s_tftDmaSem,
-            &xHigherPriorityTaskWoken
-        );
+        xSemaphoreGiveFromISR((SemaphoreHandle_t)s_tftDmaSem, &xHigherPriorityTaskWoken);
 
-        portYIELD_FROM_ISR(
-            xHigherPriorityTaskWoken
-        );
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
 }
 
@@ -185,9 +148,7 @@ void HAL_SPI_TxCpltCallback(
  * ILI9225 register write
  * ------------------------------------------------------------------ */
 
-static void TFT_WriteRegister(
-    uint8_t reg,
-    uint16_t value)
+static void TFT_WriteRegister(uint8_t reg, uint16_t value)
 {
     uint8_t cmd[2];
     uint8_t data[2];
@@ -202,21 +163,11 @@ static void TFT_WriteRegister(
 
     TFT_DC_LOW();
 
-    HAL_SPI_Transmit(
-        TFT_SPI,
-        cmd,
-        2,
-        HAL_MAX_DELAY
-    );
+    HAL_SPI_Transmit(TFT_SPI, cmd, 2, HAL_MAX_DELAY);
 
     TFT_DC_HIGH();
 
-    HAL_SPI_Transmit(
-        TFT_SPI,
-        data,
-        2,
-        HAL_MAX_DELAY
-    );
+    HAL_SPI_Transmit(TFT_SPI, data, 2, HAL_MAX_DELAY);
 
     TFT_CS_HIGH();
 }
@@ -241,12 +192,7 @@ static void TFT_BeginGramWrite(void)
 
     TFT_DC_LOW();
 
-    HAL_SPI_Transmit(
-        TFT_SPI,
-        cmd,
-        2,
-        HAL_MAX_DELAY
-    );
+    HAL_SPI_Transmit(TFT_SPI, cmd, 2, HAL_MAX_DELAY);
 
     TFT_DC_HIGH();
 }
@@ -268,11 +214,7 @@ static void TFT_BeginGramWrite(void)
  * address registers.
  * ------------------------------------------------------------------ */
 
-void TFT_SetWindow(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1)
+void TFT_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)
 {
     uint16_t px0 = y0;
     uint16_t px1 = y1;
@@ -283,35 +225,17 @@ void TFT_SetWindow(
     uint16_t py1 =
         (TFT_PHYS_HEIGHT - 1) - x0;
 
-    TFT_WriteRegister(
-        0x36,
-        px1
-    );
+    TFT_WriteRegister(0x36, px1);
 
-    TFT_WriteRegister(
-        0x37,
-        px0
-    );
+    TFT_WriteRegister(0x37, px0);
 
-    TFT_WriteRegister(
-        0x38,
-        py1
-    );
+    TFT_WriteRegister(0x38, py1);
 
-    TFT_WriteRegister(
-        0x39,
-        py0
-    );
+    TFT_WriteRegister(0x39, py0);
 
-    TFT_WriteRegister(
-        0x20,
-        px0
-    );
+    TFT_WriteRegister(0x20, px0);
 
-    TFT_WriteRegister(
-        0x21,
-        py0
-    );
+    TFT_WriteRegister(0x21, py0);
 }
 
 
@@ -342,93 +266,45 @@ void TFT_Init(void)
 
     HAL_Delay(150);
 
-    TFT_WriteRegister(
-        0x10,
-        0x0000
-    );
+    TFT_WriteRegister(0x10, 0x0000);
 
-    TFT_WriteRegister(
-        0x11,
-        0x0000
-    );
+    TFT_WriteRegister(0x11, 0x0000);
 
-    TFT_WriteRegister(
-        0x12,
-        0x0000
-    );
+    TFT_WriteRegister(0x12, 0x0000);
 
-    TFT_WriteRegister(
-        0x13,
-        0x0000
-    );
+    TFT_WriteRegister(0x13, 0x0000);
 
-    TFT_WriteRegister(
-        0x14,
-        0x0000
-    );
+    TFT_WriteRegister(0x14, 0x0000);
 
     HAL_Delay(40);
 
-    TFT_WriteRegister(
-        0x11,
-        0x0018
-    );
+    TFT_WriteRegister(0x11, 0x0018);
 
-    TFT_WriteRegister(
-        0x12,
-        0x6121
-    );
+    TFT_WriteRegister(0x12, 0x6121);
 
-    TFT_WriteRegister(
-        0x13,
-        0x006F
-    );
+    TFT_WriteRegister(0x13, 0x006F);
 
-    TFT_WriteRegister(
-        0x14,
-        0x495F
-    );
+    TFT_WriteRegister(0x14, 0x495F);
 
-    TFT_WriteRegister(
-        0x10,
-        0x0800
-    );
+    TFT_WriteRegister(0x10, 0x0800);
 
     HAL_Delay(10);
 
-    TFT_WriteRegister(
-        0x11,
-        0x103B
-    );
+    TFT_WriteRegister(0x11, 0x103B);
 
     HAL_Delay(50);
 
-    TFT_WriteRegister(
-        0x01,
-        0x011C
-    );
+    TFT_WriteRegister(0x01, 0x011C);
 
-    TFT_WriteRegister(
-        0x02,
-        0x0100
-    );
+    TFT_WriteRegister(0x02, 0x0100);
 
-    TFT_WriteRegister(
-        0x03,
-        0x1038
-    );
+    TFT_WriteRegister(0x03, 0x1038);
 
-    TFT_WriteRegister(
-        0x07,
-        0x0012
-    );
+    TFT_WriteRegister(0x07, 0x0012);
 
     HAL_Delay(50);
 
-    TFT_WriteRegister(
-        0x07,
-        0x1017
-    );
+    TFT_WriteRegister(0x07, 0x1017);
 
     HAL_Delay(50);
 }
@@ -443,8 +319,7 @@ void TFT_Init(void)
  * D-Cache region, and then transfers the row through SPI DMA.
  * ------------------------------------------------------------------ */
 
-void TFT_FillScreen(
-    uint16_t color)
+void TFT_FillScreen(uint16_t color)
 {
     uint32_t y;
     uint32_t i;
@@ -464,19 +339,11 @@ void TFT_FillScreen(
      * The line buffer is written by the CPU and consumed by SPI DMA.
      * Clean the D-Cache so that DMA reads the latest buffer contents.
      */
-    SCB_CleanDCache_by_Addr(
-        (uint32_t *)lineBuffer,
-        sizeof(lineBuffer)
-    );
+    SCB_CleanDCache_by_Addr((uint32_t *)lineBuffer, sizeof(lineBuffer));
 
 #endif
 
-    TFT_SetWindow(
-        0,
-        0,
-        TFT_WIDTH - 1,
-        TFT_HEIGHT - 1
-    );
+    TFT_SetWindow(0, 0, TFT_WIDTH - 1, TFT_HEIGHT - 1);
 
     TFT_BeginGramWrite();
 
@@ -484,11 +351,7 @@ void TFT_FillScreen(
     {
         dmaDone = 0;
 
-        HAL_SPI_Transmit_DMA(
-            TFT_SPI,
-            (uint8_t *)lineBuffer,
-            TFT_WIDTH * 2
-        );
+        HAL_SPI_Transmit_DMA(TFT_SPI, (uint8_t *)lineBuffer, TFT_WIDTH * 2);
 
         TFT_WaitDmaLine();
     }
@@ -509,12 +372,7 @@ void TFT_FillScreen(
  */
 void TFT_TestPixel(void)
 {
-    TFT_SetWindow(
-        50,
-        50,
-        50,
-        50
-    );
+    TFT_SetWindow(50, 50, 50, 50);
 
     TFT_BeginGramWrite();
 
@@ -523,12 +381,7 @@ void TFT_TestPixel(void)
     pixel[0] = 0xF8;
     pixel[1] = 0x00;
 
-    HAL_SPI_Transmit(
-        TFT_SPI,
-        pixel,
-        2,
-        HAL_MAX_DELAY
-    );
+    HAL_SPI_Transmit(TFT_SPI, pixel, 2, HAL_MAX_DELAY);
 
     TFT_CS_HIGH();
 }
@@ -546,10 +399,7 @@ void TFT_TestPixel(void)
  *
  * Coordinates outside the logical display area are ignored.
  */
-void TFT_DrawPixel(
-    uint16_t x,
-    uint16_t y,
-    uint16_t color)
+void TFT_DrawPixel(uint16_t x, uint16_t y, uint16_t color)
 {
     if ((x >= TFT_WIDTH) ||
         (y >= TFT_HEIGHT))
@@ -562,21 +412,11 @@ void TFT_DrawPixel(
     data[0] = (color >> 8);
     data[1] = (color & 0xFF);
 
-    TFT_SetWindow(
-        x,
-        y,
-        x,
-        y
-    );
+    TFT_SetWindow(x, y, x, y);
 
     TFT_BeginGramWrite();
 
-    HAL_SPI_Transmit(
-        TFT_SPI,
-        data,
-        2,
-        HAL_MAX_DELAY
-    );
+    HAL_SPI_Transmit(TFT_SPI, data, 2, HAL_MAX_DELAY);
 
     TFT_CS_HIGH();
 }
@@ -588,12 +428,7 @@ void TFT_DrawPixel(
  * The algorithm uses integer arithmetic and therefore avoids
  * floating-point operations in the pixel-generation path.
  */
-void TFT_DrawLine(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t color)
+void TFT_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
     int16_t dx =
         (int16_t)x1 -
@@ -623,11 +458,7 @@ void TFT_DrawLine(
 
     for (;;)
     {
-        TFT_DrawPixel(
-            (uint16_t)x,
-            (uint16_t)y,
-            color
-        );
+        TFT_DrawPixel((uint16_t)x, (uint16_t)y, color);
 
         if ((x == (int16_t)x1) &&
             (y == (int16_t)y1))
@@ -659,44 +490,15 @@ void TFT_DrawLine(
  * The rectangle edges are rendered using the Bresenham line
  * primitive.
  */
-void TFT_DrawRectangle(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t color)
+void TFT_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
-    TFT_DrawLine(
-        x0,
-        y0,
-        x1,
-        y0,
-        color
-    );
+    TFT_DrawLine(x0, y0, x1, y0, color);
 
-    TFT_DrawLine(
-        x0,
-        y1,
-        x1,
-        y1,
-        color
-    );
+    TFT_DrawLine(x0, y1, x1, y1, color);
 
-    TFT_DrawLine(
-        x0,
-        y0,
-        x0,
-        y1,
-        color
-    );
+    TFT_DrawLine(x0, y0, x0, y1, color);
 
-    TFT_DrawLine(
-        x1,
-        y0,
-        x1,
-        y1,
-        color
-    );
+    TFT_DrawLine(x1, y0, x1, y1, color);
 }
 
 
@@ -709,12 +511,7 @@ void TFT_DrawRectangle(
  *
  * D-Cache maintenance is performed before DMA reads the buffer.
  */
-void TFT_FillRectangle(
-    uint16_t x0,
-    uint16_t y0,
-    uint16_t x1,
-    uint16_t y1,
-    uint16_t color)
+void TFT_FillRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
     uint16_t xs =
         (x0 < x1) ? x0 : x1;
@@ -751,19 +548,11 @@ void TFT_FillRectangle(
     /*
      * Ensure that SPI DMA sees the CPU-written pixel data.
      */
-    SCB_CleanDCache_by_Addr(
-        (uint32_t *)lineBuffer,
-        w * sizeof(uint16_t)
-    );
+    SCB_CleanDCache_by_Addr((uint32_t *)lineBuffer, w * sizeof(uint16_t));
 
 #endif
 
-    TFT_SetWindow(
-        xs,
-        ys,
-        xe,
-        ye
-    );
+    TFT_SetWindow(xs, ys, xe, ye);
 
     TFT_BeginGramWrite();
 
@@ -771,11 +560,7 @@ void TFT_FillRectangle(
     {
         dmaDone = 0;
 
-        HAL_SPI_Transmit_DMA(
-            TFT_SPI,
-            (uint8_t *)lineBuffer,
-            w * 2
-        );
+        HAL_SPI_Transmit_DMA(TFT_SPI, (uint8_t *)lineBuffer, w * 2);
 
         TFT_WaitDmaLine();
     }
@@ -790,11 +575,7 @@ void TFT_FillRectangle(
  * algorithm. A bit mask selects which corner arcs are rendered.
  *=========================================================*/
 
-static void TFT_DrawCircleHelper(
-        uint16_t x0, uint16_t y0,
-        uint16_t r,
-        uint8_t cornermask,
-        uint16_t color)
+static void TFT_DrawCircleHelper(uint16_t x0, uint16_t y0, uint16_t r, uint8_t cornermask, uint16_t color)
 {
     int16_t f = 1-(int16_t)r;
     int16_t ddF_x = 1;
@@ -842,82 +623,33 @@ static void TFT_DrawCircleHelper(
 }
 
 
-void TFT_DrawRoundRect(
-        uint16_t x0, uint16_t y0,
-        uint16_t x1, uint16_t y1,
-        uint16_t radius,
-        uint16_t color)
+void TFT_DrawRoundRect(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t radius, uint16_t color)
 {
     uint16_t w = x1-x0+1;
     uint16_t h = y1-y0+1;
 
-    TFT_DrawLine(
-            x0+radius,
-            y0,
-            x1-radius,
-            y0,
-            color);          /* Top */
+    TFT_DrawLine(x0+radius, y0, x1-radius, y0, color);          /* Top */
 
-    TFT_DrawLine(
-            x0+radius,
-            y1,
-            x1-radius,
-            y1,
-            color);          /* Bottom */
+    TFT_DrawLine(x0+radius, y1, x1-radius, y1, color);          /* Bottom */
 
-    TFT_DrawLine(
-            x0,
-            y0+radius,
-            x0,
-            y1-radius,
-            color);          /* Left */
+    TFT_DrawLine(x0, y0+radius, x0, y1-radius, color);          /* Left */
 
-    TFT_DrawLine(
-            x1,
-            y0+radius,
-            x1,
-            y1-radius,
-            color);          /* Right */
+    TFT_DrawLine(x1, y0+radius, x1, y1-radius, color);          /* Right */
 
     (void)w;
     (void)h;
 
-    TFT_DrawCircleHelper(
-            x0+radius,
-            y0+radius,
-            radius,
-            0x2,
-            color);          /* Top-left */
+    TFT_DrawCircleHelper(x0+radius, y0+radius, radius, 0x2, color);          /* Top-left */
 
-    TFT_DrawCircleHelper(
-            x1-radius,
-            y0+radius,
-            radius,
-            0x1,
-            color);          /* Top-right */
+    TFT_DrawCircleHelper(x1-radius, y0+radius, radius, 0x1, color);          /* Top-right */
 
-    TFT_DrawCircleHelper(
-            x0+radius,
-            y1-radius,
-            radius,
-            0x8,
-            color);          /* Bottom-left */
+    TFT_DrawCircleHelper(x0+radius, y1-radius, radius, 0x8, color);          /* Bottom-left */
 
-    TFT_DrawCircleHelper(
-            x1-radius,
-            y1-radius,
-            radius,
-            0x4,
-            color);          /* Bottom-right */
+    TFT_DrawCircleHelper(x1-radius, y1-radius, radius, 0x4, color);          /* Bottom-right */
 }
 
 
-static void TFT_FillCircleHelper(
-        uint16_t x0, uint16_t y0,
-        uint16_t r,
-        uint8_t cornermask,
-        int16_t delta,
-        uint16_t color)
+static void TFT_FillCircleHelper(uint16_t x0, uint16_t y0, uint16_t r, uint8_t cornermask, int16_t delta, uint16_t color)
 {
     int16_t f = 1-(int16_t)r;
     int16_t ddF_x = 1;
@@ -940,46 +672,22 @@ static void TFT_FillCircleHelper(
 
         if(cornermask & 0x1)
         {
-            TFT_DrawLine(
-                    x0+x,
-                    y0-y,
-                    x0+x,
-                    y0+y+delta,
-                    color);
+            TFT_DrawLine(x0+x, y0-y, x0+x, y0+y+delta, color);
 
-            TFT_DrawLine(
-                    x0+y,
-                    y0-x,
-                    x0+y,
-                    y0+x+delta,
-                    color);
+            TFT_DrawLine(x0+y, y0-x, x0+y, y0+x+delta, color);
         }
 
         if(cornermask & 0x2)
         {
-            TFT_DrawLine(
-                    x0-x,
-                    y0-y,
-                    x0-x,
-                    y0+y+delta,
-                    color);
+            TFT_DrawLine(x0-x, y0-y, x0-x, y0+y+delta, color);
 
-            TFT_DrawLine(
-                    x0-y,
-                    y0-x,
-                    x0-y,
-                    y0+x+delta,
-                    color);
+            TFT_DrawLine(x0-y, y0-x, x0-y, y0+x+delta, color);
         }
     }
 }
 
 
-void TFT_FillRoundRect(
-        uint16_t x0, uint16_t y0,
-        uint16_t x1, uint16_t y1,
-        uint16_t radius,
-        uint16_t color)
+void TFT_FillRoundRect(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t radius, uint16_t color)
 {
     uint16_t h = y1-y0+1;
 
@@ -987,28 +695,11 @@ void TFT_FillRoundRect(
      * Fill the central rectangular region first. The corner helpers
      * then extend the fill into the rounded end regions.
      */
-    TFT_FillRectangle(
-            x0+radius,
-            y0,
-            x1-radius,
-            y1,
-            color);
+    TFT_FillRectangle(x0+radius, y0, x1-radius, y1, color);
 
-    TFT_FillCircleHelper(
-            x1-radius,
-            y0+radius,
-            radius,
-            0x1,
-            (int16_t)h-2*(int16_t)radius-1,
-            color);
+    TFT_FillCircleHelper(x1-radius, y0+radius, radius, 0x1, (int16_t)h-2*(int16_t)radius-1, color);
 
-    TFT_FillCircleHelper(
-            x0+radius,
-            y0+radius,
-            radius,
-            0x2,
-            (int16_t)h-2*(int16_t)radius-1,
-            color);
+    TFT_FillCircleHelper(x0+radius, y0+radius, radius, 0x2, (int16_t)h-2*(int16_t)radius-1, color);
 }
 
 
@@ -1019,11 +710,7 @@ void TFT_FillRoundRect(
  * floating-point operations in the rasterization path.
  *=========================================================*/
 
-void TFT_DrawCircle(
-        uint16_t x0,
-        uint16_t y0,
-        uint16_t radius,
-        uint16_t color)
+void TFT_DrawCircle(uint16_t x0, uint16_t y0, uint16_t radius, uint16_t color)
 {
     int16_t f = 1-(int16_t)radius;
     int16_t ddF_x = 1;
@@ -1031,25 +718,13 @@ void TFT_DrawCircle(
     int16_t x = 0;
     int16_t y = radius;
 
-    TFT_DrawPixel(
-            x0,
-            y0+radius,
-            color);
+    TFT_DrawPixel(x0, y0+radius, color);
 
-    TFT_DrawPixel(
-            x0,
-            y0-radius,
-            color);
+    TFT_DrawPixel(x0, y0-radius, color);
 
-    TFT_DrawPixel(
-            x0+radius,
-            y0,
-            color);
+    TFT_DrawPixel(x0+radius, y0, color);
 
-    TFT_DrawPixel(
-            x0-radius,
-            y0,
-            color);
+    TFT_DrawPixel(x0-radius, y0, color);
 
     while(x<y)
     {
@@ -1064,69 +739,30 @@ void TFT_DrawCircle(
         ddF_x+=2;
         f+=ddF_x;
 
-        TFT_DrawPixel(
-                x0+x,
-                y0+y,
-                color);
+        TFT_DrawPixel(x0+x, y0+y, color);
 
-        TFT_DrawPixel(
-                x0-x,
-                y0+y,
-                color);
+        TFT_DrawPixel(x0-x, y0+y, color);
 
-        TFT_DrawPixel(
-                x0+x,
-                y0-y,
-                color);
+        TFT_DrawPixel(x0+x, y0-y, color);
 
-        TFT_DrawPixel(
-                x0-x,
-                y0-y,
-                color);
+        TFT_DrawPixel(x0-x, y0-y, color);
 
-        TFT_DrawPixel(
-                x0+y,
-                y0+x,
-                color);
+        TFT_DrawPixel(x0+y, y0+x, color);
 
-        TFT_DrawPixel(
-                x0-y,
-                y0+x,
-                color);
+        TFT_DrawPixel(x0-y, y0+x, color);
 
-        TFT_DrawPixel(
-                x0+y,
-                y0-x,
-                color);
+        TFT_DrawPixel(x0+y, y0-x, color);
 
-        TFT_DrawPixel(
-                x0-y,
-                y0-x,
-                color);
+        TFT_DrawPixel(x0-y, y0-x, color);
     }
 }
 
 
-void TFT_FillCircle(
-        uint16_t x0,
-        uint16_t y0,
-        uint16_t radius,
-        uint16_t color)
+void TFT_FillCircle(uint16_t x0, uint16_t y0, uint16_t radius, uint16_t color)
 {
-    TFT_DrawLine(
-            x0,
-            y0-radius,
-            x0,
-            y0+radius,
-            color);
+    TFT_DrawLine(x0, y0-radius, x0, y0+radius, color);
 
-    TFT_FillCircleHelper(
-            x0,
-            y0,
-            radius,
-            0x3,
-            0,
-            color);
+    TFT_FillCircleHelper(x0, y0, radius, 0x3, 0, color);
 }
 
 
@@ -1155,11 +791,7 @@ void TFT_FillCircle(
  * that region is acceptable.
  * ========================================================= */
 
-bool TFT_FillCircleFast(
-        uint16_t cx, uint16_t cy,
-        uint16_t radius,
-        uint16_t color,
-        uint16_t bgColor)
+bool TFT_FillCircleFast(uint16_t cx, uint16_t cy, uint16_t radius, uint16_t color, uint16_t bgColor)
 {
     if (radius == 0)
     {
@@ -1179,11 +811,7 @@ bool TFT_FillCircleFast(
         ((uint32_t)cy + radius >= TFT_HEIGHT) ||
         (diameter > TFT_WIDTH))
     {
-        TFT_FillCircle(
-                cx,
-                cy,
-                radius,
-                color);
+        TFT_FillCircle(cx, cy, radius, color);
 
         return false;
     }
@@ -1197,11 +825,7 @@ bool TFT_FillCircleFast(
     uint16_t bgSwapped =
             (bgColor<<8)|(bgColor>>8);
 
-    TFT_SetWindow(
-            x0,
-            y0,
-            x0+diameter-1,
-            y0+diameter-1);
+    TFT_SetWindow(x0, y0, x0+diameter-1, y0+diameter-1);
 
     TFT_BeginGramWrite();
 
@@ -1256,18 +880,13 @@ bool TFT_FillCircleFast(
          * the SPI DMA controller. Clean the D-Cache before transfer
          * so that DMA reads the latest buffer contents.
          */
-        SCB_CleanDCache_by_Addr(
-                (uint32_t*)lineBuffer,
-                diameter*sizeof(uint16_t));
+        SCB_CleanDCache_by_Addr((uint32_t*)lineBuffer, diameter*sizeof(uint16_t));
 
 #endif
 
         dmaDone = 0;
 
-        HAL_SPI_Transmit_DMA(
-                TFT_SPI,
-                (uint8_t*)lineBuffer,
-                diameter*2);
+        HAL_SPI_Transmit_DMA(TFT_SPI, (uint8_t*)lineBuffer, diameter*2);
 
         TFT_WaitDmaLine();
     }
@@ -1400,12 +1019,7 @@ static const uint8_t font5x7[][5] = {
  * each glyph pixel into a square block.
  *=========================================================*/
 
-void TFT_DrawChar(
-        uint16_t x, uint16_t y,
-        char c,
-        uint16_t fgColor,
-        uint16_t bgColor,
-        uint8_t scale)
+void TFT_DrawChar(uint16_t x, uint16_t y, char c, uint16_t fgColor, uint16_t bgColor, uint8_t scale)
 {
     if(scale==0)
     {
@@ -1431,12 +1045,7 @@ void TFT_DrawChar(
             }
             else
             {
-                TFT_FillRectangle(
-                        x+col*scale,
-                        y+row*scale,
-                        x+col*scale+scale-1,
-                        y+row*scale+scale-1,
-                        color);
+                TFT_FillRectangle(x+col*scale, y+row*scale, x+col*scale+scale-1, y+row*scale+scale-1, color);
             }
         }
     }
@@ -1447,31 +1056,16 @@ void TFT_DrawChar(
      */
     if(scale==1)
     {
-        TFT_DrawLine(
-                x+FONT_W,
-                y,
-                x+FONT_W,
-                y+FONT_H-1,
-                bgColor);
+        TFT_DrawLine(x+FONT_W, y, x+FONT_W, y+FONT_H-1, bgColor);
     }
     else
     {
-        TFT_FillRectangle(
-                x+FONT_W*scale,
-                y,
-                x+FONT_W*scale+scale-1,
-                y+FONT_H*scale-1,
-                bgColor);
+        TFT_FillRectangle(x+FONT_W*scale, y, x+FONT_W*scale+scale-1, y+FONT_H*scale-1, bgColor);
     }
 }
 
 
-void TFT_DrawText(
-        uint16_t x, uint16_t y,
-        const char *str,
-        uint16_t fgColor,
-        uint16_t bgColor,
-        uint8_t scale)
+void TFT_DrawText(uint16_t x, uint16_t y, const char *str, uint16_t fgColor, uint16_t bgColor, uint8_t scale)
 {
     if(scale==0)
     {
@@ -1482,13 +1076,7 @@ void TFT_DrawText(
 
     while(*str)
     {
-        TFT_DrawChar(
-                cx,
-                y,
-                *str,
-                fgColor,
-                bgColor,
-                scale);
+        TFT_DrawChar(cx, y, *str, fgColor, bgColor, scale);
 
         cx += (FONT_W+1)*scale;
 
@@ -1497,11 +1085,7 @@ void TFT_DrawText(
 }
 
 
-void TFT_GetTextExtent(
-        const char *str,
-        uint8_t scale,
-        uint16_t *w,
-        uint16_t *h)
+void TFT_GetTextExtent(const char *str, uint8_t scale, uint16_t *w, uint16_t *h)
 {
     if(scale==0)
     {
@@ -1592,12 +1176,7 @@ static uint16_t textSpriteBuf[
         __attribute__((aligned(32)));
 
 
-bool TFT_DrawTextFast(
-        uint16_t x, uint16_t y,
-        const char *str,
-        uint16_t fgColor,
-        uint16_t bgColor,
-        uint8_t scale)
+bool TFT_DrawTextFast(uint16_t x, uint16_t y, const char *str, uint16_t fgColor, uint16_t bgColor, uint8_t scale)
 {
     if (scale == 0)
     {
@@ -1639,13 +1218,7 @@ bool TFT_DrawTextFast(
         ((uint32_t)x + w > TFT_WIDTH) ||
         ((uint32_t)y + h > TFT_HEIGHT))
     {
-        TFT_DrawText(
-                x,
-                y,
-                str,
-                fgColor,
-                bgColor,
-                scale);
+        TFT_DrawText(x, y, str, fgColor, bgColor, scale);
 
         return false;
     }
@@ -1797,9 +1370,7 @@ bool TFT_DrawTextFast(
      * by the SPI DMA controller. Clean the D-Cache so that DMA sees
      * the latest pixel data in memory.
      */
-    SCB_CleanDCache_by_Addr(
-            (uint32_t*)textSpriteBuf,
-            (uint32_t)w * h * sizeof(uint16_t));
+    SCB_CleanDCache_by_Addr((uint32_t*)textSpriteBuf, (uint32_t)w * h * sizeof(uint16_t));
 
 #endif
 
@@ -1809,20 +1380,13 @@ bool TFT_DrawTextFast(
      * text region, then transfer the entire sprite through one DMA
      * transaction.
      */
-    TFT_SetWindow(
-            x,
-            y,
-            x + w - 1,
-            y + h - 1);
+    TFT_SetWindow(x, y, x + w - 1, y + h - 1);
 
     TFT_BeginGramWrite();
 
     dmaDone = 0;
 
-    HAL_SPI_Transmit_DMA(
-            TFT_SPI,
-            (uint8_t*)textSpriteBuf,
-            (uint32_t)w * h * 2);
+    HAL_SPI_Transmit_DMA(TFT_SPI, (uint8_t*)textSpriteBuf, (uint32_t)w * h * 2);
 
     TFT_WaitDmaLine();
 

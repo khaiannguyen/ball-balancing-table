@@ -38,20 +38,11 @@ void servo_pwm_init(void)
      * during startup when the timer compare registers may not yet
      * contain the desired actuator command.
      */
-    servo_pwm_write_us(
-        SERVO_CH_S1,
-        SERVO_US_NEUTRAL_DEFAULT
-    );
+    servo_pwm_write_us(SERVO_CH_S1, SERVO_US_NEUTRAL_DEFAULT);
 
-    servo_pwm_write_us(
-        SERVO_CH_S2,
-        SERVO_US_NEUTRAL_DEFAULT
-    );
+    servo_pwm_write_us(SERVO_CH_S2, SERVO_US_NEUTRAL_DEFAULT);
 
-    servo_pwm_write_us(
-        SERVO_CH_S3,
-        SERVO_US_NEUTRAL_DEFAULT
-    );
+    servo_pwm_write_us(SERVO_CH_S3, SERVO_US_NEUTRAL_DEFAULT);
 }
 
 /**
@@ -96,27 +87,15 @@ void servo_pwm_write_us(servo_ch_t ch, uint16_t us)
     switch (ch)
     {
         case SERVO_CH_S1:
-            __HAL_TIM_SET_COMPARE(
-                &htim1,
-                TIM_CHANNEL_1,
-                us
-            );
+            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, us);
             break;
 
         case SERVO_CH_S2:
-            __HAL_TIM_SET_COMPARE(
-                &htim1,
-                TIM_CHANNEL_2,
-                us
-            );
+            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, us);
             break;
 
         case SERVO_CH_S3:
-            __HAL_TIM_SET_COMPARE(
-                &htim1,
-                TIM_CHANNEL_3,
-                us
-            );
+            __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, us);
             break;
 
         default:

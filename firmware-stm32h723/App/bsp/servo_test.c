@@ -134,20 +134,11 @@ void servo_test_step(void)
              */
             if (s_phase_tick == 1)
             {
-                servo_actuator_set_target(
-                    SERVO_CH_S1,
-                    1500
-                );
+                servo_actuator_set_target(SERVO_CH_S1, 1500);
 
-                servo_actuator_set_target(
-                    SERVO_CH_S2,
-                    1500
-                );
+                servo_actuator_set_target(SERVO_CH_S2, 1500);
 
-                servo_actuator_set_target(
-                    SERVO_CH_S3,
-                    1500
-                );
+                servo_actuator_set_target(SERVO_CH_S3, 1500);
             }
 
             /*
@@ -171,26 +162,17 @@ void servo_test_step(void)
              */
             if (s_phase_tick == 1)
             {
-                servo_actuator_set_target(
-                    SERVO_CH_S1,
-                    1000
-                );
+                servo_actuator_set_target(SERVO_CH_S1, 1000);
             }
 
             if (s_phase_tick == 300)
             {
-                servo_actuator_set_target(
-                    SERVO_CH_S1,
-                    2000
-                );
+                servo_actuator_set_target(SERVO_CH_S1, 2000);
             }
 
             if (s_phase_tick == 600)
             {
-                servo_actuator_set_target(
-                    SERVO_CH_S1,
-                    1500
-                );
+                servo_actuator_set_target(SERVO_CH_S1, 1500);
             }
 
             /*
@@ -215,10 +197,7 @@ void servo_test_step(void)
              */
             if (s_phase_tick % 5 == 0)
             {
-                servo_actuator_apply_delta(
-                    SERVO_CH_S2,
-                    +10
-                );
+                servo_actuator_apply_delta(SERVO_CH_S2, +10);
             }
 
             /*
@@ -244,10 +223,7 @@ void servo_test_step(void)
              */
             if (s_phase_tick == 1)
             {
-                servo_actuator_set_target(
-                    SERVO_CH_S3,
-                    1000
-                );
+                servo_actuator_set_target(SERVO_CH_S3, 1000);
             }
 
             if (s_phase_tick == 100)
@@ -256,19 +232,9 @@ void servo_test_step(void)
                 int32_t s2;
                 int32_t s3;
 
-                servo_actuator_get_local(
-                    &s1,
-                    &s2,
-                    &s3
-                );
+                servo_actuator_get_local(&s1, &s2, &s3);
 
-                trajectory_start(
-                    &s_traj[SERVO_CH_S3],
-                    (float)s3,
-                    1500.0f,
-                    SERVO_TEST_TRAJ_V_MAX,
-                    SERVO_TEST_TRAJ_A_MAX
-                );
+                trajectory_start(&s_traj[SERVO_CH_S3], (float)s3, 1500.0f, SERVO_TEST_TRAJ_V_MAX, SERVO_TEST_TRAJ_A_MAX);
             }
 
             if (s_phase_tick > 100)
@@ -282,18 +248,9 @@ void servo_test_step(void)
                  */
                 float sp;
 
-                trajectory_update(
-                    &s_traj[SERVO_CH_S3],
-                    TEST_DT,
-                    &sp,
-                    NULL,
-                    NULL
-                );
+                trajectory_update(&s_traj[SERVO_CH_S3], TEST_DT, &sp, NULL, NULL);
 
-                servo_actuator_set_target(
-                    SERVO_CH_S3,
-                    (int32_t)sp
-                );
+                servo_actuator_set_target(SERVO_CH_S3, (int32_t)sp);
             }
 
             /*
@@ -327,19 +284,9 @@ void servo_test_step(void)
         int32_t s2;
         int32_t s3;
 
-        servo_actuator_get_local(
-            &s1,
-            &s2,
-            &s3
-        );
+        servo_actuator_get_local(&s1, &s2, &s3);
 
-        printf(
-            "[servo_test] phase=%-16s S1=%ld S2=%ld S3=%ld\r\n",
-            test_phase_name(s_phase),
-            (long)s1,
-            (long)s2,
-            (long)s3
-        );
+        printf("[servo_test] phase=%-16s S1=%ld S2=%ld S3=%ld\r\n", test_phase_name(s_phase), (long)s1, (long)s2, (long)s3);
     }
 }
 
@@ -399,9 +346,7 @@ static uint8_t s_manual_channel = 1;
  */
 void servo_test_log_csv_header(void)
 {
-    printf(
-        "t_ms,S1_us,S2_us,S3_us,roll_deg,pitch_deg\r\n"
-    );
+    printf("t_ms,S1_us,S2_us,S3_us,roll_deg,pitch_deg\r\n");
 }
 
 /**
@@ -421,29 +366,11 @@ void servo_test_log_csv_row(uint32_t t_ms)
     float vroll;
     float vpitch;
 
-    servo_actuator_get_local(
-        &s1,
-        &s2,
-        &s3
-    );
+    servo_actuator_get_local(&s1, &s2, &s3);
 
-    imu_state_read(
-        system_state_get_imu_ptr(),
-        &roll,
-        &pitch,
-        &vroll,
-        &vpitch
-    );
+    imu_state_read(system_state_get_imu_ptr(), &roll, &pitch, &vroll, &vpitch);
 
-    printf(
-        "%lu,%ld,%ld,%ld,%.2f,%.2f\r\n",
-        (unsigned long)t_ms,
-        (long)s1,
-        (long)s2,
-        (long)s3,
-        (double)roll,
-        (double)pitch
-    );
+    printf("%lu,%ld,%ld,%ld,%.2f,%.2f\r\n", (unsigned long)t_ms, (long)s1, (long)s2, (long)s3, (double)roll, (double)pitch);
 }
 
 /**
@@ -479,10 +406,7 @@ static void build_channel_list(uint8_t servo_ch)
  * mode. The initial sweep offset is set to the negative calibration
  * limit so that every sweep begins from a deterministic condition.
  */
-void servo_test_start(
-    servo_test_mode_t mode,
-    uint8_t servo_ch
-)
+void servo_test_start(servo_test_mode_t mode, uint8_t servo_ch)
 {
     s_mode = mode;
     s_running = true;
@@ -552,14 +476,9 @@ void servo_test_manual_adjust(int16_t delta_us)
     servo_ch_t ch =
         (servo_ch_t)(s_manual_channel - 1);
 
-    servo_actuator_apply_delta(
-        ch,
-        delta_us
-    );
+    servo_actuator_apply_delta(ch, delta_us);
 
-    servo_test_log_csv_row(
-        (uint32_t)s_elapsed_ms
-    );
+    servo_test_log_csv_row((uint32_t)s_elapsed_ms);
 }
 
 /**
@@ -627,32 +546,15 @@ static void sweep_log_step(void)
                 {
                     tgt[i] =
                         (i == primary)
-                            ? (
-                                neutral[i] +
-                                (int32_t)s_sweep_t
-                              )
-                            : (
-                                neutral[i] -
-                                (int32_t)(
-                                    s_sweep_t / 2.0f
-                                )
-                              );
+                            ? (neutral[i] + (int32_t)s_sweep_t)
+                            : (neutral[i] - (int32_t)(s_sweep_t / 2.0f));
                 }
 
-                servo_actuator_set_target(
-                    SERVO_CH_S1,
-                    tgt[0]
-                );
+                servo_actuator_set_target(SERVO_CH_S1, tgt[0]);
 
-                servo_actuator_set_target(
-                    SERVO_CH_S2,
-                    tgt[1]
-                );
+                servo_actuator_set_target(SERVO_CH_S2, tgt[1]);
 
-                servo_actuator_set_target(
-                    SERVO_CH_S3,
-                    tgt[2]
-                );
+                servo_actuator_set_target(SERVO_CH_S3, tgt[2]);
             }
 
             s_sweep_settle_ct++;
@@ -661,21 +563,13 @@ static void sweep_log_step(void)
              * Record a measurement only after the configured
              * settling interval has elapsed.
              */
-            if (
-                s_sweep_settle_ct >=
-                SERVO_TEST_SWEEP_SETTLE_CYCLES
-            )
+            if (s_sweep_settle_ct >= SERVO_TEST_SWEEP_SETTLE_CYCLES)
             {
-                servo_test_log_csv_row(
-                    (uint32_t)s_elapsed_ms
-                );
+                servo_test_log_csv_row((uint32_t)s_elapsed_ms);
 
                 s_sweep_settle_ct = 0;
 
-                if (
-                    s_sweep_t >=
-                    (float)CALIB_TILT_MAX_US
-                )
+                if (s_sweep_t >= (float)CALIB_TILT_MAX_US)
                 {
                     s_sweep_phase =
                         SWEEP_PHASE_RETURN_NEUTRAL;
@@ -690,10 +584,7 @@ static void sweep_log_step(void)
                      * boundary when the sweep step does not divide
                      * the range evenly.
                      */
-                    if (
-                        s_sweep_t >
-                        (float)CALIB_TILT_MAX_US
-                    )
+                    if (s_sweep_t > (float)CALIB_TILT_MAX_US)
                     {
                         s_sweep_t =
                             (float)CALIB_TILT_MAX_US;
@@ -711,28 +602,16 @@ static void sweep_log_step(void)
              */
             if (s_sweep_settle_ct == 0)
             {
-                servo_actuator_set_target(
-                    SERVO_CH_S1,
-                    neutral[0]
-                );
+                servo_actuator_set_target(SERVO_CH_S1, neutral[0]);
 
-                servo_actuator_set_target(
-                    SERVO_CH_S2,
-                    neutral[1]
-                );
+                servo_actuator_set_target(SERVO_CH_S2, neutral[1]);
 
-                servo_actuator_set_target(
-                    SERVO_CH_S3,
-                    neutral[2]
-                );
+                servo_actuator_set_target(SERVO_CH_S3, neutral[2]);
             }
 
             s_sweep_settle_ct++;
 
-            if (
-                s_sweep_settle_ct >=
-                SERVO_TEST_SWEEP_SETTLE_CYCLES
-            )
+            if (s_sweep_settle_ct >= SERVO_TEST_SWEEP_SETTLE_CYCLES)
             {
                 s_sweep_settle_ct = 0;
 
