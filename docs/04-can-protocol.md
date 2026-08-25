@@ -1,10 +1,10 @@
-# 04 — FDCAN Protocol Between STM32H723 and Jetson Orin Nano
+# 04 — CAN Protocol Between STM32H723 and Jetson Orin Nano
 
 > Based on the actual implementation: `App/comm/can_id.h`, `App/comm/can_protocol.h`, `App/tasks/task_can_rx.c`, `App/tasks/task_can_tx.c`, and the Jetson-side `include/can_protocol.h`, `src/can_transport.cpp`, and `src/task_can_rx.cpp`.
 
 ---
 
-## 1. Why FDCAN Is Used Between the Two Processors
+## 1. Why CAN Is Used Between the Two Processors
 
 The Ball Balancing Table has two processors exchanging control-relevant data:
 
@@ -18,8 +18,8 @@ The communication path also operates in an environment containing servo PWM and 
 
 CAN is appropriate for this interface because it provides two properties that are useful for distributed real-time control:
 
-1. **Bus arbitration based on frame identifier priority.**
-2. **Hardware-level error detection**, including CRC, ACK, and bit-stuffing checks.
+1. Bus arbitration based on frame identifier priority.
+2. Hardware-level error detection, including CRC, ACK, and bit-stuffing checks.
 
 The STM32H723 uses its FDCAN peripheral, but the current application is configured for **Classic CAN**:
 
@@ -27,6 +27,8 @@ The STM32H723 uses its FDCAN peripheral, but the current application is configur
 FDCAN_CLASSIC_CAN
 BRS = FDCAN_BRS_OFF
 ```
+
+The communication protocol is therefore Classic CAN, while FDCAN refers to the STM32H723 hardware peripheral and its HAL interface.
 
 CAN-FD is not required because all current application payloads fit within the standard 8-byte CAN data field.
 
@@ -112,7 +114,8 @@ case CAN_ID_SERVO_CALIB:
     (void)s1c;
     (void)s2c;
     (void)s3c;
-    /* TODO: apply conditionally when a real calibration override mechanism exists */
+    /* TODO: apply conditionally when a real
+       calibration override mechanism exists */
     break;
 ```
 
@@ -133,15 +136,15 @@ The communication architecture uses two independent liveness mechanisms.
 They are intentionally not reduced to one generic timeout.
 
 ```text
-              Communication Health
+             Communication Health
                      │
           ┌──────────┴──────────┐
           │                     │
  Explicit heartbeat       Data-implied liveness
-     200 ms                    500 ms
+      200 ms                    500 ms
           │                     │
           ▼                     ▼
- Protocol/node health      Application data health
+ Protocol/node health     Application data health
 ```
 
 This separation detects different failure modes.
@@ -266,6 +269,8 @@ Without an application-level recovery step, a node that remains in Bus-Off can s
 
 The recovery mechanism is deliberately simple and contained inside the CAN receive/monitoring path.
 
+The use of `HAL_FDCAN_*` is intentional because the STM32H723 implements the Classic CAN protocol through its FDCAN peripheral.
+
 ---
 
 ## 10. Jetson SocketCAN Transport
@@ -276,7 +281,7 @@ The transport layer configures a CAN raw socket and applies CAN error-frame filt
 
 During code review, the initialization order in `CanTransport::open()` should be treated carefully:
 
-```cpp
+```text
 setsockopt(fd_, ...);
 fd_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 ```
@@ -340,7 +345,7 @@ The STM32 has an application-level Bus-Off recovery path.
 
 ## 12. Engineering Summary
 
-The FDCAN interface is treated as a defined control-system boundary rather than a generic byte transport.
+The CAN interface is treated as a defined control-system boundary rather than a generic byte transport.
 
 ```text
 STM32
@@ -364,3 +369,5 @@ Jetson
 ```
 
 The protocol combines compact deterministic encoding, shared message definitions, explicit liveness monitoring, and recovery behavior so that communication faults can be contained before stale data reaches the physical control loop.
+
+The STM32H723 implements this Classic CAN protocol using its integrated FDCAN peripheral, while the Jetson communicates through Linux SocketCAN.
