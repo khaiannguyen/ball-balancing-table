@@ -1,9 +1,21 @@
+/**
+ * @file    task_watchdog.c
+ * @brief   System watchdog supervision task.
+ *
+ * Supervises the liveness of safety-critical application tasks and refreshes
+ * the independent watchdog only when all required tasks have reported alive
+ * during the current supervision window.
+ *
+ * A missing alive bit intentionally prevents watchdog refresh and allows the
+ * hardware IWDG to reset the MCU.
+ */
+
 #include "task_watchdog.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
-#include "main.h"                  /* hiwdg1, sinh bởi CubeMX (mục A.1) */
 
+#include "main.h"
 #include "system_state.h"
 
 extern IWDG_HandleTypeDef hiwdg1;
@@ -12,28 +24,57 @@ void StartTaskWatchdog(void *argument)
 {
     (void)argument;
 
-    TickType_t lastWake = xTaskGetTickCount();
-    const TickType_t period = pdMS_TO_TICKS(100);   /* 10Hz, đúng mục 3.1 */
+    TickType_t lastWake =
+        xTaskGetTickCount();
+
+    /*
+     * Run the watchdog supervision at 10 Hz.
+     *
+     * Each supervision cycle represents one liveness window for the
+     * safety-critical tasks included in ALIVE_MASK_EXPECTED.
+     */
+    const TickType_t period =
+        pdMS_TO_TICKS(100);
 
     for (;;)
     {
-        vTaskDelayUntil(&lastWake, period);
+        vTaskDelayUntil(
+            &lastWake,
+            period
+        );
 
-        /* Đọc mask hiện tại VÀ clear về 0 trong 1 thao tác atomic (đã có sẵn trong
-         * system_state.c) - tránh race giữa lúc đọc và lúc clear (mục 3.6). */
-        uint32_t mask = task_alive_snapshot_and_clear();
+        /*
+         * Atomically capture and clear the current alive mask.
+         *
+         * Clearing the mask as part of the snapshot prevents a race between
+         * reading the task liveness state and starting the next supervision
+         * window.
+         */
+        uint32_t mask =
+            task_alive_snapshot_and_clear();
 
-        if (mask == ALIVE_MASK_EXPECTED) {
+        if (mask == ALIVE_MASK_EXPECTED)
+        {
+            /*
+             * Every required task has completed at least one liveness
+             * checkpoint during the supervision window.
+             *
+             * Only this condition permits the hardware watchdog to be
+             * refreshed.
+             */
             HAL_IWDG_Refresh(&hiwdg1);
         }
-        /* else: KHÔNG refresh. Đây là hành vi ĐÚNG THIẾT KẾ (mục 3.6, đã ghi rõ ở
-         * Phụ lục A.2): nếu 1 trong 3 task quan trọng (ControlLoop/IMU_Fusion/CAN_RX)
-         * bị treo/deadlock và không set bit của nó trong 100ms, mask sẽ thiếu bit ->
-         * không kick -> IWDG hết giờ -> MCU tự reset toàn bộ, thay vì để servo giữ
-         * nguyên vị trí cũ vô thời hạn trong lúc hệ thống thực ra đã "chết".
+
+        /*
+         * If any required task failed to report alive, deliberately do not
+         * refresh the watchdog.
          *
-         * KHÔNG thêm log/print ở nhánh else để "biết lý do" trước khi reset trừ khi
-         * bạn chắc chắn thao tác log không tự nó block/treo - nếu không sẽ tự phá
-         * mất chức năng bảo vệ mà Task_Watchdog đang cung cấp. */
+         * The independent watchdog will expire and reset the MCU, providing
+         * a hardware-enforced recovery path for task deadlock or scheduler
+         * failure.
+         *
+         * Avoid logging from this path because diagnostic output could block
+         * or delay the watchdog failure mechanism.
+         */
     }
 }

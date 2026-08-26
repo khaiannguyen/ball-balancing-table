@@ -1,17 +1,25 @@
+/**
+ * @file    task_control_loop.h
+ * @brief   Main control-loop task interface.
+ *
+ * Executes the active control mode at a fixed 100 Hz rate while the system
+ * is in STATE_RUN.
+ *
+ * The task is responsible for control-mode dispatching and actuator
+ * trajectory advancement.
+ */
+
 #ifndef TASK_CONTROL_LOOP_H
 #define TASK_CONTROL_LOOP_H
 
 /**
- * @file  task_control_loop.h
- * @brief Task chính điều khiển servo - dispatch theo setpoint.mode
- *        (operating_mode_t, system_state.h) khi system_state == STATE_RUN.
- *        Giai đoạn 2 (B6): chỉ OPMODE_HOME có code thật, các mode khác
- *        (Calib/Balance/Position/Manual) giữ servo đứng yên tại chỗ, sẽ
- *        nối dần ở các giai đoạn sau (xem B6_Control.md mục 6).
+ * @brief Run the main control-loop task.
+ *
+ * Initializes the IMU, buttons, calibration data, and actuator layer during
+ * boot, then dispatches the active control mode at 100 Hz.
+ *
+ * @param argument FreeRTOS task argument. Not used.
  */
-
-/* entry function do CubeMX sinh (osThreadNew trong main.c) - khai báo lại
- * đây cho rõ, cùng pattern với StartStateMachine (task_state_machine.h). */
 void StartTaskControlLoop(void *argument);
 
 #endif /* TASK_CONTROL_LOOP_H */

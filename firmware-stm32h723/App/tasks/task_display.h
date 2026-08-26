@@ -1,3 +1,11 @@
+/**
+ * @file    task_display.h
+ * @brief   Display task interface.
+ *
+ * Provides the FreeRTOS entry point for TFT initialization, screen
+ * management, and periodic UI updates.
+ */
+
 #ifndef TASK_DISPLAY_H
 #define TASK_DISPLAY_H
 
@@ -6,10 +14,12 @@ extern "C" {
 #endif
 
 /**
- * @brief FreeRTOS Display Task
+ * @brief Run the display task.
  *
- * Khởi tạo TFT, UI Data, Screen Manager và cập nhật giao diện
- * định kỳ ở 25 Hz.
+ * Initializes the TFT and screen manager, handles boot synchronization,
+ * and updates the active screen at 25 Hz.
+ *
+ * @param argument FreeRTOS task argument. Not used.
  */
 void StartTaskDisplay(void *argument);
 

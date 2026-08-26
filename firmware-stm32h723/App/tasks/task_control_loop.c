@@ -1,268 +1,384 @@
+/**
+ * @file    task_control_loop.c
+ * @brief   Main real-time control task.
+ *
+ * Initializes the control subsystem during boot and executes the active
+ * control mode at a fixed 100 Hz rate while the system is in STATE_RUN.
+ *
+ * The task owns control-mode dispatching and always advances the actuator
+ * trajectory once per control cycle.
+ */
+
 #include "task_control_loop.h"
 #include "main.h"
 #include "cmsis_os2.h"
 #include <stdio.h>
 
-/* ---- Init/driver cũ, giữ nguyên như code đang chạy trong main.c ---- */
 #include "imu_mpu6500.h"
 #include "buttons.h"
-
-/* ---- Servo layer (B2, đã có sẵn) ---- */
 #include "servo_actuator.h"
-
-/* ---- State/setpoint/calib (B5 + Giai đoạn 1 B6) ---- */
 #include "system_state.h"
 #include "calibration_data.h"
 
-/* ---- Control mode (Giai đoạn 2-3 B6) ---- */
 #include "control_mode_home.h"
 #include "control_mode_manual.h"
 #include "control_mode_calib.h"
 #include "control_mode_balance.h"
 #include "control_mode_position.h"
 
-#include "screen_boot.h"   /* THÊM (B7): ScreenBoot_AddLog() - log từng bước init lên màn Boot */
+#include "screen_boot.h"
 
-/* TODO Giai đoạn 5: #include "control_mode_balance.h", "control_mode_position.h" */
+extern SPI_HandleTypeDef hspi2;
 
-extern SPI_HandleTypeDef hspi2;   // dùng cho imu_mpu6500_init(), như code cũ trong main.c
-extern osEventFlagsId_t   SystemEventGroupHandle;   /* THÊM (B7): đã tồn tại sẵn, dùng chung
-                                                        cho EVT_BIT_FAULT - giờ thêm EVT_BIT_BOOT_DONE */
-extern osMessageQueueId_t StateRequestQueueHandle;  /* THÊM (B7): gửi EVT_SELFTEST_OK/FAIL,
-                                                        EVT_CALIB_DONE/FAIL thay TEMP-1 trong
-                                                        task_state_machine.c */
+extern osEventFlagsId_t SystemEventGroupHandle;
+extern osMessageQueueId_t StateRequestQueueHandle;
 
-#define CONTROL_LOOP_DT_S       0.01f   // 100Hz - PHẢI khớp osDelay bên dưới
+#define CONTROL_LOOP_DT_S       0.01f
 #define CONTROL_LOOP_PERIOD_MS  10
 
 void StartTaskControlLoop(void *argument)
 {
     (void)argument;
 
-    /* THÊM (quan trọng - fix MCU reset liên tục lúc boot, cách chắc chắn
-     * nhất): nới IWDG lên ~32s NGAY DÒNG ĐẦU TIÊN của task, TRƯỚC cả đoạn
-     * chờ EVT_BIT_TFT_READY - dùng đúng kỹ thuật ghi thanh ghi IWDG trực
-     * tiếp đã áp dụng thành công cho calibration_data_save() lúc ghi Flash.
-     * Lý do chọn cách này thay vì chỉ dựa vào task_alive_mark() rải rác:
-     * chưa rõ Task_Watchdog có yêu cầu cả 3 bit (CONTROL_LOOP|IMU_FUSION|
-     * CAN_RX) phải đến trong CÙNG 1 cửa sổ ngắn hay không - nếu đúng vậy,
-     * dù Task_ControlLoop tự mark liên tục, Task_IMU_Fusion/Task_CAN_RX có
-     * thể chưa kịp chạy đủ trong lúc Task_ControlLoop bận init/chờ TFT/ghi
-     * log Boot -> vẫn reset. Nới trực tiếp thanh ghi IWDG loại bỏ hoàn
-     * toàn khả năng này, không phụ thuộc logic Task_Watchdog là gì. PHẢI
-     * gọi calibration_data_iwdg_restore_orig() NGAY TRƯỚC khi vào vòng lặp
-     * chính for(;;) bên dưới - không để watchdog bị nới lỏng vĩnh viễn. */
+    /*
+     * Temporarily widen the independent watchdog during boot initialization.
+     *
+     * Control-loop initialization includes TFT synchronization, IMU setup,
+     * calibration loading, servo initialization, and boot-screen logging.
+     * These operations can take longer than the normal runtime watchdog window.
+     *
+     * The original watchdog configuration is restored immediately before
+     * entering the normal 100 Hz control loop.
+     */
     calibration_data_iwdg_widen_for_boot();
 
-    /* THÊM (B7, fix deadlock màn Boot): chờ Task_Display báo TFT đã init +
-     * khung Boot đã vẽ xong (EVT_BIT_TFT_READY) TRƯỚC khi gọi bất kỳ
-     * ScreenBoot_AddLog() nào bên dưới - xem giải thích đầy đủ trong
-     * system_state.h. Timeout 2000ms (không osWaitForever): nếu vì lý do
-     * gì đó Task_Display không bao giờ set bit này (vd lỗi khác trong
-     * TFT_Init), Task_ControlLoop vẫn phải tiếp tục init IMU/servo - đây
-     * là task quan trọng nhất của hệ thống, không được phép treo vô hạn
-     * chỉ vì màn hình. osEventFlagsWait timeout trả osFlagsError, bỏ qua
-     * lỗi đó và chạy tiếp bình thường (ScreenBoot_AddLog gọi sau vẫn có
-     * thể lỗi/không hiện gì, nhưng không làm treo toàn hệ thống). */
-    /* SỬA (quan trọng - fix MCU tự reset liên tục lúc boot): KHÔNG được
-     * chờ EVT_BIT_TFT_READY 1 lần liên tục (dù chỉ 2000ms) - task_alive_mark
-     * (ALIVE_BIT_CONTROL_LOOP) chỉ được gọi BÊN TRONG vòng lặp for(;;) phía
-     * dưới, nên suốt thời gian chờ này Task_Watchdog không thấy CONTROL_LOOP
-     * "còn sống" -> IWDG (mặc định ~0.5s) bắn giữa chừng trước khi vào được
-     * vòng lặp chính -> MCU reset liên tục ngay sau màn Boot, không bao giờ
-     * tới Home (đúng triệu chứng đã gặp). Sửa: chia nhỏ thời gian chờ thành
-     * từng đoạn NGẮN (200ms), gọi task_alive_mark() SAU MỖI đoạn - vẫn giữ
-     * tổng thời gian chờ tối đa ~2000ms, nhưng không còn khoảng "im lặng"
-     * nào dài hơn watchdog timeout. */
+    /*
+     * Wait for the display task to complete TFT initialization before sending
+     * boot-screen log messages.
+     *
+     * The wait is bounded so a display initialization failure cannot prevent
+     * the control task from continuing with IMU, calibration, and actuator
+     * initialization.
+     *
+     * The wait is split into short intervals so the control task continues
+     * reporting liveness while waiting for the display-ready event.
+     */
     #define TFT_READY_POLL_MS       200u
     #define TFT_READY_TOTAL_MS      2000u
+
     {
-        uint32_t poll_ticks = (TFT_READY_POLL_MS * osKernelGetTickFreq()) / 1000u;
-        uint32_t waited_ms  = 0u;
+        uint32_t poll_ticks =
+            (TFT_READY_POLL_MS * osKernelGetTickFreq()) / 1000u;
+
+        uint32_t waited_ms = 0u;
         uint32_t flags;
-        do {
-            flags = osEventFlagsWait(SystemEventGroupHandle, EVT_BIT_TFT_READY,
-                                      osFlagsWaitAny, poll_ticks);
-            task_alive_mark(ALIVE_BIT_CONTROL_LOOP);   /* báo sống mỗi 200ms trong lúc chờ */
-            if ((flags & osFlagsError) == 0) break;    /* đã nhận được bit -> thoát ngay */
+
+        do
+        {
+            flags =
+                osEventFlagsWait(
+                    SystemEventGroupHandle,
+                    EVT_BIT_TFT_READY,
+                    osFlagsWaitAny,
+                    poll_ticks
+                );
+
+            /*
+             * Keep the watchdog alive while boot synchronization is in
+             * progress. A successful event exits the wait immediately.
+             */
+            task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
+
+            if ((flags & osFlagsError) == 0)
+                break;
+
             waited_ms += TFT_READY_POLL_MS;
+
         } while (waited_ms < TFT_READY_TOTAL_MS);
     }
 
-    /* ---- Phần init giữ NGUYÊN như code cũ đang chạy trong main.c ---- */
+    /*
+     * Initialize the IMU before entering the runtime control loop.
+     *
+     * The result is retained for the boot self-test and state-machine
+     * transition below.
+     */
     HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
-    bool imu_ok = imu_mpu6500_init(&hspi2);
-    printf("MPU6500 init: %s\r\n", imu_ok ? "OK" : "FAIL");
-    ScreenBoot_AddLog(imu_ok ? "IMU MPU6500: OK" : "IMU MPU6500: FAIL");
-    task_alive_mark(ALIVE_BIT_CONTROL_LOOP);   /* THÊM: phòng ScreenBoot_AddLog chờ mutex lâu */
 
+    bool imu_ok = imu_mpu6500_init(&hspi2);
+
+    printf(
+        "MPU6500 init: %s\r\n",
+        imu_ok ? "OK" : "FAIL"
+    );
+
+    ScreenBoot_AddLog(
+        imu_ok ? "IMU MPU6500: OK" : "IMU MPU6500: FAIL"
+    );
+
+    /*
+     * Keep the watchdog alive after potentially blocking boot-screen output.
+     */
+    task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
+
+    /*
+     * Initialize the button input service before the system enters its
+     * normal interactive states.
+     */
     buttons_init();
+
     ScreenBoot_AddLog("Buttons: OK");
     task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
 
-    /* Giai đoạn 1: nạp calib từ Flash lúc INIT. Nếu Flash chưa có/hỏng,
-     * calibration_data_load() tự nạp giá trị default an toàn (neutral=1576
-     * theo thực nghiệm) vào RAM và trả false - đủ để Mode Home chạy tạm
-     * trước khi calib thật. calibration_data_is_valid() sẽ được nối vào
-     * guard STATE_READY ở Giai đoạn 4 (chưa làm ở đây). */
+    /*
+     * Load persistent calibration data into RAM.
+     *
+     * If no valid calibration is stored, the calibration module provides
+     * its defined safe defaults. Calibration validity is checked separately
+     * before allowing the system to proceed to normal operation.
+     */
     bool calib_load_ok = calibration_data_load();
-    ScreenBoot_AddLog(calib_load_ok ? "Calib data: LOADED" : "Calib data: DEFAULT (chua calib)");
+
+    ScreenBoot_AddLog(
+        calib_load_ok
+            ? "Calib data: LOADED"
+            : "Calib data: DEFAULT (chua calib)"
+    );
+
     task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
 
-    /* SỬA (B7): XOÁ khối servo_actuator_set_calib() thủ công từng gọi ở đây
-     * trước calibration_data_apply_to_actuator() - 2 đoạn code làm cùng 1
-     * việc 2 lần, nhưng calibration_data_apply_to_actuator() từng dùng
-     * hằng số deadband hard-code khác với field s_calib.deadband_S1/2/3
-     * (đã sửa trong calibration_data.c cùng đợt này). Giờ CHỈ còn 1 nguồn
-     * áp calib xuống servo_actuator, tránh lệch nhau nếu sau này 1 trong 2
-     * chỗ bị sửa mà quên chỗ kia.
+    /*
+     * Apply the loaded calibration to the actuator layer before actuator
+     * initialization so the initial position and target values use the
+     * calibrated neutral points.
      *
-     * BẮT BUỘC gọi TRƯỚC servo_actuator_init() để giá trị pos_us/target_us
-     * khởi tạo ban đầu (bên trong init()) lấy đúng neutral thật
-     * (1576/1528/1536) thay vì mặc định cũ B2 (1500) - nếu gọi sau,
-     * init() đã lỡ chốt pos_us=1500 rồi mới đổi bảng calib. */
+     * This keeps calibration data ownership centralized in the calibration
+     * module instead of duplicating calibration writes in this task.
+     */
     calibration_data_apply_to_actuator();
+
     ScreenBoot_AddLog("Calib -> Servo: applied");
     task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
 
-    /* THAY servo_test_init() cũ bằng servo_actuator_init() trực tiếp -
-     * servo_test_init() bên trong cũng chỉ gọi servo_actuator_init(), nhưng
-     * Task_ControlLoop không còn tự chạy servo_test mặc định nữa. Từ Giai
-     * đoạn 3, servo_test (API mới servo_test_start/step_dt) chỉ được gọi
-     * gián tiếp qua control_mode_manual.c khi setpoint.mode == OPMODE_MANUAL. */
+    /*
+     * Initialize the actuator layer after calibration has been applied.
+     *
+     * Manual servo test behavior is owned by control_mode_manual and is not
+     * executed automatically by the control task during initialization.
+     */
     servo_actuator_init();
+
     ScreenBoot_AddLog("Servo actuator: OK");
     task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
 
-    /* THÊM (B7): self-test thật thay TEMP-1 trong task_state_machine.c.
-     * imu_ok: kết quả init IMU ở trên. calib_load_ok/calibration_data_is_valid():
-     * true nếu Flash có calib hợp lệ (magic+version+crc đúng) - KHÔNG cần
-     * calib lại mỗi lần boot, chỉ cần calib đã lưu từ lần chạy Mode Calib
-     * trước đó còn tốt. Nếu IMU fail -> EVT_SELFTEST_FAIL -> STATE_ERROR
-     * ngay, không cho chạy tiếp với IMU chết. Nếu IMU OK nhưng calib chưa
-     * từng chạy/hỏng -> EVT_CALIB_FAIL -> STATE_ERROR, buộc người dùng
-     * chạy Mode Calib trước khi dùng Balance/Position (IK an toàn trả về
-     * neutral nếu A_i/B_i=0, nhưng vẫn nên chặn ở state machine cho rõ ràng). */
+    /*
+     * Publish boot self-test results through the state-request queue.
+     *
+     * A failed IMU initialization prevents normal operation. Calibration
+     * validity is reported separately so the state machine can require a
+     * valid calibration before entering modes that depend on calibrated
+     * actuator geometry.
+     */
     {
         state_event_t evt;
-        if (imu_ok) {
+
+        if (imu_ok)
+        {
             evt = EVT_SELFTEST_OK;
-            osMessageQueuePut(StateRequestQueueHandle, &evt, 0, 0);
+
+            osMessageQueuePut(
+                StateRequestQueueHandle,
+                &evt,
+                0,
+                0
+            );
+
             ScreenBoot_AddLog("Self-test: OK");
             task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
 
             bool calib_valid = calibration_data_is_valid();
-            evt = calib_valid ? EVT_CALIB_DONE : EVT_CALIB_FAIL;
-            osMessageQueuePut(StateRequestQueueHandle, &evt, 0, 0);
-            ScreenBoot_AddLog(calib_valid ? "Calib: VALID" : "Calib: INVALID - can calib lai!");
+
+            evt =
+                calib_valid
+                    ? EVT_CALIB_DONE
+                    : EVT_CALIB_FAIL;
+
+            osMessageQueuePut(
+                StateRequestQueueHandle,
+                &evt,
+                0,
+                0
+            );
+
+            ScreenBoot_AddLog(
+                calib_valid
+                    ? "Calib: VALID"
+                    : "Calib: INVALID - can calib lai!"
+            );
+
             task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
-        } else {
+        }
+        else
+        {
             evt = EVT_SELFTEST_FAIL;
-            osMessageQueuePut(StateRequestQueueHandle, &evt, 0, 0);
+
+            osMessageQueuePut(
+                StateRequestQueueHandle,
+                &evt,
+                0,
+                0
+            );
+
             ScreenBoot_AddLog("Self-test: FAIL (IMU)");
             task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
         }
-        (void)calib_load_ok;  /* dùng calibration_data_is_valid() làm nguồn sự thật, giữ biến này chỉ để log nếu cần */
+
+        /*
+         * Calibration validity is determined by calibration_data_is_valid().
+         * Keep the load result available for diagnostics without using it as
+         * the runtime source of truth.
+         */
+        (void)calib_load_ok;
     }
 
     ScreenBoot_AddLog("READY");
 
-    /* THÊM (B7): báo Task_Display init xong (IMU + calib + servo + self-test),
-     * thay osDelay(2000) cứng trong task_display.c. Đặt SAU MỌI log/self-test
-     * ở trên - đảm bảo màn Boot có ĐỦ nội dung trước khi Task_Display nhận
-     * bit và có thể rời màn hình (task_display.c còn tự đảm bảo thời gian
-     * hiển thị tối thiểu, xem comment trong file đó). */
-    osEventFlagsSet(SystemEventGroupHandle, EVT_BIT_BOOT_DONE);
+    /*
+     * Signal that all control-loop initialization steps are complete.
+     *
+     * The display task can use this event to finish the boot-screen sequence
+     * without relying on a fixed delay.
+     */
+    osEventFlagsSet(
+        SystemEventGroupHandle,
+        EVT_BIT_BOOT_DONE
+    );
 
-    /* THÊM: khôi phục ĐÚNG timeout IWDG gốc (~0.5s) ngay trước khi vào vòng
-     * lặp chính - không để hệ thống chạy lâu dài với watchdog bị nới lỏng
-     * (giữ đúng độ nhạy bảo vệ ban đầu cho toàn bộ control loop 100Hz). */
+    /*
+     * Restore the normal watchdog timeout before entering runtime operation.
+     * The extended boot timeout must never remain active during control.
+     */
     calibration_data_iwdg_restore_orig();
 
-    /* Giá trị không hợp lệ ban đầu để ép gọi *_enter() ngay lần đầu vào
-     * 1 mode bất kỳ (kể cả khi mode đầu tiên đúng bằng 0/OPMODE_HOME). */
+    /*
+     * Force the first control cycle to execute the selected mode's enter()
+     * function even when the initial mode value is OPMODE_HOME (zero).
+     */
     uint8_t s_last_mode = 0xFFu;
 
-    for (;;) {
-        //HAL_GPIO_TogglePin(GPIOE, GPIO_PIN_1);
-
+    for (;;)
+    {
         system_state_t state = system_state_get();
 
-        if (state != STATE_RUN) {
-            /* Giữ đúng hành vi cũ: không dispatch mode gì khi không RUN,
-             * chỉ step() để servo dừng êm tại vị trí hiện tại (không giật
-             * khi chuyển STOP/READY) - servo_actuator_step() không đổi
-             * target nếu không ai gọi set_target()/apply_delta() trước đó. */
+        /*
+         * Control modes are executed only in STATE_RUN.
+         *
+         * Outside RUN, continue advancing the actuator trajectory so the
+         * servos can settle smoothly at their current targets without
+         * introducing an abrupt position change.
+         */
+        if (state != STATE_RUN)
+        {
             servo_actuator_step(CONTROL_LOOP_DT_S);
+
             task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
+
             osDelay(CONTROL_LOOP_PERIOD_MS);
+
             continue;
         }
 
         setpoint_t sp;
-        if (!setpoint_get(&sp)) {
-            /* Không lấy được mutex trong 5 tick (setpoint_get() timeout nội
-             * bộ) - bỏ qua chu kỳ này, KHÔNG đổi target theo dữ liệu rác,
-             * chỉ step() giữ nguyên vị trí hiện tại. */
+
+        /*
+         * Do not execute a control cycle with an invalid or unavailable
+         * setpoint. Keep the current actuator target and allow the next
+         * cycle to retry the read.
+         */
+        if (!setpoint_get(&sp))
+        {
             servo_actuator_step(CONTROL_LOOP_DT_S);
+
             task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
+
             osDelay(CONTROL_LOOP_PERIOD_MS);
+
             continue;
         }
 
-        bool mode_changed = (sp.mode != s_last_mode);
+        bool mode_changed =
+            (sp.mode != s_last_mode);
 
-        switch (sp.mode) {
+        /*
+         * Enter a control mode only when the selected mode changes.
+         * The step function then executes once per 10 ms control cycle.
+         */
+        switch (sp.mode)
+        {
             case OPMODE_HOME:
-                if (mode_changed) {
+                if (mode_changed)
+                {
                     control_mode_home_enter();
                 }
+
                 control_mode_home_step(CONTROL_LOOP_DT_S);
                 break;
 
             case OPMODE_MANUAL:
-                if (mode_changed) {
+                if (mode_changed)
+                {
                     control_mode_manual_enter();
                 }
+
                 control_mode_manual_step(CONTROL_LOOP_DT_S);
                 break;
 
             case OPMODE_CALIB:
-                if (mode_changed) {
+                if (mode_changed)
+                {
                     control_mode_calib_enter();
                 }
+
                 control_mode_calib_step(CONTROL_LOOP_DT_S);
                 break;
 
             case OPMODE_BALANCE:
-                if (mode_changed) {
+                if (mode_changed)
+                {
                     control_mode_balance_enter();
                 }
+
                 control_mode_balance_step(CONTROL_LOOP_DT_S);
                 break;
 
             case OPMODE_POSITION:
-                if (mode_changed) {
+                if (mode_changed)
+                {
                     control_mode_position_enter();
                 }
+
                 control_mode_position_step(CONTROL_LOOP_DT_S);
                 break;
 
-            /* TODO Giai đoạn 5: case OPMODE_BALANCE   -> control_mode_balance_enter/step() */
-            /* TODO Giai đoạn 5: case OPMODE_POSITION  -> control_mode_position_enter/step() */
-
             default:
-                /* Mode chưa cài code (Calib/Balance/Position/Manual ở Giai
-                 * đoạn 2) - KHÔNG gọi set_target/apply_delta gì cả, servo
-                 * giữ nguyên vị trí hiện tại (an toàn), tránh hành vi không
-                 * xác định nếu UI lỡ chọn mode chưa có code thật. */
+                /*
+                 * Unknown or unsupported modes must not modify actuator
+                 * targets. The actuator layer continues from its current
+                 * target, providing a safe fallback for invalid requests.
+                 */
                 break;
         }
 
         s_last_mode = sp.mode;
 
-        servo_actuator_step(CONTROL_LOOP_DT_S);   /* luôn gọi cuối cùng, 1 lần/chu kỳ */
+        /*
+         * Advance the actuator trajectory exactly once at the end of every
+         * control cycle, regardless of the selected control mode.
+         */
+        servo_actuator_step(CONTROL_LOOP_DT_S);
+
         task_alive_mark(ALIVE_BIT_CONTROL_LOOP);
+
         osDelay(CONTROL_LOOP_PERIOD_MS);
     }
 }

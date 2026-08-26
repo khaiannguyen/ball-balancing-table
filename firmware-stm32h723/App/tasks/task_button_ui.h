@@ -1,8 +1,17 @@
 #ifndef TASK_BUTTON_UI_H
 #define TASK_BUTTON_UI_H
 
-/* Entry point cho Task_Button_UI (khai bao osThreadNew tro toi ham nay,
- * priority 2 theo bang muc 3.1 cua tai lieu thiet ke). */
+/**
+ * @brief FreeRTOS entry point for the Button UI task.
+ *
+ * Waits for button events, translates them into logical UI actions, and
+ * forwards normal navigation events to the screen manager.
+ *
+ * BTN1 long press is handled separately because it can request system-state
+ * transitions such as RUN, STOP, and SAFE_MODE acknowledgement.
+ *
+ * @param argument FreeRTOS task argument. Not used.
+ */
 void StartTaskButtonUi(void *argument);
 
 #endif /* TASK_BUTTON_UI_H */

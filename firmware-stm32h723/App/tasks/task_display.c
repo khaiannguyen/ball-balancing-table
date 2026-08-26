@@ -1,4 +1,16 @@
+/**
+ * @file    task_display.c
+ * @brief   Display task and screen manager service.
+ *
+ * Initializes the TFT display and UI data, manages screen transitions,
+ * and periodically refreshes the active screen at 25 Hz.
+ *
+ * The task also handles the boot-screen synchronization and fault-screen
+ * transitions without participating in the system watchdog alive mask.
+ */
+
 #include "cmsis_os2.h"
+
 #include <stdbool.h>
 
 #include "screen.h"
@@ -9,41 +21,47 @@
 #include "screen_position.h"
 #include "screen_manual.h"
 #include "screen_fault.h"
+
 #include "tft_service.h"
+
 #include "ui_data.h"
 #include "system_state.h"
 
-extern osEventFlagsId_t SystemEventGroupHandle;   /* THÊM (B7): chờ EVT_BIT_BOOT_DONE */
+extern osEventFlagsId_t SystemEventGroupHandle;
 
-/* =========================================================
- * Task_Display - priority 1 (THẤP NHẤT, mục 3.1/2).
+/*
+ * The display task is intentionally excluded from the watchdog alive mask.
  *
- * KHÔNG gọi task_alive_mark() ở đây - ALIVE_MASK_EXPECTED (system_state.h)
- * chỉ gồm đúng 3 bit (CONTROL_LOOP|IMU_FUSION|CAN_RX). Thêm bit thứ 4 sẽ
- * làm watchdog đòi 1 bit không có trong mask mong đợi -> không bao giờ
- * refresh IWDG -> MCU tự reset liên tục. Task_CAN_TX cũng cố tình KHÔNG
- * gọi hàm này vì cùng lý do (xem comment trong task_can_tx.c).
- * ========================================================= */
+ * The watchdog monitors only the tasks required for real-time control and
+ * CAN communication. Adding the display task to that mask would make the
+ * watchdog depend on a non-critical UI task.
+ */
+#define DISPLAY_PERIOD_MS (1000 / 25)
 
-#define DISPLAY_PERIOD_MS   (1000 / 25)   /* 25Hz, theo mục 3.1 */
-
-/* THÊM (B7): thời gian tối thiểu màn Boot phải đứng yên để người dùng đọc
- * kịp log, kể cả khi init (Task_ControlLoop) chạy xong trong vài chục ms.
- * Không dùng osDelay() cứng TRƯỚC khi chờ event (như bản cũ) vì vậy sẽ lại
- * biến thành "chờ mù" bất kể EVT_BIT_BOOT_DONE - thay vào đó: chờ event
- * trước (không giới hạn), rồi nếu thời gian trôi qua ít hơn mức tối thiểu,
- * ngủ bù phần còn thiếu. Cách này vẫn phản ứng ngay khi có FAULT/init xong,
- * chỉ đảm bảo người dùng luôn thấy màn Boot ít nhất chừng đó lâu. */
-#define BOOT_MIN_DISPLAY_MS  1500u
+/*
+ * Keep the boot screen visible for a minimum period after the display
+ * initialization is complete.
+ *
+ * The task first waits for the boot-completion event and then compensates
+ * only for the remaining display time. This avoids a fixed startup delay
+ * while ensuring that boot diagnostics remain readable.
+ */
+#define BOOT_MIN_DISPLAY_MS 1500u
 
 void StartTaskDisplay(void *argument)
 {
     (void)argument;
 
+    /*
+     * Initialize the display and UI data before creating the initial screen.
+     */
     TFT_Init();
     UiData_Init();
 
-    /* Đăng ký label nút cho 5 gauge screen */
+    /*
+     * Initialize all screens that require button-label or screen-state
+     * registration before the screen manager selects the boot screen.
+     */
     ScreenHome_Get();
     ScreenCalibrate_Get();
     ScreenBalance_Get();
@@ -52,66 +70,105 @@ void StartTaskDisplay(void *argument)
 
     ScreenManager_Goto(ScreenBoot_Get());
 
-    /* THÊM (B7, fix deadlock): báo cho Task_ControlLoop biết TFT đã init +
-     * khung Boot đã vẽ xong - Task_ControlLoop PHẢI chờ bit này trước khi
-     * gọi ScreenBoot_AddLog() lần đầu (xem giải thích đầy đủ trong
-     * system_state.h, EVT_BIT_TFT_READY). Đặt NGAY SAU ScreenManager_Goto()
-     * ở trên - đây là điểm sớm nhất TFT_DrawText() từ nơi khác gọi vào mới
-     * an toàn. */
-    osEventFlagsSet(SystemEventGroupHandle, EVT_BIT_TFT_READY);
+    /*
+     * The boot screen is now fully initialized and available for other tasks.
+     * Signal this event before Task_ControlLoop attempts to publish boot logs.
+     */
+    osEventFlagsSet(
+        SystemEventGroupHandle,
+        EVT_BIT_TFT_READY
+    );
 
-    uint32_t bootScreenStartTick = osKernelGetTickCount();
+    uint32_t bootScreenStartTick =
+        osKernelGetTickCount();
 
-    /* SỬA (B7): chờ Task_ControlLoop báo init xong thật (IMU + calib +
-     * servo_actuator_init() + self-test, xem EVT_BIT_BOOT_DONE trong
-     * task_control_loop.c), thay vì osDelay(2000) cứng - không còn phụ
-     * thuộc 1 con số đoán mò cho phần "chờ init xong". osFlagsWaitAny +
-     * clear-on-read mặc định (KHÔNG dùng osFlagsNoClear như
-     * system_state_fault_is_set() - ở đây là sự kiện 1 lần lúc boot, không
-     * phải trạng thái cần đọc lặp lại). */
-    osEventFlagsWait(SystemEventGroupHandle, EVT_BIT_BOOT_DONE,
-                      osFlagsWaitAny, osWaitForever);
+    /*
+     * Wait until the control task completes its initialization sequence.
+     *
+     * This event represents completion of the IMU, calibration, actuator,
+     * and self-test initialization required before normal operation.
+     */
+    osEventFlagsWait(
+        SystemEventGroupHandle,
+        EVT_BIT_BOOT_DONE,
+        osFlagsWaitAny,
+        osWaitForever
+    );
 
-    /* THÊM (B7): nếu init xong quá nhanh (thực tế chỉ vài chục ms), ngủ bù
-     * phần còn thiếu để màn Boot đứng đủ BOOT_MIN_DISPLAY_MS - tránh hiện
-     * tượng "sượt qua", người dùng không kịp đọc log nào. Dùng phép trừ
-     * unsigned nên vẫn đúng nếu tick counter wrap-around. */
-    uint32_t elapsedMs = (osKernelGetTickCount() - bootScreenStartTick)
-                         * 1000u / osKernelGetTickFreq();
-    if (elapsedMs < BOOT_MIN_DISPLAY_MS) {
-        osDelay(BOOT_MIN_DISPLAY_MS - elapsedMs);
+    /*
+     * Compensate for any time difference between boot initialization and the
+     * minimum display interval so the boot diagnostics remain visible.
+     */
+    uint32_t elapsedMs =
+        (osKernelGetTickCount() - bootScreenStartTick)
+        * 1000u
+        / osKernelGetTickFreq();
+
+    if (elapsedMs < BOOT_MIN_DISPLAY_MS)
+    {
+        osDelay(
+            BOOT_MIN_DISPLAY_MS - elapsedMs
+        );
     }
 
+    /*
+     * Normal runtime operation starts from the home screen after the boot
+     * sequence has completed.
+     */
     ScreenManager_Goto(ScreenHome_Get());
 
     bool wasFault = false;
-    uint32_t lastWake = osKernelGetTickCount();
+
+    uint32_t lastWake =
+        osKernelGetTickCount();
 
     for (;;)
     {
-        /* Đổ dữ liệu THẬT từ system_state.h vào g_uiData TRƯỚC khi vẽ -
-         * đây là chỗ khiến Roll/Pitch/S1-3/Ball trên màn hình là số
-         * thật, không phải 0 tĩnh như trước khi có UiData_SyncFromSystemState(). */
+        /*
+         * Synchronize the UI data from the shared system state before
+         * rendering the active screen.
+         *
+         * This keeps displayed IMU, actuator, ball, and system-state values
+         * consistent with the latest application state available to the UI.
+         */
         UiData_SyncFromSystemState();
 
-        bool fault = system_state_fault_is_set();
+        bool fault =
+            system_state_fault_is_set();
 
+        /*
+         * Enter the fault screen only on the fault rising edge.
+         *
+         * The current screen is pushed onto the screen stack so normal
+         * operation can resume at the same screen after the fault clears.
+         */
         if (fault && !wasFault)
         {
-            /* rising edge: đẩy screen hiện tại vào stack, hiện Fault.
-             * Nhờ ScreenManager kiểu stack, dù đang đứng ở Stop/Shutdown
-             * cũng được nhớ đúng, GoBack() lúc hết lỗi trả về đúng chỗ. */
-            ScreenManager_GotoAndRemember(ScreenFault_Get());
+            ScreenManager_GotoAndRemember(
+                ScreenFault_Get()
+            );
         }
+        /*
+         * Restore the previous screen when the fault condition clears.
+         */
         else if (!fault && wasFault)
         {
             ScreenManager_GoBack();
         }
+
         wasFault = fault;
 
+        /*
+         * Update the active screen once per display cycle.
+         */
         ScreenManager_Update();
 
+        /*
+         * Maintain a fixed 25 Hz update schedule without accumulating
+         * execution-time drift between cycles.
+         */
         lastWake += DISPLAY_PERIOD_MS;
+
         osDelayUntil(lastWake);
     }
 }
