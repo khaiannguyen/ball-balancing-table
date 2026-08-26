@@ -1,32 +1,38 @@
 #ifndef TASK_CAN_RX_HPP
 #define TASK_CAN_RX_HPP
+
 #include <thread>
 #include <atomic>
 #include <memory>
+
 #include "can_transport.hpp"
 
-/* Task_CAN_RX (Jetson, J3) — đối xứng với task_can_rx.c bên STM32:
- * - Nhận frame từ CanTransport, decode theo can_id.h/can_protocol.h
- * - Ghi vào system_state() (telemetry_attitude/servo/robot_state)
- * - Gọi stm32_heartbeat_mark() khi nhận 0x100/0x102/0x103 (frame STM32
- *   gửi định kỳ 100Hz) - dùng để phát hiện mất kết nối STM32, tương tự
- *   camera_heartbeat_mark() bên STM32 nhưng theo chiều ngược lại.
+/*
+ * Receives STM32 CAN frames and updates the shared Jetson system state.
  *
- * Khác biệt so với STM32: không có FreeRTOS Queue/ISR, chạy bằng std::thread
- * với vòng lặp blocking-read có timeout (CanTransport::receive), y hệt cấu
- * trúc "for(;;) { xQueueReceive(timeout); ... failsafe check; }" bên STM32
- * nhưng thay Queue bằng socket read có timeout. */
-class TaskCanRx {
+ * The task also marks STM32 heartbeat activity when the expected periodic
+ * status frames are received. Missing heartbeats can therefore be detected
+ * independently of the CAN receive loop.
+ *
+ * Unlike the STM32 implementation, this task uses a std::thread and a
+ * blocking socket read with timeout instead of a FreeRTOS queue/ISR path.
+ */
+class TaskCanRx
+{
 public:
-    bool start(const std::string &ifname = "can0");
+    bool start(const std::string& ifname = "can0");
+
     void stop();
+
     ~TaskCanRx();
 
 private:
     void run();
 
-    std::atomic<bool> running_{false};
+    std::atomic<bool> running_{ false };
+
     CanTransport can_;
+
     std::unique_ptr<std::thread> thread_;
 };
 
