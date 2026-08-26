@@ -3,8 +3,8 @@
 #include "ui_data.h"
 #include <string.h>
 
-static manual_sub_state_t s_sub          = MANUAL_SUB_IDLE;
-static bool                s_sub_entered  = false;
+static manual_sub_state_t s_sub         = MANUAL_SUB_IDLE;
+static bool               s_sub_entered = false;
 
 static void set_guide(const char *msg)
 {
@@ -14,9 +14,16 @@ static void set_guide(const char *msg)
 
 void control_mode_manual_enter(void)
 {
+    /*
+     * Stop any active servo test before entering Manual mode.
+     * This guarantees that a previous test session cannot continue
+     * after the mode transition.
+     */
     servo_test_stop();
+
     s_sub         = MANUAL_SUB_IDLE;
     s_sub_entered = false;
+
     set_guide("Manual: UP/DOWN to select");
 }
 
@@ -24,36 +31,67 @@ void control_mode_manual_step(float dt)
 {
     switch (s_sub) {
         case MANUAL_SUB_IDLE:
-            /* Chờ chọn qua control_mode_manual_select_substate() từ UI */
+            /*
+             * Wait for the UI to select a manual operation.
+             * No actuator command is generated in the idle state.
+             */
             break;
 
         case MANUAL_SUB_MANUAL_STEP:
             if (!s_sub_entered) {
-                servo_test_start(SERVO_TEST_MODE_MANUAL_STEP, 1 /* mặc định S1 */);
+                /*
+                 * Start manual servo adjustment with S1 selected by default.
+                 * The selected channel can be changed through the UI.
+                 */
+                servo_test_start(
+                    SERVO_TEST_MODE_MANUAL_STEP,
+                    1
+                );
+
                 s_sub_entered = true;
+
                 set_guide("Manual: LEFT/RIGHT adjust us");
             }
+
             servo_test_step_dt(dt);
-            /* Không tự "done" - chờ người dùng đổi sub-state khác qua UI */
+
+            /*
+             * Manual adjustment has no automatic completion condition.
+             * The user selects another sub-state or exits Manual mode.
+             */
             break;
 
         case MANUAL_SUB_SWEEP_LOG:
             if (!s_sub_entered) {
-                servo_test_start(SERVO_TEST_MODE_SWEEP_LOG, 0 /* cả 3 servo */);
+                /*
+                 * Start the synchronized sweep for all three servos.
+                 * The test service owns the sweep timing and data logging.
+                 */
+                servo_test_start(
+                    SERVO_TEST_MODE_SWEEP_LOG,
+                    0
+                );
+
                 s_sub_entered = true;
+
                 set_guide("Manual: sweep log CSV...");
             }
+
             servo_test_step_dt(dt);
+
             if (servo_test_is_done()) {
                 s_sub         = MANUAL_SUB_DONE;
                 s_sub_entered = false;
+
                 set_guide("Sweep done. Log UART");
             }
             break;
 
         case MANUAL_SUB_DONE:
-            /* Chờ người dùng chọn việc khác hoặc thoát Mode Manual (đổi mode
-             * khác trên UI - control_mode_manual_enter() sẽ reset lại). */
+            /*
+             * Keep the completed state until the user selects another
+             * operation or exits Manual mode.
+             */
             break;
     }
 }
@@ -65,7 +103,13 @@ manual_sub_state_t control_mode_manual_get_sub_state(void)
 
 void control_mode_manual_select_substate(manual_sub_state_t sub)
 {
+    /*
+     * Stop the current test before changing the sub-state.
+     * This prevents the previous operation from continuing in parallel
+     * with the newly selected operation.
+     */
     servo_test_stop();
+
     s_sub         = sub;
     s_sub_entered = false;
 }

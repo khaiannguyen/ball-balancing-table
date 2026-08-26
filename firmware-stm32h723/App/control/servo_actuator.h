@@ -1,27 +1,29 @@
 /**
  * @file    servo_actuator.h
- * @brief   Tang 2 - Actuator layer: vi tri tuyet doi, toc do, incremental,
- *          deadband compensation, gioi han van toc + gia toc, anti-windup.
+ * @brief   Final actuator limiting layer before physical PWM output.
  *
- * Day la module THUAN, khong tu tao FreeRTOS task/timer nao ben trong -
- * task-agnostic. Tai 1 thoi diem chi dung 1 task duoc goi cac ham
- * servo_actuator_*() (nguyen tac single-writer):
- *   - O buoc bring-up: task test tam (servo_test.c).
- *   - O ban chinh thuc: Task_ControlLoop.
- * Chuyen doi giua 2 giai doan tren KHONG sua bat ky dong nao trong file nay.
+ * The module accepts position, velocity, and incremental commands and
+ * applies the calibrated actuator limits before writing the PWM output.
  *
- * Thu tu bat buoc trong servo_actuator_step(): van toc mong muon -> anti-
- * windup -> gioi han van toc (slew-rate) -> gioi han gia toc (vel_current
- * ramp dan) -> deadband kick -> clamp cung -> ghi PWM -> publish snapshot.
- * Khong duoc dao.
+ * The processing order inside servo_actuator_step() is:
  *
- * VAI TRO trong kien truc 3 tang: day la lop "safety limiter" CUOI CUNG
- * truoc PWM that, KHONG phai trajectory planner - khong tao profile
- * chuyen dong (viec do thuoc ve Trajectory Engine Tang 3, trajectory.h).
- * 2 lop gioi han (Tang 2 o day va Tang 3) KHONG thay the nhau, cung ton
- * tai song song (xem ke hoach sua trajectory/actuator/IK cho servo moi,
- * muc 4).
+ *   command generation
+ *       -> anti-windup
+ *       -> velocity limit
+ *       -> acceleration limit
+ *       -> deadband compensation
+ *       -> position clamp
+ *       -> PWM output
+ *       -> state publication
+ *
+ * This module is a safety limiter, not a trajectory planner. Higher-level
+ * trajectory generation remains responsible for producing the desired
+ * motion profile.
+ *
+ * The module is task-agnostic. A single task should own calls to the
+ * servo_actuator_*() APIs at a given time.
  */
+
 #ifndef SERVO_ACTUATOR_H
 #define SERVO_ACTUATOR_H
 
@@ -33,87 +35,119 @@
 extern "C" {
 #endif
 
-/**
- * Servo dang dung: 40kg.cm, 0.085s/60do (khong tai, 7.4V), 500-2500us/180do.
+/*
+ * Physical actuator limits used by the final velocity and acceleration
+ * constraints.
  *
- *   us/do              = 2000/180                = 11.111 us/do
- *   V_max ly thuyet     = 60/0.085                = 705.88 do/s
- *   V_max ly thuyet(us) = 705.88 * 11.111         = 7843 us/s
+ * SERVO_SLEW_MAX_US_PER_S limits the maximum commanded servo speed.
+ * SERVO_ACCEL_MAX_US_PER_S2 limits how quickly the applied speed may change.
  *
- * SERVO_SLEW_MAX_US_PER_S dung ~65% gia tri tren de con margin khi co tai
- * that (mat ban nghieng, ma sat) va tranh dong dinh gan stall current -
- * BAT BUOC xac nhan lai bang thuc nghiem duoi tai that; neu thay dong dien
- * ap sat stall current lien tuc luc di chuyen binh thuong, giam gia tri
- * nay xuong ngay.
- *
- * SERVO_ACCEL_MAX_US_PER_S2 la UOC LUONG (gia su dat toc do toi da trong
- * ~15ms) - TODO: do dong dien that de hieu chinh lai cho chinh xac.
- *
- * Day la NGUON CHAN LY DUY NHAT cho 2 hang so nay - Trajectory Engine
- * Tang 3 (control_mode_balance.c) tham chieu THANG toi day (vd quy doi
- * TRAJ_HEIGHT_V_MAX/A_MAX qua HEIGHT_K_US_PER_MM), KHONG duoc dinh nghia
- * lai o noi khac de tranh lech gia tri khi tune lai.
+ * These values are the single source of truth for the actuator layer and
+ * are also used by higher-level trajectory configuration where required.
  */
 #define SERVO_SLEW_MAX_US_PER_S    5100.0f
 #define SERVO_ACCEL_MAX_US_PER_S2  340000.0f
 
 /**
- * @brief Khoi tao lop actuator: dua tat ca truc ve gia tri neutral (calib
- *        tam thoi ben duoi), goi servo_pwm_init() ben trong. Goi 1 lan luc
- *        init he thong (sau servo_pwm_init() logic da duoc goi gop o day).
+ * @brief Initialize the actuator layer.
+ *
+ * Initializes all internal servo states at their calibrated neutral
+ * positions and initializes the physical PWM outputs.
  */
 void servo_actuator_init(void);
 
 /**
- * @brief (1) API vi tri tuyet doi. Servo se di chuyen DAN toi target_us,
- *        toc do va gia toc di chuyen bi gioi han (khong nhay tuc thi,
- *        khong giat toc). Dung cho: test tay, ve Home tung buoc nho, hoac
- *        lam "diem den" cho trajectory_update() (Tang 3) moi chu ky.
+ * @brief Set an absolute servo position target.
+ *
+ * The target is approached gradually by servo_actuator_step() and is
+ * subject to the configured velocity, acceleration, and position limits.
+ *
+ * Setting a target also selects position mode for the specified channel.
+ *
+ * @param ch Servo channel.
+ * @param target_us Target position in PWM microseconds.
  */
 void servo_actuator_set_target(servo_ch_t ch, int32_t target_us);
 
 /**
- * @brief (2) API toc do. Servo se di chuyen LIEN TUC theo van toc dat truoc
- *        (us/giay, am = lui) cho toi khi goi lai servo_actuator_set_velocity()
- *        voi 0.0f (dung lai dung vi tri hien tai) hoac goi set_target() khac
- *        (chuyen ve che do vi tri). Van bi gioi han gia toc nhu (1).
+ * @brief Set a continuous servo velocity command.
+ *
+ * The servo continues moving at the requested velocity until velocity
+ * mode is disabled or another position command is issued.
+ *
+ * The applied velocity remains subject to the actuator velocity and
+ * acceleration limits.
+ *
+ * @param ch Servo channel.
+ * @param us_per_sec Commanded velocity in microseconds per second.
+ *                   A negative value commands motion in the opposite direction.
+ *                   Zero stops the servo at its current position.
  */
 void servo_actuator_set_velocity(servo_ch_t ch, float us_per_sec);
 
 /**
- * @brief (3) API incremental - cong don mot luong nho vao target hien tai,
- *        CHUA clamp/slew/accel (servo_actuator_step() se xu ly o buoc ke
- *        tiep). Day la ham DUY NHAT ma PID incremental duoc phep goi -
- *        khong bao gio goi thang servo_pwm_write_us().
+ * @brief Apply an incremental position command.
+ *
+ * Adds delta_us to the current position target. The updated target is
+ * processed by servo_actuator_step(), where all actuator limits are applied.
+ *
+ * @param ch Servo channel.
+ * @param delta_us Position increment in PWM microseconds.
  */
 void servo_actuator_apply_delta(servo_ch_t ch, int32_t delta_us);
 
 /**
- * @brief Doc nhanh gia tri noi bo da ap dung - CHI dung cho debug/test trong
- *        cung task so huu (test task, hoac Task_ControlLoop).
- *        Task KHAC luon phai doc qua actuator_state_get() (system_state.c,
- *        seqlock) - khong bao gio goi ham nay tu task khac.
+ * @brief Read the internal actuator positions.
+ *
+ * This function returns the positions maintained by the actuator layer.
+ * It is intended for the task that owns the actuator interface.
+ *
+ * Other tasks should consume the published actuator state through
+ * system_state rather than accessing this internal state directly.
+ *
+ * @param s1 Output position for servo S1.
+ * @param s2 Output position for servo S2.
+ * @param s3 Output position for servo S3.
  */
-void servo_actuator_get_local(int32_t *s1, int32_t *s2, int32_t *s3);
+void servo_actuator_get_local(
+    int32_t *s1,
+    int32_t *s2,
+    int32_t *s3
+);
 
 /**
- * @brief (4) API vi tri tuyet doi. Buoc xu ly chinh - PHAI goi dung 1 lan,
- *        cuoi moi chu ky dieu khien, sau khi da goi 1 (hoac nhieu) ham
- *        set/apply_delta o tren. Thu tu ben trong: xem doc o dau file.
+ * @brief Apply calibration data to one servo channel.
  *
- * @param dt  Thoi gian tu lan goi truoc, don vi GIAY (vd 0.01f cho 100Hz).
- *            dt <= 0 -> bo qua chu ky nay (khong chia cho 0).
+ * Updates the neutral position, hard position limits, and deadband used
+ * by the actuator layer.
+ *
+ * @param ch Servo channel.
+ * @param neutral Calibrated neutral position in PWM microseconds.
+ * @param min Minimum allowed position in PWM microseconds.
+ * @param max Maximum allowed position in PWM microseconds.
+ * @param deadband_us Deadband compensation in PWM microseconds.
+ */
+void servo_actuator_set_calib(
+    servo_ch_t ch,
+    int32_t neutral,
+    int32_t min,
+    int32_t max,
+    int32_t deadband_us
+);
+
+/**
+ * @brief Advance the actuator layer by one control cycle.
+ *
+ * Converts the active command into a constrained actuator motion, writes
+ * the resulting PWM output, and publishes the updated actuator state.
+ *
+ * This function should be called once per control cycle after all command
+ * updates for that cycle have been applied.
+ *
+ * @param dt Control-loop period in seconds.
+ *           Values less than or equal to zero are ignored.
  */
 void servo_actuator_step(float dt);
-
-/**
- * @brief Nap lai calib cho 1 truc servo. Gia tri mac dinh tam thoi (xem
- *        servo_actuator.c) nam trong khoang an toan cua servo 40kg.cm
- *        moi. Goi ham nay voi du lieu that doc tu Flash (calibration_data_t)
- *        sau Mode 0 Calibration khi co.
- */
-void servo_actuator_set_calib(servo_ch_t ch, int32_t neutral, int32_t min,
-                               int32_t max, int32_t deadband_us);
 
 #ifdef __cplusplus
 }
