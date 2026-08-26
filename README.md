@@ -2,134 +2,130 @@
 
 ### STM32H723 + Jetson Orin Nano | Computer Vision | Real-Time Control | Robotics
 
-<p align="center">
-  <img src="docs/media/first.jpg"
-       alt="Jetson, camera and CAN integration"
-       width="400">
-</p> 
+A vision-based three-servo ball-balancing system integrating computer vision, real-time embedded control, CAN communication, calibrated inverse kinematics, trajectory generation, and layered fault handling.
 
-<p align="center">
-  <b>An end-to-end mechatronic control system combining computer vision, real-time embedded control, CAN communication, calibrated inverse kinematics, trajectory generation, and layered failsafe mechanisms.</b>
-</p>
+The core design principle is:
+
+> **Jetson handles perception and high-level computation. STM32 owns the final real-time actuator path.**
 
 ---
 
-## 1. Project Overview
+## Demo
 
-This project is a **vision-based three-servo ball-balancing platform**.
+![Ball Balancing Table](docs/media/overview-balance-ball-table.jpg)
 
-The system combines:
-
-- **NVIDIA Jetson Orin Nano** for camera processing, ball detection, state estimation, and high-level control;
-- **STM32H723** for deterministic real-time execution, IMU acquisition, trajectory generation, inverse kinematics, servo control, and safety supervision;
-- **CAN bus** as the processor-to-processor control interface;
-- **three RC servos** as physical actuators;
-- **MPU6500 IMU** for platform motion feedback;
-- **calibrated second-order inverse kinematics** for the servo mapping;
-- **FreeRTOS** for concurrent embedded tasks;
-- **persistent Flash calibration data** with versioning and CRC validation.
-
-The central engineering principle is:
-
-> **Use the Jetson where computational flexibility is valuable, while keeping final real-time actuator authority on the STM32.**
-
-This makes the project more than a computer-vision demo: it is a complete **perception → estimation → control → communication → trajectory → IK → actuation → safety** pipeline.
-
----
-
-## 2. System at a Glance
+The system closes the loop from camera observation to physical actuation:
 
 ```text
-                       CAMERA
-                         │
-                         ▼
-               ┌────────────────────┐
-               │  JETSON ORIN NANO  │
-               │                    │
-               │ Camera Capture     │
-               │ Ball Detection     │
-               │ Ball State         │
-               │ PID / Control      │
-               └─────────┬──────────┘
-                         │
-                         │ CAN
-                         ▼
-               ┌────────────────────┐
-               │     STM32H723      │
-               │                    │
-               │ CAN RX             │
-               │ IMU / SPI DMA      │
-               │ State Machine      │
-               │ Trajectory Engine  │
-               │ Inverse Kinematics │
-               │ Servo Actuator     │
-               │ Failsafe / IWDG    │
-               └─────────┬──────────┘
-                         │
-                  ┌──────┼──────┐
-                  ▼      ▼      ▼
-                Servo 1 Servo 2 Servo 3
-                  └──────┼──────┘
-                         ▼
-                 BALANCING TABLE
-                         │
-                         ● Ball
+Camera
+  ↓
+Ball Detection
+  ↓
+Ball State
+  ↓
+Control
+  ↓
+CAN
+  ↓
+STM32 / FreeRTOS
+  ↓
+Trajectory
+  ↓
+Inverse Kinematics
+  ↓
+Servo Actuation
+  ↓
+Physical Balancing
 ```
 
-### Processor responsibility boundary
+---
+
+## System Architecture
+
+```text
+                         CAMERA
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │   JETSON ORIN NANO  │
+                 │                     │
+                 │ Camera Capture      │
+                 │ Ball Detection      │
+                 │ Ball State          │
+                 │ PID / Control       │
+                 │ Linux Diagnostics   │
+                 └──────────┬──────────┘
+                            │
+                           CAN
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │      STM32H723      │
+                 │                     │
+                 │ FreeRTOS            │
+                 │ IMU / SPI DMA       │
+                 │ State Machine       │
+                 │ Trajectory          │
+                 │ Inverse Kinematics  │
+                 │ Servo Control       │
+                 │ Calibration         │
+                 │ Failsafe / IWDG     │
+                 └──────────┬──────────┘
+                            │
+                     ┌──────┼──────┐
+                     ▼      ▼      ▼
+                   Servo  Servo  Servo
+                     1      2      3
+                            │
+                            ▼
+                    BALANCING TABLE
+                            │
+                            ● Ball
+```
+
+### Processor responsibility
 
 **Jetson — Perception & High-Level Control**
 
 ```text
-Camera → Capture → Ball Detection → Ball State → Control → CAN
+Camera
+  ↓
+Capture
+  ↓
+Ball Detection
+  ↓
+Ball State
+  ↓
+Control
+  ↓
+CAN
 ```
 
-**STM32 — Real-Time Control & Physical Safety**
+**STM32 — Real-Time Control & Actuation**
 
 ```text
-CAN → Target → Trajectory → IK → Servo Constraints → PWM
+CAN
+ ↓
+Target Validation
+ ↓
+Trajectory
+ ↓
+Inverse Kinematics
+ ↓
+Servo Constraints
+ ↓
+PWM
 ```
 
-The Jetson determines the desired platform behavior. The STM32 remains the final control boundary between software commands and the physical actuators.
+This keeps Linux scheduling out of the final physical actuator path.
 
 ---
 
-## 3. Engineering Architecture
+## Engineering Highlights
 
-The project is deliberately split into two processors with different responsibilities.
+### 1. Distributed real-time control
 
-### Jetson
-
-- camera acquisition;
-- ball detection;
-- ball-state processing;
-- high-level PID/control;
-- CAN communication;
-- video recording and Linux-side diagnostics.
-
-### STM32H723
-
-- FreeRTOS task execution;
-- MPU6500 acquisition through SPI/DMA;
-- sensor fusion;
-- CAN protocol handling;
-- state machine;
-- trajectory generation;
-- second-order inverse kinematics;
-- servo dynamic limits;
-- PWM output;
-- calibration persistence;
-- watchdog and failsafe handling.
-
-This separation avoids making Linux scheduling part of the final actuator-safety path.
-
----
-
-## 4. Main Engineering Challenges
-
-### 4.1 Distributed real-time control
-
-The feedback loop spans:
+The feedback loop crosses two processors:
 
 ```text
 Jetson / Linux
@@ -139,203 +135,135 @@ Jetson / Linux
 STM32 / FreeRTOS
 ```
 
-The design therefore has to account for communication latency, stale data, asynchronous tasks, and processor failure.
+The design therefore accounts for communication loss, stale data, asynchronous tasks, and processor failures.
 
-### 4.2 Cortex-M7 cache and DMA
+### 2. Cortex-M7 Cache + DMA
 
 The STM32H723 uses a Cortex-M7 architecture with data cache. DMA-based SPI transfers therefore require explicit cache-coherency handling.
 
-The IMU path is organized as:
+The IMU acquisition path is:
 
 ```text
 IMU Data Ready
       ↓
-EXTI
+    EXTI
       ↓
-SPI2 DMA
+  SPI2 DMA
       ↓
-DMA callback
+ DMA Callback
       ↓
-FreeRTOS notification
+FreeRTOS Notification
       ↓
-IMU fusion
+ IMU Fusion
 ```
 
-### 4.3 Nonlinear actuator mapping
+### 3. Calibrated inverse kinematics
 
-The mechanical platform is not an ideal linear mechanism. The runtime IK model uses:
+The mechanical mechanism is not treated as an ideal linear system.
 
-```text
-R
-P
-R²
-P²
-R·P
-1
-```
-
-for each servo, allowing the fitted model to represent nonlinear and cross-axis behavior.
-
-### 4.4 Fault containment
-
-Communication loss, stale vision data, peripheral faults, task stalls, and actuator-limit violations are handled at different layers rather than through one generic emergency routine.
-
----
-
-## 5. Calibration and Inverse Kinematics
-
-The calibration layer stores:
+The runtime model uses:
 
 ```text
-Servo neutral positions
-Servo limits
-Servo deadband
-Roll/Pitch offsets
-Second-order IK coefficients
-CRC32
-Version information
-```
-
-The runtime mapping is conceptually:
-
-```text
-Roll + Pitch
-     ↓
 [R, P, R², P², R·P, 1]
-     ↓
-IK coefficients
-     ↓
-S1 / S2 / S3
-     ↓
-Servo actuator limits
-     ↓
-PWM
+          ↓
+   IK coefficients
+          ↓
+      S1 / S2 / S3
+          ↓
+   Servo constraints
+          ↓
+         PWM
 ```
 
-Calibration is persisted in STM32 internal Flash and validated through:
+Calibration data includes:
 
-```text
-Magic check
-    ↓
-Version check
-    ↓
-CRC32
-    ↓
-Read-back verification
-    ↓
-Valid calibration
-```
+- Servo neutral positions
+- Servo limits
+- Servo deadband
+- Roll/pitch offsets
+- Second-order IK coefficients
+- Version information
+- CRC32 validation
 
-Invalid or obsolete calibration data is not silently accepted as active runtime configuration.
+Calibration is stored in STM32 internal Flash and validated before use.
 
----
+### 4. Trajectory-controlled actuation
 
-## 6. Trajectory-Controlled Actuation
-
-The STM32 does not convert every new target directly into an instantaneous servo command.
-
-Instead:
+Target changes are passed through a trajectory layer rather than directly mapped to instantaneous servo commands.
 
 ```text
 Target
   ↓
 Trajectory Planner
   ↓
-Velocity / Acceleration constraints
+Velocity / Acceleration Limits
   ↓
 Inverse Kinematics
   ↓
-Servo Actuator
+Servo Actuation
   ↓
-Hard PWM limits
+Hard PWM Limits
 ```
 
-When the target reverses, the trajectory engine can brake the current motion before accelerating toward the new target.
-
-```text
-Target reversal
-      ↓
-Braking
-      ↓
-Velocity → 0
-      ↓
-Acceleration
-      ↓
-New target
-```
-
-The trajectory infrastructure is also reusable for controlled return-to-neutral behavior during fault handling.
-
-### Demonstrated trajectory modes
-
-The project has been exercised with multiple reference paths, including:
-
-- circular trajectory;
-- triangular trajectory;
-- hexagonal trajectory;
-- figure-8 trajectories.
-
-The screenshots below show the trajectory reference, detected ball position, platform state, roll/pitch values, and servo outputs together in the runtime visualization.
+The trajectory layer also supports controlled return-to-neutral behavior during fault handling.
 
 ---
 
-## 7. Layered Failsafe
+## Layered Fault Handling
 
-Safety is not implemented as a single function.
-
-Different failure classes are handled at different layers:
+Safety is implemented across multiple layers:
 
 ```text
-CAN heartbeat
-      +
-Application data freshness
-      +
-Ball validity
-      +
-FDCAN recovery
-      +
-Critical-task supervision
-      +
+CAN Heartbeat
+     +
+Data Freshness
+     +
+Ball Validity
+     +
+FDCAN Recovery
+     +
+Task Supervision
+     +
+Trajectory Fallback
+     +
+Servo Hard Limits
+     +
 IWDG
-      +
-Trajectory fallback
-      +
-Servo hard limits
 ```
 
-### Communication/application failure
+### Application-level failure
 
 ```text
-Jetson data becomes stale
-          ↓
-Target becomes invalid
-          ↓
-Neutral target
-          ↓
-Controlled trajectory
-          ↓
-Bounded servo motion
+Stale Jetson Data
+      ↓
+Invalid Target
+      ↓
+Neutral Target
+      ↓
+Controlled Trajectory
+      ↓
+Bounded Servo Motion
 ```
 
-### Critical firmware execution failure
+### Critical firmware failure
 
 ```text
-Critical task stops progressing
-          ↓
-Alive bit missing
-          ↓
-IWDG not refreshed
-          ↓
-MCU reset
+Critical Task Stops
+      ↓
+Watchdog Condition
+      ↓
+IWDG Timeout
+      ↓
+MCU Reset
 ```
 
-The architecture therefore distinguishes a recoverable application fault from a firmware execution failure.
+The architecture distinguishes recoverable application faults from critical firmware execution failures.
 
 ---
 
-## 8. FreeRTOS Architecture
+## FreeRTOS Architecture
 
-The STM32 firmware is divided into dedicated task responsibilities such as:
+The STM32 firmware separates responsibilities into dedicated execution paths:
 
 ```text
 Sensor / IMU
@@ -350,32 +278,13 @@ Watchdog
 State Machine
 ```
 
-This avoids turning the controller into one large super-loop and makes timing, synchronization, and fault ownership easier to reason about.
-
-Critical tasks are additionally supervised by the watchdog architecture.
+This avoids a large super-loop and makes task ownership, synchronization, timing, and fault handling easier to reason about.
 
 ---
 
-## 9. Jetson Software Architecture
+## Jetson Software Architecture
 
-The Jetson side contains explicit modules for:
-
-```text
-camera_pipeline
-ball_detector
-can_transport
-pid_controller
-system_state
-task_camera_capture
-task_ball_detect
-task_control_loop
-task_can_rx
-task_can_tx
-task_video_record
-task_watchdog
-```
-
-The resulting pipeline is:
+The Jetson side separates perception, control, communication, and diagnostics.
 
 ```text
 Camera
@@ -393,156 +302,98 @@ CAN TX
 STM32
 ```
 
-Video recording is kept outside the core control path so encoding and disk I/O do not become fundamental feedback-loop dependencies.
+Main software components include:
+
+```text
+camera_pipeline
+ball_detector
+pid_controller
+can_transport
+system_state
+
+task_camera_capture
+task_ball_detect
+task_control_loop
+task_can_rx
+task_can_tx
+task_video_record
+task_watchdog
+```
+
+Video recording and disk I/O are kept outside the core control path.
 
 ---
 
-## 10. CAN Communication
+## CAN Communication
 
 CAN provides the processor boundary:
 
 ```text
-Jetson application state
-        ↓
-CAN protocol
-        ↓
-SocketCAN
-        ↓
-CAN bus
-        ↓
-STM32 FDCAN
-        ↓
-STM32 application state
+Jetson Application State
+          ↓
+     CAN Protocol
+          ↓
+       SocketCAN
+          ↓
+        CAN Bus
+          ↓
+      STM32 FDCAN
+          ↓
+ STM32 Application State
 ```
 
-The protocol definition is kept separate from Linux-specific transport handling.
-
-This makes the communication interface easier to test and prevents the control algorithm from being tightly coupled to SocketCAN implementation details.
+The protocol definition is kept separate from Linux-specific transport handling, allowing the control layer to remain independent from SocketCAN implementation details.
 
 ---
 
-## 11. Project Documentation
+## Trajectory Demonstrations
 
-The repository is accompanied by focused engineering documents:
+The trajectory system has been exercised with multiple reference paths:
 
-| Document | Focus |
-|---|---|
-| [`01-architecture.md`](docs/01-architecture.md) | Overall system architecture |
-| [`02-stm32h723-cache-memory.md`](docs/02-stm32h723-cache-memory.md) | Cortex-M7 memory/cache considerations |
-| [`03-freertos-task-design.md`](docs/03-freertos-task-design.md) | FreeRTOS task architecture |
-| [`04-fdcan-protocol-en.md`](docs/04-fdcan-protocol-en.md) | CAN protocol and communication |
-| [`05-imu-mpu6500-spi-dma.md`](docs/05-imu-mpu6500-spi-dma.md) | IMU, SPI DMA and estimation |
-| [`06-tft-ui-design.md`](docs/06-tft-ui-design.md) | Embedded TFT UI architecture |
-| [`07-servo-trajectory-safety.md`](docs/07-servo-trajectory-safety.md) | Servo control and trajectory limits |
-| [`08-failsafe-design.md`](docs/08-failsafe-design.md) | Fault detection and recovery |
-| [`09-ik-calibration.md`](docs/09-ik-calibration.md) | IK calibration and persistent model |
-| [`10-jetson-vision-control.md`](docs/10-jetson-vision-control.md) | Jetson vision/control pipeline |
-
-These documents focus not only on **what the code does**, but also on **why the implementation is structured this way**.
-
----
-
-## 12. Project Media & Experimental Results
-
-The repository includes hardware photos, calibration evidence, system-integration views, and recorded trajectory experiments.
-
-### Mechanical platform
-
-<p align="center">
-  <img src="docs/media/overview-balance-ball-table.jpg"
-       alt="Three-servo ball balancing platform"
-       width="500">
-</p>
-
-### Hardware and mechanical implementation
-
-<p align="center">
-  <img src="docs/media/hardware-overview-1.jpg"
-       alt="Hardware overview"
-       width="300">
-  &nbsp;&nbsp;
-  <img src="docs/media/hardware-overview-2.jpg"
-       alt="Mechanical platform overview"
-       width="300">
-</p>
-
-### Camera calibration
-
-<p align="center">
-  <img src="docs/media/camera-calibration.jpg"
-       alt="Camera calibration setup"
-       width="500">
-</p>
-
-### Jetson / Camera / CAN integration
-
-<p align="center">
-  <img src="docs/media/jetson-camera-can.jpg"
-       alt="Jetson camera CAN integration"
-       width="450">
-</p>
-
----
-
-## 13. Trajectory Demonstrations
-
-The trajectory engine is used to generate bounded reference motion for the physical balancing platform. The runtime visualization shows the reference path together with the detected ball position and control telemetry.
+- Circular
+- Triangle
+- Hexagon
+- Figure-8
 
 ### Circular trajectory
 
-<p align="center">
-  <img src="docs/media/trajectory-circle.png"
-       alt="Circular trajectory demonstration"
-       width="650">
-</p>
+![Circular trajectory](docs/media/trajectory-circle.png)
 
 ### Triangle trajectory
 
-<p align="center">
-  <img src="docs/media/trajectory-triangle.png"
-       alt="Triangle trajectory demonstration"
-       width="650">
-</p>
+![Triangle trajectory](docs/media/trajectory-triangle.png)
 
 ### Hexagon trajectory
 
-<p align="center">
-  <img src="docs/media/trajectory-hexagon.png"
-       alt="Hexagon trajectory demonstration"
-       width="650">
-</p>
+![Hexagon trajectory](docs/media/trajectory-hexagon.png)
 
 ### Figure-8 trajectory
 
-<p align="center">
-  <img src="docs/media/trajectory-figure8-1.png"
-       alt="Figure-8 trajectory demonstration, run 1"
-       width="650">
-</p>
+![Figure-8 trajectory](docs/media/trajectory-figure8-1.png)
 
-<p align="center">
-  <img src="docs/media/trajectory-figure8-2.png"
-       alt="Figure-8 trajectory demonstration, run 2"
-       width="650">
-</p>
-
-### Recorded trajectory-control demonstration
-
-<p align="center">
-  <a href="docs/media/trajectory-control-demo.mp4">
-    <img src="docs/media/trajectory-triangle.png"
-         alt="Open the recorded trajectory-control demonstration"
-         width="650">
-  </a>
-</p>
-
-<p align="center">
-  <b>▶ Click the image above to open the recorded trajectory-control demonstration.</b>
-</p>
+The runtime visualization combines the reference trajectory, detected ball position, platform state, roll/pitch values, and servo outputs.
 
 ---
 
-## 14. Technology Stack
+## Hardware
+
+![Hardware overview](docs/media/hardware-overview-1.jpg)
+
+### Main components
+
+| Component | Role |
+|---|---|
+| STM32H723 | Real-time embedded controller |
+| Jetson Orin Nano | Vision and high-level control |
+| MPU6500 | Platform motion feedback |
+| 3 × RC Servos | Table actuation |
+| CAN | Jetson ↔ STM32 communication |
+| Camera | Ball observation |
+| TFT Display | Embedded UI |
+
+---
+
+## Technology Stack
 
 ### Embedded
 
@@ -556,12 +407,6 @@ The trajectory engine is used to generate bounded reference motion for the physi
 - IWDG
 - TFT display
 
-### Sensors and actuators
-
-- MPU6500 IMU
-- Three RC servos
-- Three-servo balancing mechanism
-
 ### Linux / Robotics
 
 - NVIDIA Jetson Orin Nano
@@ -571,178 +416,123 @@ The trajectory engine is used to generate bounded reference motion for the physi
 - PID control
 - SocketCAN
 
-### Engineering methods
+### Engineering
 
 - Real-time task design
 - Sensor acquisition and fusion
-- System identification
-- Calibrated polynomial IK
+- Calibration
+- Polynomial inverse kinematics
 - Trajectory generation
-- Fault containment
+- Fault handling
 - Persistent configuration
 - Hardware/software integration
 - Experimental validation
 
 ---
 
-## 15. What This Project Demonstrates
+## Documentation
 
-The project is not one isolated algorithm. It is the integration of multiple engineering layers into one physical system:
+Detailed engineering decisions are documented separately:
+
+| Document | Focus |
+|---|---|
+| [`01-architecture.md`](docs/01-architecture.md) | System architecture |
+| [`02-stm32h723-cache-memory.md`](docs/02-stm32h723-cache-memory.md) | Cortex-M7 cache and DMA |
+| [`03-freertos-task-design.md`](docs/03-freertos-task-design.md) | FreeRTOS task architecture |
+| [`04-can-protocol.md`](docs/04-can-protocol.md) | CAN protocol and communication |
+| [`05-imu-mpu6500-spi-dma.md`](docs/05-imu-mpu6500-spi-dma.md) | IMU, SPI/DMA and estimation |
+| [`06-tft-ui-design.md`](docs/06-tft-ui-design.md) | Embedded TFT UI |
+| [`07-servo-trajectory-safety.md`](docs/07-servo-trajectory-safety.md) | Servo and trajectory control |
+| [`08-failsafe-design.md`](docs/08-failsafe-design.md) | Fault detection and recovery |
+| [`09-ik-calibration.md`](docs/09-ik-calibration.md) | IK calibration |
+| [`10-jetson-vision-control.md`](docs/10-jetson-vision-control.md) | Jetson vision/control |
+
+The README provides the system-level view. The documents above contain implementation details and engineering rationale.
+
+---
+
+## Project Scope
+
+The current prototype integrates:
 
 ```text
-Mechanical system
+Mechanical System
        +
 Camera
        +
-Computer vision
+Computer Vision
        +
-Sensor acquisition
+State Estimation
        +
-State estimation
+Real-Time Firmware
        +
 Control
-       +
-Trajectory generation
-       +
-Inverse kinematics
        +
 CAN
        +
-FreeRTOS
+Trajectory Generation
        +
-Actuator constraints
+Inverse Kinematics
        +
-Failsafe
+Servo Actuation
+       +
+Fault Handling
 ```
 
-### Clear processor boundaries
+The project focuses on the engineering problems that appear when software interacts with physical hardware:
 
-Jetson handles computationally flexible workloads.
-
-STM32 owns the final physical actuator path.
-
-### Calibration as data
-
-Mechanical behavior is represented by validated persistent calibration instead of constants scattered throughout the controller.
-
-### Explicit validity
-
-Freshness and validity are treated separately from numerical values.
-
-### Layered safety
-
-Communication loss, software faults, actuator limits, and watchdog recovery are handled independently.
-
-### Deterministic low-level authority
-
-The final trajectory and actuator command remain under STM32 control rather than depending directly on Linux scheduling.
+- Real-time execution
+- DMA and cache coherency
+- Sensor validity and freshness
+- Communication reliability
+- Mechanical calibration
+- Nonlinear actuator mapping
+- Trajectory constraints
+- Fault containment
+- Safe actuator behavior
 
 ---
 
-## 16. Recommended Reading Order
+## Engineering Principle
+
+> **Use the Jetson for computational flexibility and the STM32 for deterministic low-level authority.**
+
+The goal is not to demonstrate a single algorithm in isolation, but to integrate perception, control, communication, real-time firmware, calibration, actuation, and fault handling into one physical robotic system.
+
+---
+
+## Repository Structure
 
 ```text
-01 Architecture
-      ↓
-03 FreeRTOS
-      ↓
-04 FDCAN
-      ↓
-05 IMU
-      ↓
-07 Servo / Trajectory
-      ↓
-08 Failsafe
-      ↓
-09 IK Calibration
-      ↓
-10 Jetson Vision / Control
+ball-balancing-table/
+│
+├── firmware-stm32h723/
+│   └── STM32H723 firmware
+│
+├── jetson-vision-control/
+│   └── Jetson vision and control
+│
+├── docs/
+│   ├── 01-architecture.md
+│   ├── 02-stm32h723-cache-memory.md
+│   ├── 03-freertos-task-design.md
+│   ├── 04-can-protocol.md
+│   ├── 05-imu-mpu6500-spi-dma.md
+│   ├── 06-tft-ui-design.md
+│   ├── 07-servo-trajectory-safety.md
+│   ├── 08-failsafe-design.md
+│   ├── 09-ik-calibration.md
+│   └── 10-jetson-vision-control.md
+│
+└── README.md
 ```
-
-The README gives the system-level picture first; the individual documents then provide implementation-level details.
 
 ---
 
-## 17. Project Scope
+## Status
 
-The current project covers an integrated prototype with:
+The system is an actively developed engineering prototype.
 
-- three-servo balancing hardware;
-- camera-based ball observation;
-- Jetson-side vision/control pipeline;
-- STM32H723 real-time firmware;
-- MPU6500 SPI/DMA acquisition;
-- FreeRTOS task architecture;
-- FDCAN communication;
-- trajectory generation;
-- calibrated second-order IK;
-- persistent calibration storage;
-- servo dynamic and physical limits;
-- layered failsafe mechanisms;
-- TFT UI;
-- recorded experimental data/video.
+Performance metrics such as tracking error, control-loop timing, latency, and recovery time will be reported separately when supported by repeatable measurements.
 
-The repository intentionally documents engineering constraints as well as successful implementation. Calibration and control models are valid within the experimentally established operating region and depend on the physical configuration remaining consistent with the calibration.
-
----
-
-## 18. Technical Capabilities
-
-This project crosses several layers:
-
-```text
-Low-level Embedded
-  ├── STM32
-  ├── DMA / SPI
-  ├── FDCAN
-  ├── PWM
-  ├── Flash
-  └── Watchdog
-
-Real-Time Software
-  ├── FreeRTOS
-  ├── task synchronization
-  ├── state machines
-  └── fault handling
-
-Robotics
-  ├── computer vision
-  ├── state estimation
-  ├── PID
-  ├── trajectory generation
-  └── inverse kinematics
-
-System Integration
-  ├── Jetson
-  ├── CAN
-  ├── camera
-  ├── sensors
-  └── physical actuators
-```
-
-The project demonstrates how these components are integrated through defined interfaces, timing constraints, calibration data, and fault-handling mechanisms to control a physical mechatronic system.
-
----
-
-## 19. Engineering Approach
-
-This project evolved from a ball-balancing mechanism into an end-to-end embedded robotics system:
-
-> **Perception → Estimation → Control → Communication → Trajectory → IK → Actuation → Safety**
-
-The key engineering challenge is not implementing the control algorithm in isolation, but integrating it reliably with hardware, timing, communication, calibration, mechanical behavior, and fault handling.
-
-It is the interaction between:
-
-```text
-Software
-Hardware
-Timing
-Communication
-Calibration
-Control
-Mechanical behavior
-Failure handling
-```
-
-The repository is structured to make those relationships visible in both the source code and the engineering documentation.
+**No performance figures are claimed here without experimental evidence.**
