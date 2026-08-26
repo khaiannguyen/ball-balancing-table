@@ -1,28 +1,47 @@
+/**
+ * @file    main.cpp
+ * @brief   Jetson vision and control application entry point.
+ *
+ * Initializes the camera, vision pipeline, CAN communication, control loop,
+ * watchdog, video recording, and telemetry logging.
+ *
+ * The application uses a shared system-state layer to exchange measurements
+ * and commands between concurrent runtime tasks.
+ */
+
 #include "task_camera_capture.hpp"
 #include "task_ball_detect.hpp"
 #include "task_control_loop.hpp"
 #include "task_can_rx.hpp"
 #include "task_can_tx.hpp"
 #include "task_watchdog.hpp"
-#include "task_video_record.hpp"   // THEM: ghi video (khong overlay, ve offline sau)
+#include "task_video_record.hpp"
 #include "system_state.hpp"
+
 #include <csignal>
 #include <atomic>
 #include <thread>
 #include <chrono>
 #include <cstdio>
-#include <ctime>     // THEM: strftime/localtime cho ten file video co timestamp
-#include <fstream>   // THEM (tu J7): ghi file CSV
+#include <ctime>
+#include <fstream>
 
-std::atomic<bool> g_stop{false};
-void on_sigint(int) { g_stop.store(true); }
+std::atomic<bool> g_stop{ false };
 
-/* THEM: nang priority SCHED_FIFO cho thread control loop - logic thuc su
- * nam o dau ham TaskControlLoop::run() (task_control_loop.cpp), khong goi
- * tu day vi std::thread khong the set scheduling param tu ben ngoai sau
- * khi thread da start mot cach an toan/don gian. */
+void on_sigint(int)
+{
+    g_stop.store(true);
+}
 
-int main() {
+/*
+ * Runtime threads are created by their corresponding task classes.
+ *
+ * The control-loop scheduling policy is owned by TaskControlLoop so its
+ * timing configuration remains close to the control implementation.
+ */
+
+int main()
+{
     std::signal(SIGINT, on_sigint);
 
     TaskCameraCapture cam;
@@ -31,166 +50,394 @@ int main() {
     TaskCanRx         can_rx;
     TaskCanTx         can_tx;
     TaskWatchdog      watchdog;
-    TaskVideoRecord   video_record;   // THEM: ghi video song song, khong overlay
-/**/
-    if (!cam.start(1280, 720, 60, /*sensor_id=*/0)) {
-        std::fprintf(stderr, "Loi: khong start duoc camera\n");
+    TaskVideoRecord   video_record;
+
+    /*
+     * Start the camera before any consumer task.
+     *
+     * Ball detection and video recording both consume frames from the
+     * camera pipeline, so the producer must be available first.
+     */
+    if (!cam.start(1280, 720, 60, /*sensor_id=*/0))
+    {
+        std::fprintf(
+            stderr,
+            "Loi: khong start duoc camera\n"
+        );
+
         return 1;
     }
 
     BallDetectorConfig cfg;
-    // 200 qua cao voi anh toi (bong bi cat con r~24px, duoi min_radius_px,
-    // va circularity tut xuong ~0.39) -> ha ve 120 (da kiem chung tren
-    // test_1280x720.jpg cho circularity ~0.71, r~42px, dung vi tri bong).
+
+    /*
+     * Detection thresholds are calibrated for the current camera,
+     * illumination, and ball geometry.
+     *
+     * These values are part of the vision configuration and should be
+     * changed only when the corresponding camera/detection calibration
+     * changes.
+     */
     cfg.white_threshold = 230.0;
-    cfg.min_area_px = 1500.0;   // da ha tu 2500.0 sau khi chan doan flicker (J7)
-    // Bong o sat mep ban thuong bi chieu sang khong deu (nua toi do nen
-    // ban toi, nua loa sang do nen ngoai ban) -> hull khong tron hoan
-    // toan du la bong that. Do thuc te tren test_1280x720.jpg: circularity
-    // ~0.70-0.71 voi bong that o mep ban. Ha nguong tu 0.75 (mac dinh
-    // trong ball_detector.hpp) xuong 0.65 de khong loai nham truong hop nay.
+    cfg.min_area_px = 1500.0;
     cfg.min_circularity = 0.65;
     cfg.debug_print = false;
 
-    // ROI: gioi han vung detect trong pham vi mat ban tron, loai bo nen/vat
-    // phan chieu ngoai vien khoi threshold (J7). TODO: do chinh xac lai
-    // (Huong D, J8) - hien tai la gia tri uoc luong.
-    cfg.roi_center_px = cv::Point2f(629.8f, 362.4f);
-    cfg.roi_radius_px = 400.0f; // hoi nho hon ban kinh ban that de chac
-                                        // chan khong lot vien den/khung kim loai
+    /*
+     * Restrict detection to the calibrated table region.
+     *
+     * The ROI reduces false detections from the surrounding mechanical
+     * structure and background while keeping the complete usable ball
+     * workspace inside the processing region.
+     */
+    cfg.roi_center_px = cv::Point2f(
+        629.8f,
+        362.4f
+    );
 
-    if (!ball_detect.start(cam, cfg, "/home/khaian/balance_ball/calib")) {
-        std::fprintf(stderr, "Loi: khong start duoc ball detect\n");
-        cam.stop();
-        return 1;
-    }
+    cfg.roi_radius_px = 400.0f;
 
-    if (!can_rx.start("can0")) {
-        std::fprintf(stderr, "Loi: khong start duoc CAN RX\n");
-        ball_detect.stop(); cam.stop();
-        return 1;
-    }
-
-    if (!can_tx.start("can0")) {
-        std::fprintf(stderr, "Loi: khong start duoc CAN TX\n");
-        can_rx.stop(); ball_detect.stop(); cam.stop();
-        return 1;
-    }
-
-    
-    //  if (!control_loop.start(/*kp=*/0.0625f, /*ki=*/0.028f, /*kd=*/0.04125f,/*out_limit_deg=*/3.5f)) 
-    //  if (!control_loop.start(/*kp=*/0.055f, /*ki=*/0.018f, /*kd=*/0.035f,/*out_limit_deg=*/3.5f)) {
-    if (!control_loop.start(/*kp=*/0.045f, /*ki=*/0.018f, /*kd=*/0.03f,/*out_limit_deg=*/3.5f)) {
-        std::fprintf(stderr, "Loi: khong start duoc control loop\n");
-        can_tx.stop(); can_rx.stop(); ball_detect.stop(); cam.stop();
-        return 1;
-    }
-
-    // SUA: t_start doi len SOM HON (truoc ca csv/video) - dung LAM MOC
-    // THOI GIAN CHUNG cho CA data.csv LAN video_timestamps.csv, de 2 file
-    // khop duoc voi nhau chinh xac theo timestamp_ms khi ve lai offline
-    // sau nay (video KHONG con phu thuoc fps danh nghia de dong bo nua).
-    auto t_start = std::chrono::steady_clock::now();
-
-    watchdog.start(/*check_period_ms=*/1000);
-
-    // THEM: start ghi video - PHAI sau khi cam.start() thanh cong (da co
-    // o tren), KHONG can doi ball_detect/control_loop vi day la consumer
-    // DOC LAP hoan toan voi 2 cai do, chi doc them frame giong ball_detect
-    // dang doc (FrameBox ho tro nhieu reader dong thoi, xem
-    // task_camera_capture.hpp). Duong dan cung thu muc voi data.csv, dat
-    // ten co timestamp de KHONG ghi de lan chay truoc (khac data.csv hien
-    // dang trunc/ghi de moi lan chay - video nang hon, mat cong quay lai
-    // nen uu tien khong mat du lieu cu).
+    /*
+     * Ball detection consumes frames from the camera pipeline and publishes
+     * measurements to the shared system state.
+     */
+    if (!ball_detect.start(
+        cam,
+        cfg,
+        "/home/khaian/balance_ball/calib"))
     {
-        auto now_tp = std::chrono::system_clock::now();
-        std::time_t now_c = std::chrono::system_clock::to_time_t(now_tp);
+        std::fprintf(
+            stderr,
+            "Loi: khong start duoc ball detect\n"
+        );
+
+        cam.stop();
+
+        return 1;
+    }
+
+    /*
+     * CAN RX and TX share the same SocketCAN interface but have independent
+     * responsibilities:
+     *
+     *   RX -> receive STM32 telemetry and status
+     *   TX -> transmit commands and control outputs
+     */
+    if (!can_rx.start("can0"))
+    {
+        std::fprintf(
+            stderr,
+            "Loi: khong start duoc CAN RX\n"
+        );
+
+        ball_detect.stop();
+        cam.stop();
+
+        return 1;
+    }
+
+    if (!can_tx.start("can0"))
+    {
+        std::fprintf(
+            stderr,
+            "Loi: khong start duoc CAN TX\n"
+        );
+
+        can_rx.stop();
+        ball_detect.stop();
+        cam.stop();
+
+        return 1;
+    }
+
+    /*
+     * The controller consumes the latest vision and telemetry state and
+     * produces the desired platform attitude for transmission to STM32.
+     *
+     * Controller gains and output limits are application-level parameters.
+     */
+    if (!control_loop.start(
+        /*kp=*/0.045f,
+        /*ki=*/0.018f,
+        /*kd=*/0.03f,
+        /*out_limit_deg=*/3.5f))
+    {
+        std::fprintf(
+            stderr,
+            "Loi: khong start duoc control loop\n"
+        );
+
+        can_tx.stop();
+        can_rx.stop();
+        ball_detect.stop();
+        cam.stop();
+
+        return 1;
+    }
+
+    /*
+     * Use one monotonic reference timestamp for runtime telemetry,
+     * video synchronization, and CSV logging.
+     *
+     * A monotonic clock avoids discontinuities caused by wall-clock
+     * adjustments during a running experiment.
+     */
+    auto t_start =
+        std::chrono::steady_clock::now();
+
+    /*
+     * The watchdog supervises the runtime tasks independently from the
+     * application logging loop.
+     */
+    watchdog.start(
+        /*check_period_ms=*/1000
+    );
+
+    /*
+     * Video recording is started after camera initialization because it is
+     * another independent consumer of the camera frame stream.
+     *
+     * Recording failure is non-fatal: the control application can continue
+     * operating without video logging.
+     */
+    {
+        auto now_tp =
+            std::chrono::system_clock::now();
+
+        std::time_t now_c =
+            std::chrono::system_clock::to_time_t(now_tp);
+
         char time_buf[32];
-        std::strftime(time_buf, sizeof(time_buf), "%Y%m%d_%H%M%S", std::localtime(&now_c));
 
-        const std::string video_path = std::string(
-            "/home/khaian/balance_ball/scripts/video_") + time_buf + ".mp4";
-        const std::string video_ts_csv_path = std::string(
-            "/home/khaian/balance_ball/scripts/video_timestamps_") + time_buf + ".csv";
+        std::strftime(
+            time_buf,
+            sizeof(time_buf),
+            "%Y%m%d_%H%M%S",
+            std::localtime(&now_c)
+        );
 
-        if (!video_record.start(cam, video_path, video_ts_csv_path, t_start,
-                                 /*fps_hint=*/60.0)) {
-            std::fprintf(stderr, "Canh bao: khong start duoc TaskVideoRecord, "
-                         "tiep tuc chay nhung KHONG ghi video.\n");
+        const std::string video_path =
+            std::string(
+                "/home/khaian/balance_ball/scripts/video_"
+            ) +
+            time_buf +
+            ".mp4";
+
+        const std::string video_ts_csv_path =
+            std::string(
+                "/home/khaian/balance_ball/scripts/video_timestamps_"
+            ) +
+            time_buf +
+            ".csv";
+
+        if (!video_record.start(
+            cam,
+            video_path,
+            video_ts_csv_path,
+            t_start,
+            /*fps_hint=*/60.0))
+        {
+            std::fprintf(
+                stderr,
+                "Canh bao: khong start duoc TaskVideoRecord, "
+                "tiep tuc chay nhung KHONG ghi video.\n"
+            );
         }
     }
 
-    /* ---- THEM (tu J7): mo file CSV log o ~/balance_ball/scripts/data.csv
-     * Duong dan TUYET DOI de khong phu thuoc thu muc dang chay chuong
-     * trinh (bai hoc rut ra tu loi calib/intrinsics.yaml o J7). */
-    const std::string csv_path = "/home/khaian/balance_ball/scripts/data.csv";
-    std::ofstream csv(csv_path, std::ios::out | std::ios::trunc);
-    if (!csv.is_open()) {
-        std::fprintf(stderr, "Canh bao: khong mo duoc %s de ghi log CSV, "
-                     "tiep tuc chay nhung KHONG ghi file.\n", csv_path.c_str());
-    } else {
-        csv << "timestamp_ms,S1,S2,S3,roll_imu,pitch_imu,roll_d,pitch_d,height_d,Ballx,Bally,detected\n";
+    /*
+     * Store runtime telemetry in a fixed absolute path so experiment data
+     * does not depend on the directory from which the application is
+     * launched.
+     */
+    const std::string csv_path =
+        "/home/khaian/balance_ball/scripts/data.csv";
+
+    std::ofstream csv(
+        csv_path,
+        std::ios::out | std::ios::trunc
+    );
+
+    if (!csv.is_open())
+    {
+        std::fprintf(
+            stderr,
+            "Canh bao: khong mo duoc %s de ghi log CSV, "
+            "tiep tuc chay nhung KHONG ghi file.\n",
+            csv_path.c_str()
+        );
+    }
+    else
+    {
+        csv <<
+            "timestamp_ms,S1,S2,S3,roll_imu,pitch_imu,"
+            "roll_d,pitch_d,height_d,Ballx,Bally,detected\n";
+
         csv.flush();
-        std::printf("main: dang ghi log vao %s\n", csv_path.c_str());
+
+        std::printf(
+            "main: dang ghi log vao %s\n",
+            csv_path.c_str()
+        );
     }
 
-    std::printf("main: he thong day du dang chay (camera+CAN+PID+watchdog+video). "
-                "Nhan Ctrl+C de dung.\n");
+    std::printf(
+        "main: he thong day du dang chay "
+        "(camera+CAN+PID+watchdog+video). "
+        "Nhan Ctrl+C de dung.\n"
+    );
 
-    while (!g_stop.load()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));   // 5Hz, khop tan so log J7
+    /*
+     * The main thread performs low-rate telemetry monitoring and logging.
+     *
+     * Real-time processing remains inside the dedicated runtime tasks.
+     * This prevents diagnostic output and file I/O from blocking the
+     * camera, control, or CAN processing paths.
+     */
+    while (!g_stop.load())
+    {
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(200)
+        );
 
-        int16_t x, y, vx, vy;
+        int16_t x;
+        int16_t y;
+        int16_t vx;
+        int16_t vy;
         uint8_t detected;
-        ball_state_read(system_state().ball, x, y, vx, vy, detected);
 
-        float roll_d, pitch_d, height_d;
-        attitude_desired_read(system_state().attitude_desired, roll_d, pitch_d, height_d);
+        ball_state_read(
+            system_state().ball,
+            x,
+            y,
+            vx,
+            vy,
+            detected
+        );
 
-        int32_t s1, s2, s3;
-        telemetry_servo_read(system_state().servo, s1, s2, s3);
+        float roll_d;
+        float pitch_d;
+        float height_d;
 
-        float roll_imu, pitch_imu, vroll_imu, vpitch_imu, height_imu;
-        telemetry_attitude_read(system_state().attitude, roll_imu, pitch_imu,
-                                 vroll_imu, vpitch_imu, height_imu);
+        attitude_desired_read(
+            system_state().attitude_desired,
+            roll_d,
+            pitch_d,
+            height_d
+        );
 
-        bool stm32_ok = stm32_state_is_ok();
+        int32_t s1;
+        int32_t s2;
+        int32_t s3;
 
-        std::printf("[main] ball=(%d,%d)mm det=%d  roll_d=%.4f pitch_d=%.4f deg  height_d=%.2f mm  "
-                    "S1=%d S2=%d S3=%d  roll_imu=%.2f pitch_imu=%.2f  stm32_ok=%d\n",
-                    x, y, detected, roll_d, pitch_d, height_d, s1, s2, s3,
-                    roll_imu, pitch_imu, stm32_ok ? 1 : 0);
+        telemetry_servo_read(
+            system_state().servo,
+            s1,
+            s2,
+            s3
+        );
 
-        // TODO: log RSS dinh ky neu muon tu dong theo doi memory leak
-        // (doc /proc/self/status truong VmRSS) thay vi chi xem htop tay.
+        float roll_imu;
+        float pitch_imu;
+        float vroll_imu;
+        float vpitch_imu;
+        float height_imu;
 
-        /* ---- Ghi 1 dong CSV moi chu ky giam sat (5Hz) ---- */
-        if (csv.is_open()) {
-            auto now = std::chrono::steady_clock::now();
-            double t_ms = std::chrono::duration<double, std::milli>(now - t_start).count();
+        telemetry_attitude_read(
+            system_state().attitude,
+            roll_imu,
+            pitch_imu,
+            vroll_imu,
+            vpitch_imu,
+            height_imu
+        );
 
-            csv << t_ms << ","
-                << s1 << "," << s2 << "," << s3 << ","
-                << roll_imu << "," << pitch_imu << ","
-                << roll_d << "," << pitch_d << "," << height_d << ","
-                << x << "," << y << "," << (int)detected << "\n";
-            csv.flush();   // flush moi dong de khong mat du lieu neu Ctrl+C dot ngot
+        bool stm32_ok =
+            stm32_state_is_ok();
+
+        std::printf(
+            "[main] ball=(%d,%d)mm det=%d  "
+            "roll_d=%.4f pitch_d=%.4f deg  "
+            "height_d=%.2f mm  "
+            "S1=%d S2=%d S3=%d  "
+            "roll_imu=%.2f pitch_imu=%.2f  "
+            "stm32_ok=%d\n",
+            x,
+            y,
+            detected,
+            roll_d,
+            pitch_d,
+            height_d,
+            s1,
+            s2,
+            s3,
+            roll_imu,
+            pitch_imu,
+            stm32_ok ? 1 : 0
+        );
+
+        /*
+         * Flush every telemetry record so an unexpected process termination
+         * does not leave the latest experiment samples only in userspace
+         * buffers.
+         */
+        if (csv.is_open())
+        {
+            auto now =
+                std::chrono::steady_clock::now();
+
+            double t_ms =
+                std::chrono::duration<double, std::milli>(
+                    now - t_start
+                    ).count();
+
+            csv <<
+                t_ms << "," <<
+                s1 << "," <<
+                s2 << "," <<
+                s3 << "," <<
+                roll_imu << "," <<
+                pitch_imu << "," <<
+                roll_d << "," <<
+                pitch_d << "," <<
+                height_d << "," <<
+                x << "," <<
+                y << "," <<
+                (int)detected <<
+                "\n";
+
+            csv.flush();
         }
     }
 
+    /*
+     * Stop consumers before their shared producers.
+     *
+     * Video recording and ball detection must release their camera
+     * dependencies before the camera itself is stopped.
+     */
     watchdog.stop();
     control_loop.stop();
     can_tx.stop();
     can_rx.stop();
-    video_record.stop();   // THEM: dung TRUOC cam.stop() vi phu thuoc cam (giong ball_detect)
+
+    video_record.stop();
     ball_detect.stop();
     cam.stop();
 
-    if (csv.is_open()) {
+    if (csv.is_open())
+    {
         csv.close();
-        std::printf("main: da dong file log %s\n", csv_path.c_str());
+
+        std::printf(
+            "main: da dong file log %s\n",
+            csv_path.c_str()
+        );
     }
 
-    std::printf("main: da dung toan bo he thong an toan.\n");
+    std::printf(
+        "main: da dung toan bo he thong an toan.\n"
+    );
+
     return 0;
 }
