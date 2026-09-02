@@ -2,6 +2,7 @@
 #define CAN_PROTOCOL_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "can_id.h"
 
@@ -19,6 +20,8 @@ typedef struct
     uint32_t id;
     uint8_t dlc;
     uint8_t data[8];
+    bool is_error;
+    uint32_t err_class;
 
 } can_frame_t;
 
