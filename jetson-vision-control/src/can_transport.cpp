@@ -31,6 +31,22 @@ CanTransport::~CanTransport()
 bool CanTransport::open(
     const std::string& ifname)
 {
+    fd_ =
+        socket(
+            PF_CAN,
+            SOCK_RAW,
+            CAN_RAW
+        );
+
+    if (fd_ < 0)
+    {
+        perror(
+            "CanTransport: socket()"
+        );
+
+        return false;
+    }
+
     /*
      * Enable SocketCAN error-frame reporting so bus and interface errors
      * remain observable by the transport layer.
@@ -49,22 +65,6 @@ bool CanTransport::open(
             "CanTransport: setsockopt(CAN_RAW_ERR_FILTER) - "
             "khong bat duoc error frame reporting"
         );
-    }
-
-    fd_ =
-        socket(
-            PF_CAN,
-            SOCK_RAW,
-            CAN_RAW
-        );
-
-    if (fd_ < 0)
-    {
-        perror(
-            "CanTransport: socket()"
-        );
-
-        return false;
     }
 
     struct ifreq ifr;
