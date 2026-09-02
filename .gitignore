@@ -18,3 +18,15 @@ Makefile
 .vscode/
 Thumbs.db
 .DS_Store
+
+# Runtime-generated captures (large, regenerable outputs, not source)
+jetson-vision-control/scripts/video_*.mp4
+jetson-vision-control/scripts/video_timestamps_*.csv
+jetson-vision-control/scripts/data.csv
+
+# Stray ad-hoc candump capture at repo root
+/validation_candump_*.log
+
+# Oversized validation logs (>10MB), kept locally as evidence but not tracked in git
+validation/03-can/125kbps-soak/candump_soak.log
+validation/03-can/125kbps-soak-30min/candump.log

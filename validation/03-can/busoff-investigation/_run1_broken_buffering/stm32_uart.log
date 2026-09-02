@@ -1,0 +1,25 @@
+1788345893 [CAN_TX] attempt=65695 drop=58 burst=36 busoff=263 TEC=203 REC=0 passive=1 warn=1 LEC=7 free=2
+1788345893 [CAN_TX] attempt=68695 drop=58 burst=36 busoff=265 TEC=210 REC=0 passive=1 warn=1 LEC=7 free=2
+1788345893 [CAN_TX] attempt=71695 drop=58 burst=36 busoff=266 TEC=165 REC=0 passive=1 warn=1 LEC=7 free=2
+1788345893 [CAN_TX] attempt=74695 drop=58 burst=36 busoff=267 TEC=150 REC=0 passive=1 warn=1 LEC=7 free=2
+1788345893 [CAN_TX] attempt=77695 drop=58 burst=36 busoff=269 TEC=150 REC=0 passive=1 warn=1 LEC=7 free=2
+1788345893 [CAN_TX] attempt=80695 drop=58 burst=36 busoff=269 TEC=195 REC=0 passive=1 warn=1 LEC=7 free=2
+1788345893 FAULT SET - mat heartbeat!
+1788345893 [CAN_TX] attempt=83695 drop=58 burst=36 busoff=458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=86695 drop=58 burst=36 busoff=958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=89695 drop=58 burst=36 busoff=1458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=92695 drop=58 burst=36 busoff=1958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=95695 drop=58 burst=36 busoff=2458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=98695 drop=58 burst=36 busoff=2958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=101695 drop=58 burst=36 busoff=3458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=104695 drop=58 burst=36 busoff=3958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=107695 drop=58 burst=36 busoff=4458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=110695 drop=58 burst=36 busoff=4958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=113695 drop=58 burst=36 busoff=5458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=116695 drop=58 burst=36 busoff=5958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=119695 drop=58 burst=36 busoff=6458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=122695 drop=58 burst=36 busoff=6958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=125695 drop=58 burst=36 busoff=7458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=128695 drop=58 burst=36 busoff=7958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=131695 drop=58 burst=36 busoff=8458 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
+1788345893 [CAN_TX] attempt=134695 drop=58 burst=36 busoff=8958 TEC=0 REC=0 passive=0 warn=0 LEC=7 free=2
