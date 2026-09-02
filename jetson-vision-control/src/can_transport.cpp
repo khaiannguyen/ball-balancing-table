@@ -362,6 +362,12 @@ bool CanTransport::receive(
         return false;
     }
 
+    out.is_error =
+        (raw.can_id & CAN_ERR_FLAG) != 0;
+
+    out.err_class =
+        raw.can_id & CAN_ERR_MASK;
+
     out.id =
         raw.can_id & CAN_SFF_MASK;
 

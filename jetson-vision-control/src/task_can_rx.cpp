@@ -105,6 +105,8 @@ void TaskCanRx::run()
 
     can_frame_t frame;
 
+    uint64_t can_err_count = 0;
+
     while (running_.load())
     {
         /*
@@ -122,6 +124,34 @@ void TaskCanRx::run()
 
         if (got)
         {
+            if (frame.is_error)
+            {
+                ++can_err_count;
+
+                if (
+                    can_err_count <= 20 ||
+                    (can_err_count % 100) == 0)
+                {
+                    std::fprintf(
+                        stderr,
+                        "[CAN_ERR] class=0x%08X tec=%u rec=%u "
+                        "data=%02X %02X %02X %02X %02X %02X %02X %02X\n",
+                        frame.err_class,
+                        (unsigned)frame.data[6],
+                        (unsigned)frame.data[7],
+                        frame.data[0],
+                        frame.data[1],
+                        frame.data[2],
+                        frame.data[3],
+                        frame.data[4],
+                        frame.data[5],
+                        frame.data[6],
+                        frame.data[7]
+                    );
+                }
+            }
+            else
+            {
             switch (frame.id)
             {
             case CAN_ID_ATTITUDE:
@@ -322,6 +352,7 @@ void TaskCanRx::run()
                  * traffic cannot affect the control state.
                  */
                 break;
+            }
             }
         }
 
