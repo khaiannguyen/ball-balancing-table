@@ -1,17 +1,45 @@
-# Điều tra CAN bus STM32H723 <-> Jetson: từ "stm32_ok rơi về 0 sau 20-45s" đến 45 phút không tái hiện
+# Điều tra CAN bus STM32H723 <-> Jetson: 3 bug phần mềm đã sửa, nguyên nhân gốc là phần cứng — CHƯA GIẢI QUYẾT
 
 Thư mục này tổng hợp toàn bộ quá trình điều tra, khoanh vùng và các fix đã áp dụng cho sự cố mất kết
 nối CAN định kỳ giữa STM32H723 (node điều khiển) và Jetson (node vision/control). Mỗi thư mục con
 là một lần đo cụ thể, giữ nguyên log gốc làm bằng chứng.
 
-**Mức độ tin cậy hiện tại**: sau các fix ở mục 3, hai lần soak test liên tiếp (15 phút + 30 phút =
-45 phút, mục 5 và 5.1) không tái hiện lại triệu chứng gốc (`stm32_ok` dao động liên tục 1↔0). Đây là
-bằng chứng "không tái hiện được trong 45 phút đo", **không phải bằng chứng "đã hết lỗi vĩnh viễn"** —
-45 phút chỉ giới hạn được tần suất lỗi còn lại xuống dưới cỡ ~1 lần/45 phút nếu có, chưa loại trừ được
-lỗi hiếm hơn hoặc phụ thuộc điều kiện chưa tái hiện trong phòng thí nghiệm (nhiệt độ, rung động,
-servo hoạt động nặng, v.v.). Một sự kiện STM32 tự reboot **chưa rõ nguyên nhân** đã xảy ra ở lần soak
-đầu (mục 5) và không lặp lại ở lần soak sau (mục 5.1) — xem mục 6 (Giới hạn đã biết) trước khi coi vấn
-đề này là đã đóng.
+## TRẠNG THÁI HIỆN TẠI (2026-09-04): CHƯA GIẢI QUYẾT — đang chờ khắc phục phần cứng
+
+**Đọc mục này trước khi đọc bất kỳ phần nào khác của tài liệu.** Bản trước của phần mở đầu này (viết
+2026-09-02, trước khi có `regression-after-reboot/` và `soak-after-reconnect/`) mô tả câu chuyện theo
+hướng "5 fix phần mềm -> 45 phút soak sạch -> vấn đề gần như đã đóng". Cách kể đó **gây hiểu lầm** và
+đã bị chứng minh sai bởi chính dữ liệu thu được ngày 2026-09-03/04. Câu chuyện thật là:
+
+1. **Nguyên nhân gốc là một điểm tiếp xúc vật lý chập chờn** trên đường dây CAN (đầu nối/mối hàn —
+   xem bằng chứng dứt điểm ở [`regression-after-reboot/README.md`](regression-after-reboot/README.md)
+   mục 2.3/2.4: lỗi xảy ra cả khi module kernel `can`/`can_raw` còn chưa nạp — không một dòng code hay
+   socket userspace nào có thể gây ra nó — và tái diễn thành từng cụm xen kẽ khoảng nghỉ, mẫu hình
+   kinh điển của tiếp xúc điện chập chờn, không phải lỗi cấu hình).
+2. Lỗi tiếp xúc này tạo ra triệu chứng (`stm32_ok` dao động, REC/TEC tăng, mất frame) **trông giống**
+   nhiều giả thuyết phần mềm khác nhau, nên quá trình điều tra ban đầu (mục 1-4 bên dưới) đã lần lượt
+   đuổi theo và **tìm ra 3 bug phần mềm CÓ THẬT**, mỗi bug đều được chứng minh bằng số liệu trước/sau
+   cụ thể (bảng ở mục 3): (a) thứ tự `socket()`/`setsockopt(CAN_RAW_ERR_FILTER)` sai, (b)
+   `AutoRetransmission` STM32 để `ENABLE` gây bùng nổ retry, (c) vòng lặp bus-off recovery của STM32
+   không rate-limit. Cả 3 fix này **vẫn đúng, vẫn có giá trị thật** — chúng sửa lỗi thật, không phải
+   giả tưởng, và làm hệ thống chịu lỗi tốt hơn hẳn (busoff giảm từ ~100 lần/giây xuống <1 lần/giây khi
+   có tải thật — xem `soak-after-reconnect/README.md`).
+3. **Nhưng cả 3 fix đó không phải là lời giải cho vấn đề gốc.** Soak test 15+30 phút sạch (mục 5, 5.1
+   dưới đây) từng được coi là bằng chứng "đã hết lỗi" — **sai**: đó chỉ là 45 phút tình cờ rơi vào một
+   khoảng nghỉ giữa các cụm lỗi vật lý. Khi tắt máy qua đêm rồi bật lại (2026-09-03), lỗi tái phát ở
+   DẠNG KHÁC (hai chiều, không phải một chiều như lỗi gốc — xem `regression-after-reboot/`), và soak
+   30 phút lặp lại ngay sau đó (`soak-after-reconnect/`) **tái hiện đầy đủ triệu chứng gốc**: 1071 lần
+   `TaskCanRx: FAULT`, `stm32_ok` dao động 1↔0 liên tục ngay giây thứ 15, bus load thật rơi từ ~62%
+   xuống còn ~31%.
+4. **Việc cắm lại đầu nối bằng tay của người dùng (trong lúc điều tra `regression-after-reboot/`) chỉ
+   tạm thời cải thiện, không phải fix dứt điểm** — dmesg cho thấy một khoảng nghỉ ~14 phút sau đó, rồi
+   lỗi lại tiếp diễn.
+
+**Kết luận**: vấn đề **CHƯA được khắc phục**. Bước tiếp theo cần thiết là **kiểm tra/sửa phần cứng**
+(đầu nối CAN_H/CAN_L/GND, mối hàn, transceiver) — không phải thêm fix phần mềm hay soak test dài hơn
+(xem mục "Khuyến nghị bước tiếp theo" cuối tài liệu, đã cập nhật theo hướng này). Phần còn lại của
+tài liệu này (mục 1-7 bên dưới) giữ nguyên làm hồ sơ điều tra gốc — có giá trị lịch sử và các fix vẫn
+đúng — nhưng **đừng đọc kết luận "45 phút sạch" ở mục 5.1 như bằng chứng vấn đề đã đóng**.
 
 ```
 busoff-investigation/   giai đoạn đầu — phát hiện bug thứ tự socket + Jetson controller bị kẹt
@@ -19,6 +47,13 @@ signal-integrity/       đo baseline 500kbps sau khi bật hiển thị error fr
 125kbps-measurement/    đo 60s ngay sau khi hạ bitrate — vẫn còn REC=127 và mất frame
 125kbps-soak/           soak test 900s (15 phút) sau khi chia tần cả 2 phía — 1 lần reboot chưa rõ nguyên nhân, còn lại sạch
 125kbps-soak-30min/     soak test 1800s (30 phút) lặp lại — 0 bất thường, không tái hiện reboot
+regression-after-reboot/ 2026-09-03 — lỗi tái phát sau tắt/mở máy qua đêm, DẠNG KHÁC (hai chiều,
+                         tx≈rx) — dmesg + kiểm tra lại theo thời gian thực xác định đây là lỗi TIẾP
+                         XÚC VẬT LÝ GIÁN ĐOẠN (đầu nối/dây), theo cụm, CHƯA hết — không liên quan tới
+                         5 fix ở mục 3 bên dưới
+soak-after-reconnect/   2026-09-03 — soak 1800s lặp lại sau phát hiện trên: TÁI HIỆN ĐẦY ĐỦ triệu
+                         chứng gốc (1071 lần FAULT, busoff 1563 lần, bus load rơi còn 12.3%) — xác
+                         nhận vấn đề vật lý vẫn đang hoạt động, chưa được khắc phục
 ```
 
 ## 1. Triệu chứng ban đầu
@@ -173,9 +208,21 @@ nén bằng `gunzip -k candump.log.gz` nếu cần xem từng frame; các số l
 
 Chạy bằng `scripts/run_soak.sh 1800 validation/03-can/125kbps-soak-30min`, phân tích bằng
 `scripts/analyze_soak.py` (script tái sử dụng, viết sau lần soak 900s đầu — xem
-`scripts/run_soak.sh`/`scripts/analyze_soak.py`). `can0` được reset sạch qua
-`systemctl restart can0.service` ngay trước khi đo (`ERROR-ACTIVE, berr tx=0 rx=0` xác nhận trong
-`run_info.txt`). Firmware STM32 tại thời điểm này đã có thêm log `[BOOT]` (đọc `RCC->RSR` lúc khởi
+`scripts/run_soak.sh`/`scripts/analyze_soak.py`). `can0` đọc được `ERROR-ACTIVE, berr tx=0 rx=0`
+ngay trước khi đo (xác nhận trong `run_info.txt`) sau một `systemctl restart can0.service`.
+
+**Đính chính (2026-09-03, xem [`regression-after-reboot/`](regression-after-reboot/README.md))**:
+câu trên dễ gây hiểu lầm rằng bản thân lệnh `systemctl restart can0.service` "làm sạch" berr-counter
+— **không đúng**. Đã kiểm chứng: lệnh này (và cả `ip link down/up` thủ công) không hề reset
+berr-counter phần cứng, nó chỉ giữ nguyên giá trị cũ. `tx=0 rx=0` đọc được ở đây chỉ vì counter vốn
+đã ở 0 sẵn tại đúng thời điểm đó (bus tình cờ đang sạch), không phải do lệnh restart gây ra. Cách
+reset thật sự (đã kiểm chứng) là nạp lại module driver: `sudo rmmod mttcan && sudo modprobe mttcan`
+— `scripts/run_soak.sh` đã được cập nhật để làm việc này trước mỗi lần đo, và `scripts/analyze_soak.py`
+nay đọc berr-counter xuất phát từ `run_info.txt` và tính delta thay vì giả định bắt đầu từ 0. Kết
+luận "0 bất thường" của lần soak này (mục dưới) không bị ảnh hưởng bởi đính chính này — số liệu
+`berr-counter` đo được xuyên suốt 1800s vẫn đúng, chỉ có mô tả *lý do* nó bắt đầu ở 0 là sai.
+
+Firmware STM32 tại thời điểm này đã có thêm log `[BOOT]` (đọc `RCC->RSR` lúc khởi
 động, đề xuất ở mục pháp y sự kiện reboot của lần soak trước) — mục đích chính của lần chạy này là chờ
 xem sự kiện reboot ở t+374s của lần soak 900s trước có lặp lại không, và nếu có thì bắt được nguyên
 nhân qua `[BOOT]`.
@@ -190,9 +237,17 @@ nhân qua `[BOOT]`.
 | Mẫu rời `ERROR-ACTIVE` (canstats) | **0/360** |
 | `berr-counter` | `tx` luôn = 0; `rx` chạm 2 và 8 đúng 2 lần (nhiễu bit đơn lẻ, tự hết trong 1 chu kỳ 5s, không leo thang tới ngưỡng warning 96) |
 | Gap candump >100ms | **0** |
-| Bus load thực (chỉ chiều STM32, candump) | 508074 frame / 1800.1s = 282.3 fr/s ≈ **30.48%** |
+| Bus load thực | candump (chỉ chiều STM32) = 282.3 fr/s; cộng TX packets Jetson (netdevice, +289.8 fr/s — không hiện trong candump vì `CanTransport::open()` tắt `CAN_RAW_LOOPBACK` trên chính socket gửi, nên frame Jetson tự phát không được kernel loopback về BẤT KỲ socket local nào, kể cả `candump`, xem đính chính 2026-09-04 bên dưới bảng) = **~572.1 fr/s × 1080µs ≈ 61.79%** |
 | Phân bố ID | `0x100=181714(100.9Hz) 0x102=181110(100.6Hz) 0x103=36345 0x1FF=36344 0x104=36330 0x101=36231(~20.1-20.2Hz mỗi ID)` — khớp thiết kế |
 | S1/S2/S3 | `S1=1632 S2=1549 S3=1580` không đổi suốt 30 phút |
+
+**Đính chính (2026-09-04)**: hàng "Bus load thực" ở trên ban đầu chỉ ghi `282.3 fr/s ≈ 30.48%` — con số
+này CHỈ đếm được chiều STM32->Jetson (candump không thấy frame Jetson tự phát, lý do nêu trong ô bên
+trên), nên thực chất là bus load MỘT NỬA, không phải toàn bus. Đã sửa lại thành `~572.1 fr/s ≈ 61.79%`
+(khớp thiết kế lý thuyết ~62%, giống cách tính đã làm đúng ở mục 5 cho lần soak 900s). `scripts/analyze_soak.py`
+đã được sửa để tự tính cả 2 chiều (đọc thêm `tx_packets` từ `canstats.log`) thay vì chỉ đếm dòng
+`candump.log` — không có bảng/kết luận nào khác trong tài liệu này bị ảnh hưởng bởi lỗi này (mọi số
+liệu khác — FAULT, berr-counter, gap, ID distribution — không liên quan tới cách tính bus load).
 
 Đây là bằng chứng mạnh cho thấy sự kiện reboot ở lần soak 900s trước **là hiếm/ngẫu nhiên, không phải
 lỗi lặp lại theo chu kỳ** — 30 phút liên tục sau đó không tái hiện. Do không có `[BOOT]` nào xảy ra,
@@ -238,6 +293,12 @@ dùng được để chẩn đoán nguyên nhân reboot thật.**
 
 ## 6. Giới hạn đã biết
 
+- **(Cập nhật 2026-09-04, quan trọng nhất)** Toàn bộ đánh giá "0 bất thường"/"đã hết lỗi" ở mục 5 và
+  5.1 dưới đây **không còn đúng như một kết luận cuối cùng** — xem "TRẠNG THÁI HIỆN TẠI" ở đầu tài
+  liệu và [`regression-after-reboot/README.md`](regression-after-reboot/README.md) +
+  [`soak-after-reconnect/README.md`](soak-after-reconnect/README.md). Nguyên nhân gốc là phần cứng
+  (tiếp xúc chập chờn), lỗi hoạt động theo cụm ngắt quãng, và 45 phút soak sạch ngày 2026-09-02 chỉ là
+  một khoảng nghỉ giữa các cụm — KHÔNG phải bằng chứng đã hết lỗi. Vấn đề hiện **CHƯA GIẢI QUYẾT**.
 - Nguyên nhân STM32 tự reboot ở t+374s trong soak test 900s đầu tiên **vẫn chưa được xác định** —
   không tái hiện trong 30 phút chạy tiếp theo (mục 5.1), nên khả năng cao là sự kiện hiếm/ngẫu nhiên,
   nhưng chưa đủ dữ liệu để loại trừ hẳn một nguyên nhân định kỳ hiếm gặp (vd. brown-out khi servo giật
@@ -257,10 +318,23 @@ dùng được để chẩn đoán nguyên nhân reboot thật.**
 
 ## 7. Khuyến nghị bước tiếp theo
 
-1. ~~Chạy soak test dài hơn~~ **Đã làm** (mục 5.1, 30 phút, 0 bất thường). Nếu cần độ tin cậy cao hơn
-   nữa cho vận hành thực tế, cân nhắc chạy qua đêm (≥8 giờ) hoặc lặp lại soak 30 phút qua vài lần
-   bật/tắt nguồn khác nhau — sự kiện reboot ở lần đầu vẫn chưa giải thích được nên chưa nên coi là
-   "đã đóng".
+**(Cập nhật 2026-09-04)** Với bằng chứng dứt điểm rằng nguyên nhân gốc là phần cứng (mục "TRẠNG THÁI
+HIỆN TẠI" ở đầu tài liệu), khuyến nghị #1 dưới đây (chạy thêm soak test phần mềm) **không còn là ưu
+tiên** — đã có đủ bằng chứng, thêm soak nữa chỉ đo lại cùng một lỗi đã biết, không giúp sửa nó. Ưu
+tiên bây giờ là phần cứng:
+
+0. **(Mới, ưu tiên cao nhất)** Kiểm tra vật lý kỹ đường dây CAN: rung nhẹ từng đầu nối CAN_H/CAN_L/GND
+   dọc theo dây trong lúc app đang chạy và `candump`/berr-counter đang mở, để khoanh vùng chính xác
+   điểm lỏng (đầu Jetson, đầu STM32, hay giữa dây — xem khuyến nghị chi tiết ở
+   `soak-after-reconnect/README.md`). Sau khi sửa/thay đầu nối, lặp lại soak 30 phút
+   (`scripts/run_soak.sh 1800 <thư mục mới>`) để xác nhận — lần này nếu sạch thật, cần thêm ít nhất
+   một chu kỳ tắt/mở máy qua đêm nữa trước khi tin, vì bài học từ chính tài liệu này (mục 5.1 tưởng
+   sạch, hoá ra không) là 1 lần soak sạch không đủ để kết luận đã hết.
+1. ~~Chạy soak test dài hơn~~ Đã làm 2 lần (mục 5.1 hôm 2026-09-02, 30 phút "sạch"; và
+   `soak-after-reconnect/` hôm 2026-09-04, 30 phút "tái hiện đầy đủ lỗi") — **kết quả trái ngược nhau
+   chứng minh chính bài học của mục này**: soak test phần mềm không phân biệt được "đã hết lỗi" với
+   "đang ở khoảng nghỉ giữa các cụm lỗi phần cứng". Không nên chạy thêm soak thuần phần mềm nữa cho
+   tới khi phần cứng được sửa.
 2. Điều tra riêng lỗi UART print bị đứng hình ở lần soak đầu (mục 5) — nguyên nhân chưa xác định, cần
    xem lại code counter/print trong firmware (không phải DMA — retarget dùng `HAL_UART_Transmit`
    blocking). Không liên quan tới CAN nhưng ảnh hưởng khả năng chẩn đoán tương lai.

@@ -35,6 +35,25 @@ def read_lines(path):
     return path.read_text(errors="replace").splitlines()
 
 
+# ---------- run_info.txt: starting berr-counter (do NOT assume it's 0) ----------
+#
+# scripts/run_soak.sh does a real hardware reset (rmmod/modprobe mttcan)
+# before capturing, which normally does zero the counter - but analysis
+# should not silently assume that happened (e.g. an older run_info.txt from
+# before that fix, or a manual capture that skipped the reset step). Always
+# read the actual starting value and report deltas against it explicitly.
+START_BERR_RE = re.compile(r"berr-counter tx (\d+) rx (\d+)")
+
+
+def read_start_berr(run_info_path):
+    lines = read_lines(run_info_path)
+    for l in lines:
+        m = START_BERR_RE.search(l)
+        if m:
+            return {"tx": int(m.group(1)), "rx": int(m.group(2))}
+    return None
+
+
 # ---------- app.log: FAULT/CLEARED ----------
 
 FAULT_RE = re.compile(r"^(\d+) .*TaskCanRx: FAULT -")
@@ -132,27 +151,58 @@ def analyze_uart_log(lines):
     }
 
 
-# ---------- canstats.log: berr-counter / state timeline ----------
+# ---------- canstats.log: berr-counter / state timeline + TX packets ----------
+#
+# Each 5s block in canstats.log is: a bare timestamp line, then the output of
+# `ip -details -s link show can0` (state/berr-counter line, then an RX: header
+# + value line, then a TX: header + value line). Track the block's timestamp
+# across ALL of those lines, not just the state line - the TX packets line
+# (netdevice-level counter, incremented on every real transmit regardless of
+# CAN_RAW_LOOPBACK) is what lets us recover Jetson's own TX rate, which never
+# appears in candump.log (see BUS_LOAD note in analyze_candump/main below).
 
 STATE_RE = re.compile(r"can state (\S+) \(berr-counter tx (\d+) rx (\d+)\)")
 TS_RE = re.compile(r"^(\d+\.\d+)$")
+TX_HEADER_RE = re.compile(r"^\s*TX:\s+bytes\s+packets")
 
 
 def analyze_canstats(lines):
     samples = []
+    tx_samples = []  # [{"t":..., "tx_packets":...}, ...]
     ts = None
+    expect_tx_values = False
     for l in lines:
         m = TS_RE.match(l.strip())
         if m:
             ts = float(m.group(1))
+            expect_tx_values = False
+            continue
+        if expect_tx_values:
+            parts = l.split()
+            if parts and ts is not None:
+                tx_samples.append({"t": ts, "tx_packets": int(parts[1])})
+            expect_tx_values = False
+            continue
+        if TX_HEADER_RE.match(l):
+            expect_tx_values = True
             continue
         m = STATE_RE.search(l)
         if m and ts is not None:
             samples.append({"t": ts, "state": m.group(1), "berr_tx": int(m.group(2)), "berr_rx": int(m.group(3))})
-            ts = None
 
     non_active = [s for s in samples if s["state"] != "ERROR-ACTIVE"]
-    return {"samples": samples, "non_active": non_active}
+
+    jetson_tx = None
+    if len(tx_samples) >= 2:
+        first, last = tx_samples[0], tx_samples[-1]
+        dt = last["t"] - first["t"]
+        d_packets = last["tx_packets"] - first["tx_packets"]
+        jetson_tx = {
+            "first": first, "last": last, "dt": dt, "d_packets": d_packets,
+            "rate": d_packets / dt if dt > 0 else 0.0,
+        }
+
+    return {"samples": samples, "non_active": non_active, "tx_samples": tx_samples, "jetson_tx": jetson_tx}
 
 
 # ---------- candump.log: ID distribution, gaps, bus load ----------
@@ -202,6 +252,7 @@ def main():
     uart_lines = read_lines(d / "stm32_uart.log")
     canstats_lines = read_lines(d / "canstats.log")
     candump_lines = read_lines(d / "candump.log")
+    start_berr = read_start_berr(d / "run_info.txt")
 
     if not (app_lines or uart_lines or canstats_lines or candump_lines):
         print(f"analyze_soak.py: khong doc duoc file log nao trong {d}", file=sys.stderr)
@@ -255,19 +306,47 @@ def main():
 
     print("-- berr-counter / trang thai (canstats.log) --")
     total_samples = len(canstats["samples"])
+    if start_berr is None:
+        print("** KHONG doc duoc berr-counter xuat phat tu run_info.txt - khong tinh duoc delta, "
+              "chi in gia tri tuyet doi ben duoi. Dung gia dinh bat dau tu 0. **")
+    else:
+        print(f"berr-counter xuat phat (tu run_info.txt): tx={start_berr['tx']} rx={start_berr['rx']}")
+        if canstats["samples"]:
+            last = canstats["samples"][-1]
+            print(f"berr-counter mau cuoi: tx={last['berr_tx']} rx={last['berr_rx']}  "
+                  f"(delta tx={last['berr_tx'] - start_berr['tx']:+d} rx={last['berr_rx'] - start_berr['rx']:+d})")
+        if start_berr["tx"] != 0 or start_berr["rx"] != 0:
+            print("** CANH BAO: berr-counter xuat phat KHAC 0 - phep do nay bat dau tu mot trang thai "
+                  "chua sach, khong phai baseline sach tuyet doi. Xem [BOOT]/dmesg de biet ly do. **")
     print(f"Tong so mau: {total_samples}")
     print(f"Mau khac ERROR-ACTIVE: {len(canstats['non_active'])}/{total_samples}")
     for s in canstats["non_active"][:20]:
-        print(f"  t={s['t']:.1f} state={s['state']} berr_tx={s['berr_tx']} berr_rx={s['berr_rx']}")
+        delta_str = ""
+        if start_berr is not None:
+            delta_str = f" (delta tx={s['berr_tx'] - start_berr['tx']:+d} rx={s['berr_rx'] - start_berr['rx']:+d})"
+        print(f"  t={s['t']:.1f} state={s['state']} berr_tx={s['berr_tx']} berr_rx={s['berr_rx']}{delta_str}")
     if len(canstats["non_active"]) > 20:
         print(f"  ... va {len(canstats['non_active']) - 20} mau khac")
     print()
 
-    print("-- Bus load (candump.log) --")
-    print(f"Tong frame: {candump['total_frames']}  thoi luong: {candump['duration']:.1f}s  "
-          f"rate: {candump['rate']:.1f} fr/s")
-    print(f"Bus load (chi chieu hien trong candump - KHONG gom frame Jetson tu phat, "
-          f"vi CAN_RAW_LOOPBACK da tat trong CanTransport::open()): {candump['bus_load_pct']:.2f}%")
+    print("-- Bus load --")
+    print(f"candump.log (chi chieu STM32->Jetson - frame Jetson tu phat KHONG xuat hien o day, vi "
+          f"CanTransport::open() tat CAN_RAW_LOOPBACK tren chinh socket dung de gui, nen kernel "
+          f"khong loopback frame do ve BAT KY socket local nao, ke ca candump):")
+    print(f"  Tong frame: {candump['total_frames']}  thoi luong: {candump['duration']:.1f}s  "
+          f"rate: {candump['rate']:.1f} fr/s  ({candump['bus_load_pct']:.2f}% neu tinh rieng chieu nay)")
+    jt = canstats.get("jetson_tx")
+    if jt is None:
+        print("  ** KHONG doc duoc TX packets tu canstats.log - khong tinh duoc bus load THAT (2 chieu). "
+              "Con so % o tren la MOT NUA thuc te, dung lam bus load toan bus. **")
+    else:
+        print(f"Jetson TX (netdevice tx_packets delta trong canstats.log, KHONG phu thuoc CAN_RAW_LOOPBACK "
+              f"vi day la counter o tang driver, duoi ca socket): "
+              f"{jt['d_packets']} frame / {jt['dt']:.1f}s = {jt['rate']:.1f} fr/s")
+        total_rate = candump["rate"] + jt["rate"]
+        total_load_pct = total_rate * BUS_LOAD_SEC_PER_FRAME * 100
+        print(f"  BUS LOAD THAT (candump + Jetson TX, 2 chieu): {total_rate:.1f} fr/s = "
+              f"{total_load_pct:.2f}%")
     print()
 
     print("-- Phan bo frame theo ID (candump.log) vs thiet ke --")

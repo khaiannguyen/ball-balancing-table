@@ -5,11 +5,29 @@
 #
 # Usage: scripts/run_soak.sh <duration_seconds> <output_dir> [uart_dev] [uart_baud]
 #
-# Resets can0 to a known-clean state (systemctl restart can0.service) BEFORE
-# capturing, and records the resulting `ip -details link show can0` at the
-# top of run_info.txt -- several earlier measurements in this investigation
-# gave confusing results because can0 was already ERROR-PASSIVE from a prior
-# session when the capture started.
+# Resets can0 BEFORE capturing and records the resulting `ip -details link
+# show can0` at the top of run_info.txt -- several earlier measurements in
+# this investigation gave confusing results because can0 was already
+# ERROR-PASSIVE from a prior session when the capture started.
+#
+# IMPORTANT (found during validation/03-can/regression-after-reboot/,
+# 2026-09-03): `systemctl restart can0.service` (or a plain `ip link set
+# can0 down`/`up`) does NOT reset the hardware berr-counter (TEC/REC) or the
+# netlink error-warn/error-pass/bus-off counters on this mttcan driver -
+# those only ever go DOWN via real successful TX/RX, never via a soft
+# reconfigure. A prior version of this script (and validation/03-can/README.md
+# section 5.1) assumed the restart itself produced "berr tx=0 rx=0" - that
+# was only true because the bus already happened to be quiet at that moment,
+# not because of anything the restart did. The only way found so far to
+# actually zero these counters is a full driver reload
+# (`rmmod mttcan && modprobe mttcan`, done below before the service restart),
+# which re-probes the hardware and gives a real ifindex/counter reset -
+# verified: berr-counter, error-warn/pass/bus-off and netdevice packet
+# counters all read 0 immediately after. This means "clean at t=0" in a
+# run_info.txt written by this script is now a real guarantee, not a
+# coincidence - but it is still not a guarantee that the bus STAYS clean:
+# on 2026-09-03 the counters climbed again within seconds of this reset while
+# the bus was actively erroring (see regression-after-reboot/README.md).
 set -u
 
 DURATION="${1:?Usage: run_soak.sh <duration_seconds> <output_dir> [uart_dev] [uart_baud]}"
@@ -42,14 +60,20 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM ERR
 
-echo "=== resetting can0 to a clean state (systemctl restart can0.service) ==="
+echo "=== hard-resetting can0 (rmmod/modprobe mttcan) to actually zero berr-counter ==="
+sudo ip link set can0 down 2>/dev/null
+sudo rmmod mttcan
+sleep 1
+sudo modprobe mttcan
+sleep 1
+echo "=== bringing can0 up at the normal bitrate (systemctl restart can0.service) ==="
 sudo systemctl restart can0.service
 sleep 1
 
 {
   echo "SOAK_START=$(date +%s.%N) ($(date '+%Y-%m-%d %H:%M:%S %Z'))"
   echo "duration=${DURATION}s outdir=$OUTDIR uart=$UART_DEV@$UART_BAUD"
-  echo "can0 state at start (after can0.service restart):"
+  echo "can0 state at start (after mttcan module reload + can0.service restart):"
   ip -details link show can0
 } | tee "$OUTDIR/run_info.txt"
 
