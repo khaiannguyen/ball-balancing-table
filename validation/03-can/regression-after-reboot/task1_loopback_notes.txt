@@ -1,0 +1,48 @@
+Task 1 - Jetson controller loopback isolation test
+====================================================
+Commands run (mttcan driver, can0):
+  sudo ip link set can0 down
+  sudo ip link set can0 type can bitrate 125000 loopback on
+  sudo ip link set can0 up
+  sudo candump -tz can0 > task1_loopback_candump.log &
+  cansend can0 123#DEADBEEF
+  sleep 1; kill candump
+
+Result: frame 123#DEADBEEF was received back twice (own-TX echo + loopback RX) -
+see task1_loopback_candump.log. Jetson mttcan controller silicon/driver TX+RX
+datapath is healthy in isolation.
+
+IMPORTANT CAVEAT discovered during this test: SocketCAN "loopback on" on this
+mttcan driver does NOT disconnect the interface from the physical bus - it only
+adds a local echo of locally-transmitted frames into the RX queue. Real physical
+bus traffic (STM32 frames) kept arriving and being counted in `ip -s link show
+can0` RX packet counter *while loopback was enabled*, confirming the physical
+link stayed connected throughout. So this test alone does not fully isolate the
+Jetson controller from the bus; it only proves the controller's own TX->RX
+silicon path works. Physical-layer isolation would require physically
+unplugging the CAN wires from the Jetson side, which was not done in this
+session.
+
+Follow-up real-bus TX check (not in original task list, done to double check):
+sent 3 real frames on the live bus (`cansend can0 7DF#0011223344556677`) after
+clearing the loopback flag - berr-counter tx dropped 108->105 (each successful
+TX decrements TEC by 1 per CAN spec), confirming the physical TX path was
+already healthy again by the time of this test (see Task 4 README for why: the
+error burst had already stopped ~10-15 min earlier per dmesg, before this
+session's testing began).
+
+Also discovered: `sudo systemctl restart can0.service` and even explicit
+`ip link set can0 down` + reconfigure + `up` do NOT reset the hardware
+berr-counter (TEC/REC) on this driver - the counters simply carry over from
+whatever they were before the reconfiguration. The "ERROR-ACTIVE, berr tx=0
+rx=0" seen right after restart in `scripts/run_soak.sh`'s run_info.txt on
+previous days was NOT caused by the restart itself - it only reflected that
+the counters already happened to be at/near 0 before that restart. This means
+`systemctl restart can0.service` is not a reliable way to get a "known clean"
+starting point when the counters are actually elevated; TEC only decreases via
+each successful transmission (REC via each successful reception), so with the
+app off, TEC stays frozen indefinitely until something transmits.
+
+Cleanup performed: loopback disabled (`loopback off`), interface restored via
+`sudo systemctl restart can0.service` (see task1/task2 sequence in dmesg_full.log
+timestamps 22:54:50-22:57:22).
