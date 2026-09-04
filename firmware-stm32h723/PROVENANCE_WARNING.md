@@ -1,55 +1,59 @@
-# CẢNH BÁO: source trong thư mục này KHÔNG khớp firmware đang chạy trên chip thật
+# WARNING: the source in this directory does NOT match the firmware actually running on the real chip
 
-Viết 2026-09-04, sau khi điều tra lỗi CAN bus lặp lại giữa STM32H723 và Jetson
-(toàn bộ quá trình: `../docs/` và `validation/03-can/` phía repo `balance_ball`).
+Written 2026-09-04, after investigating a recurring CAN bus fault between STM32H723
+and Jetson (full process: `../docs/` and `validation/03-can/` on the `balance_ball`
+repo side).
 
-## Sự thật đã xác nhận bằng SWD (đọc thanh ghi sống qua ST-Link, không build/flash)
+## Fact confirmed via SWD (reading live registers over ST-Link, no build/flash)
 
-Chip STM32H723 đang chạy thật trên board Nucleo-H723ZG (đã xác nhận qua ổ MSC
-`NODE_H723ZG` của board) có:
+The STM32H723 chip actually running on the Nucleo-H723ZG board (confirmed via the
+board's `NODE_H723ZG` MSC drive) has:
 
 ```
 FDCAN1->NBTP: NominalPrescaler=40, NominalTimeSeg1=13, NominalTimeSeg2=2  -> 125000 bps, sample-point 0.875
 FDCAN1->CCCR: DAR=1 -> AutoRetransmission = DISABLE
 ```
 
-**Source trong `Core/Src/main.c` ở thư mục này (và trên GitHub
-`khaiannguyen/ball-balancing-table`, branch `main`, mọi commit/branch/stash đã
-kiểm tra) lại ghi:**
+**The source in `Core/Src/main.c` in this directory (and on GitHub
+`khaiannguyen/ball-balancing-table`, branch `main`, every commit/branch/stash checked)
+instead reads:**
 
 ```c
-hfdcan1.Init.NominalPrescaler = 10;   // -> 500000 bps nếu build/flash từ đây, KHÔNG PHẢI 125000
-hfdcan1.Init.AutoRetransmission = ENABLE;   // KHÁC DAR=1 (DISABLE) đang chạy thật
+hfdcan1.Init.NominalPrescaler = 10;   // -> 500000 bps if built/flashed from here, NOT 125000
+hfdcan1.Init.AutoRetransmission = ENABLE;   // DIFFERENT from the DAR=1 (DISABLE) actually running
 ```
 
-Với `NominalPrescaler=10`, `NominalTimeSeg1=13`, `NominalTimeSeg2=2` và
-FDCAN kernel clock 80MHz (đã đo qua SWD, không giả định): bitrate =
-80e6/(10×16) = **500000 bps** — lệch 4 lần so với Jetson (`can0` chạy
-125000 bps, xem `../jetson-vision-control/scripts/can_up.sh`).
+With `NominalPrescaler=10`, `NominalTimeSeg1=13`, `NominalTimeSeg2=2` and an FDCAN
+kernel clock of 80MHz (measured via SWD, not assumed): bitrate = 80e6/(10×16) =
+**500000 bps** — off by 4x from Jetson (`can0` runs at 125000 bps, see
+`../jetson-vision-control/scripts/can_up.sh`).
 
-## Vì sao điều này nguy hiểm
+## Why this is dangerous
 
-Nếu ai đó build + flash STM32H723 từ chính thư mục này (hoặc từ bản GitHub
-đã push, hiện đang giống hệt), board sẽ chạy sai bitrate và tái tạo lại
-đúng loại lỗi CAN đã mất nhiều ngày điều tra (xem `validation/03-can/README.md`
-phía `balance_ball` để biết toàn bộ diễn biến — nguyên nhân thật của lỗi hóa ra
-là SJW phía Jetson quá hẹp, KHÔNG phải bitrate, nhưng nếu flash nhầm bản này thì
-sẽ có thêm một lỗi bitrate thật chồng lên).
+If someone builds + flashes the STM32H723 from this very directory (or from the
+pushed GitHub version, which currently looks identical), the board will run at the
+wrong bitrate and reproduce exactly the type of CAN fault that took many days to
+investigate (see `validation/03-can/README.md` on the `balance_ball` side for the full
+account — the final root cause of the fault turned out to be the untwisted CAN_H/CAN_L
+wire pair, causing crosstalk/EMI, NOT the bitrate; `sjw=16` is kept as an additional
+safety margin but its own contribution was never verified in isolation — but if this
+version is flashed by mistake there would be an additional real bitrate fault stacked
+on top).
 
-## Bản nào mới đúng?
+## Which version is the correct one?
 
-Bản đang chạy thật trên chip (`NominalPrescaler=40`, `AutoRetransmission=DISABLE`)
-**không tìm thấy ở bất kỳ đâu trên máy Jetson này** — không phải file, không
-phải git object (đã kiểm tra toàn bộ commit/branch/stash/reflog), không phải
-build artifact (`.elf`/`.hex`). Nó gần như chắc chắn chỉ tồn tại trên máy đã
-dùng STM32CubeIDE để build + nạp lần cuối. **Trước khi build/flash lại từ thư
-mục này, hãy tìm và đối chiếu với project trên máy đó trước.**
+The version actually running on the chip (`NominalPrescaler=40`,
+`AutoRetransmission=DISABLE`) **cannot be found anywhere on this Jetson machine** —
+not as a file, not as a git object (every commit/branch/stash/reflog checked), not as
+a build artifact (`.elf`/`.hex`). It almost certainly only exists on the machine that
+was last used to build + flash it with STM32CubeIDE. **Before building/flashing again
+from this directory, find and cross-check against the project on that machine first.**
 
-## Việc cần làm (chưa làm ở đây — chỉ ghi chú, không tự sửa `main.c`)
+## To do (not done here — note only, `main.c` not self-edited)
 
-1. Tìm project STM32CubeIDE thật (máy đã flash lần cuối), lấy đúng
-   `NominalPrescaler`/`AutoRetransmission` từ đó.
-2. Cập nhật `Core/Src/main.c` ở đây cho khớp, hoặc — tốt hơn — build lại đúng
-   từ máy CubeIDE đó, đọc lại qua SWD một lần nữa để xác nhận khớp, rồi mới
-   đồng bộ source vào git.
-3. Commit + push, xoá file cảnh báo này sau khi source đã khớp.
+1. Find the real STM32CubeIDE project (the machine that did the last flash), get the
+   correct `NominalPrescaler`/`AutoRetransmission` from it.
+2. Update `Core/Src/main.c` here to match, or — better — rebuild from that CubeIDE
+   machine, read back via SWD once more to confirm the match, then sync the source
+   into git.
+3. Commit + push, delete this warning file once the source matches.
