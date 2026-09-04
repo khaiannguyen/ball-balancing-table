@@ -1,0 +1,62 @@
+Kiem tra lai theo thoi gian thuc (VIEC 1: thu module reload de reset that berr-counter)
+=======================================================================================
+
+Lenh: sudo ip link set can0 down; sudo rmmod mttcan; sudo modprobe mttcan; sudo systemctl restart can0.service
+
+-- Ngay sau reload (should be tx=0 rx=0 that su, khong con carry-over) --
+can state ERROR-ACTIVE (berr-counter tx 0 rx 20) -- ~1s sau khi len (RX da bat dau tang, tx dung im vi app tat khong TX)
+
+-- Trace 40 giay tiep theo (moi 2s, xem file postreload_berr_trace.log day du) --
+state ERROR-WARNING (berr-counter tx 0 rx 126)
+state ERROR-WARNING (berr-counter tx 0 rx 119)
+state ERROR-WARNING (berr-counter tx 0 rx 121)
+state ERROR-WARNING (berr-counter tx 0 rx 123)
+state ERROR-WARNING (berr-counter tx 0 rx 126)
+state ERROR-WARNING (berr-counter tx 0 rx 123)
+state ERROR-ACTIVE (berr-counter tx 0 rx 90)
+state ERROR-WARNING (berr-counter tx 0 rx 102)
+state ERROR-WARNING (berr-counter tx 0 rx 104)
+state ERROR-WARNING (berr-counter tx 0 rx 126)
+state ERROR-WARNING (berr-counter tx 0 rx 124)
+state ERROR-WARNING (berr-counter tx 0 rx 126)
+state ERROR-WARNING (berr-counter tx 0 rx 126)
+state ERROR-WARNING (berr-counter tx 0 rx 123)
+state ERROR-WARNING (berr-counter tx 0 rx 116)
+state ERROR-ACTIVE (berr-counter tx 0 rx 95)
+state ERROR-WARNING (berr-counter tx 0 rx 112)
+state ERROR-WARNING (berr-counter tx 0 rx 112)
+state ERROR-WARNING (berr-counter tx 0 rx 126)
+state ERROR-WARNING (berr-counter tx 0 rx 123)
+state ERROR-WARNING (berr-counter tx 0 rx 109)
+state ERROR-WARNING (berr-counter tx 0 rx 119)
+state ERROR-ACTIVE (berr-counter tx 0 rx 87)
+state ERROR-ACTIVE (berr-counter tx 0 rx 73)
+state ERROR-ACTIVE (berr-counter tx 0 rx 73)
+state ERROR-ACTIVE (berr-counter tx 0 rx 83)
+state ERROR-WARNING (berr-counter tx 0 rx 98)
+state ERROR-WARNING (berr-counter tx 0 rx 123)
+state ERROR-WARNING (berr-counter tx 0 rx 121)
+state ERROR-WARNING (berr-counter tx 0 rx 120)
+state ERROR-WARNING (berr-counter tx 0 rx 116)
+state ERROR-WARNING (berr-counter tx 0 rx 123)
+state ERROR-WARNING (berr-counter tx 0 rx 119)
+state ERROR-WARNING (berr-counter tx 0 rx 127)
+state ERROR-WARNING (berr-counter tx 0 rx 127)
+state ERROR-WARNING (berr-counter tx 0 rx 127)
+state ERROR-WARNING (berr-counter tx 0 rx 122)
+state ERROR-WARNING (berr-counter tx 0 rx 125)
+state ERROR-WARNING (berr-counter tx 0 rx 120)
+state ERROR-WARNING (berr-counter tx 0 rx 125)
+
+-- Candump song song 40s: phan bo ID va gap --
+Tong frame: 1832
+   1068 100
+    247 1FF
+    216 103
+    200 101
+     52 102
+     49 104
+Gap >100ms: 40
+
+-- dmesg tai thoi diem viet file nay (Thu Sep  3 11:17:52 PM +07 2026) --
+Su kien error-passive gan nhat: [Thu Sep  3 23:16:52 2026] mttcan c310000.mttcan can0: entered error passive state
