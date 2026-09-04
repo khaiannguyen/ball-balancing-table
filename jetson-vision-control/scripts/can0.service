@@ -10,7 +10,7 @@ After=network.target
 Type=oneshot
 RemainAfterExit=yes
 ExecStartPre=-/sbin/ip link set can0 down
-ExecStart=/sbin/ip link set can0 type can bitrate 125000 sample-point 0.875 restart-ms 100
+ExecStart=/sbin/ip link set can0 type can bitrate 125000 sample-point 0.875 sjw 16 restart-ms 100
 ExecStart=/sbin/ip link set can0 up
 ExecStop=/sbin/ip link set can0 down
 

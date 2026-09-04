@@ -1,0 +1,1815 @@
+1788534159.938896733
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+          1664     318      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0       0      0       0       0       0 
+1788534164.945138405
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+          9052    1736      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0    1286      0       0       0       0 
+1788534169.952590582
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         16437    3152      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0    2736      0       0       0       0 
+1788534174.958878892
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         23822    4568      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0    4188      0       0       0       0 
+1788534179.965056051
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         31195    5982      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0    5641      0       0       0       0 
+1788534184.972741866
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         38580    7398      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0    7091      0       0       0       0 
+1788534189.978717483
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         45953    8812      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0    8545      0       0       0       0 
+1788534194.984128547
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         53338   10228      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0    9997      0       0       0       0 
+1788534199.990147645
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         60711   11642      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   11448      0       0       0       0 
+1788534204.996931770
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         68109   13062      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   12900      0       0       0       0 
+1788534210.004896099
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         75488   14476      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   14352      0       0       0       0 
+1788534215.010970878
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         82867   15892      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   15803      0       0       0       0 
+1788534220.017237942
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         90252   17308      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   17255      0       0       0       0 
+1788534225.026130272
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+         97637   18724      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   18707      0       0       0       0 
+1788534230.032499025
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        105010   20138      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   20160      0       0       0       0 
+1788534235.038500790
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        112395   21554      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   21612      0       0       0       0 
+1788534240.045661024
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        119778   22970      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   23064      0       0       0       0 
+1788534245.052129376
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        127166   24388      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   24515      0       0       0       0 
+1788534250.058231547
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        134551   25804      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   25967      0       0       0       0 
+1788534255.064670593
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        141930   27219      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   27419      0       0       0       0 
+1788534260.070977687
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        149309   28634      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   28870      0       0       0       0 
+1788534265.080428841
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        156694   30050      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   30324      0       0       0       0 
+1788534270.088348068
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        164079   31466      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   31777      0       0       0       0 
+1788534275.094739806
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        171452   32880      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   33229      0       0       0       0 
+1788534280.101682901
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        178850   34300      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   34679      0       0       0       0 
+1788534285.107451265
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        186235   35716      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   36132      0       0       0       0 
+1788534290.113482762
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        193620   37132      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   37583      0       0       0       0 
+1788534295.120646944
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        200999   38547      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   39034      0       0       0       0 
+1788534300.127082869
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        208378   39962      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   40489      0       0       0       0 
+1788534305.132863104
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        215763   41378      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   41939      0       0       0       0 
+1788534310.139929462
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        223146   42794      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   43391      0       0       0       0 
+1788534315.146219969
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        230534   44212      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   44844      0       0       0       0 
+1788534320.153785753
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        237919   45628      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   46296      0       0       0       0 
+1788534325.162720210
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        245304   47044      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   47746      0       0       0       0 
+1788534330.169676620
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        252689   48460      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   49199      0       0       0       0 
+1788534335.176972998
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        260074   49876      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   50653      0       0       0       0 
+1788534340.183185602
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        267447   51290      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   52104      0       0       0       0 
+1788534345.190169677
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        274845   52710      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   53556      0       0       0       0 
+1788534350.197723759
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        282230   54126      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   55008      0       0       0       0 
+1788534355.203606896
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        289603   55540      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   56460      0       0       0       0 
+1788534360.211698973
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        296988   56956      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   57911      0       0       0       0 
+1788534365.218580820
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        304361   58370      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   59363      0       0       0       0 
+1788534370.224673715
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        311746   59786      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   60817      0       0       0       0 
+1788534375.231711712
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        319131   61202      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   62268      0       0       0       0 
+1788534380.238098838
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        326514   62618      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   63720      0       0       0       0 
+1788534385.244195437
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        333902   64036      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   65173      0       0       0       0 
+1788534390.252084533
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        341287   65452      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   66623      0       0       0       0 
+1788534395.259136137
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        348672   66868      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   68075      0       0       0       0 
+1788534400.267610908
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        356045   68282      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   69528      0       0       0       0 
+1788534405.274198834
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        363430   69698      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   70980      0       0       0       0 
+1788534410.280405960
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        370803   71112      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   72432      0       0       0       0 
+1788534415.286889068
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        378188   72528      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   73885      0       0       0       0 
+1788534420.293694125
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        385561   73942      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   75336      0       0       0       0 
+1788534425.299230283
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        392944   75358      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   76787      0       0       0       0 
+1788534430.305127083
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        400332   76776      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   78239      0       0       0       0 
+1788534435.311077067
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        407705   78190      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   79690      0       0       0       0 
+1788534440.317307491
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        415090   79606      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   81142      0       0       0       0 
+1788534445.323431723
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        422463   81020      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   82593      0       0       0       0 
+1788534450.329160224
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        429848   82436      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   84047      0       0       0       0 
+1788534455.335781234
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        437221   83850      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   85499      0       0       0       0 
+1788534460.343770471
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        444606   85266      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   86949      0       0       0       0 
+1788534465.349794745
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        451979   86680      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   88402      0       0       0       0 
+1788534470.356312438
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        459358   88095      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   89854      0       0       0       0 
+1788534475.362431707
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        466737   89510      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   91306      0       0       0       0 
+1788534480.370509711
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        474110   90924      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   92757      0       0       0       0 
+1788534485.376509803
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        481499   92341      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   94210      0       0       0       0 
+1788534490.388353652
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        488893   93760      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   95664      0       0       0       0 
+1788534495.399939703
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        496278   95176      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   97116      0       0       0       0 
+1788534500.406753498
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        503651   96590      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0   98569      0       0       0       0 
+1788534505.413436310
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        511036   98006      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  100021      0       0       0       0 
+1788534510.422430706
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        518409   99420      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  101471      0       0       0       0 
+1788534515.429075309
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        525794  100836      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  102926      0       0       0       0 
+1788534520.435085577
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        533167  102250      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  104378      0       0       0       0 
+1788534525.441529831
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        540558  103668      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  105828      0       0       0       0 
+1788534530.448066720
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        547938  105084      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  107281      0       0       0       0 
+1788534535.454267466
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        555311  106498      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  108733      0       0       0       0 
+1788534540.460634118
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        562696  107914      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  110183      0       0       0       0 
+1788534545.468229076
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        570069  109328      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  111636      0       0       0       0 
+1788534550.474655815
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        577442  110742      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  113089      0       0       0       0 
+1788534555.481535385
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        584827  112158      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  114540      0       0       0       0 
+1788534560.488787729
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        592212  113574      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  115993      0       0       0       0 
+1788534565.498108776
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        599585  114988      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  117445      0       0       0       0 
+1788534570.504533786
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        606958  116402      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  118898      0       0       0       0 
+1788534575.512832213
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        614331  117816      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  120348      0       0       0       0 
+1788534580.520009748
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        621716  119232      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  121800      0       0       0       0 
+1788534585.533854899
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        629107  120650      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  123255      0       0       0       0 
+1788534590.543158339
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        636487  122066      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  124708      0       0       0       0 
+1788534595.549796938
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        643860  123480      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  126160      0       0       0       0 
+1788534600.555699693
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        651233  124894      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  127612      0       0       0       0 
+1788534605.562129424
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        658606  126308      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  129062      0       0       0       0 
+1788534610.569208867
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        665979  127722      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  130515      0       0       0       0 
+1788534615.575660498
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        673364  129138      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  131967      0       0       0       0 
+1788534620.581679568
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        680737  130552      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  133419      0       0       0       0 
+1788534625.589008405
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        688110  131966      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  134872      0       0       0       0 
+1788534630.596601050
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        695483  133380      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  136324      0       0       0       0 
+1788534635.603363317
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        702856  134794      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  137775      0       0       0       0 
+1788534640.611316650
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        710241  136210      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  139227      0       0       0       0 
+1788534645.617248400
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        717614  137624      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  140679      0       0       0       0 
+1788534650.623639425
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        724993  139039      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  142133      0       0       0       0 
+1788534655.633383590
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        732372  140454      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  143585      0       0       0       0 
+1788534660.641426371
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        739745  141868      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  145036      0       0       0       0 
+1788534665.646984767
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        747130  143284      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  146489      0       0       0       0 
+1788534670.653344531
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        754503  144698      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  147940      0       0       0       0 
+1788534675.659706693
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        761901  146118      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  149391      0       0       0       0 
+1788534680.666180674
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        769274  147532      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  150844      0       0       0       0 
+1788534685.675401989
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        776659  148948      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  152298      0       0       0       0 
+1788534690.681672474
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        784044  150364      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  153748      0       0       0       0 
+1788534695.688707181
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        791417  151778      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  155201      0       0       0       0 
+1788534700.694732088
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        798802  153194      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  156653      0       0       0       0 
+1788534705.700472258
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        806175  154608      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  158103      0       0       0       0 
+1788534710.706466570
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        813560  156024      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  159556      0       0       0       0 
+1788534715.712670549
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        820933  157438      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  161006      0       0       0       0 
+1788534720.718799935
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        828331  158858      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  162458      0       0       0       0 
+1788534725.725296897
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        835710  160273      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  163910      0       0       0       0 
+1788534730.731148118
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        843089  161688      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  165363      0       0       0       0 
+1788534735.738285113
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        850474  163104      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  166815      0       0       0       0 
+1788534740.744193733
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        857847  164518      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  168267      0       0       0       0 
+1788534745.751818815
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        865220  165932      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  169718      0       0       0       0 
+1788534750.757540498
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        872605  167348      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  171170      0       0       0       0 
+1788534755.763938421
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        879978  168762      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  172621      0       0       0       0 
+1788534760.772003894
+9: can0: <NOARP,UP,LOWER_UP,ECHO> mtu 16 qdisc pfifo_fast state UP mode DEFAULT group default qlen 10
+    link/can  promiscuity 0  allmulti 0 minmtu 0 maxmtu 0 
+    can state ERROR-ACTIVE (berr-counter tx 0 rx 0) restart-ms 100 
+	  bitrate 125000 sample-point 0.875
+	  tq 40 prop-seg 87 phase-seg1 87 phase-seg2 25 sjw 16 brp 2
+	  mttcan: tseg1 2..255 tseg2 0..127 sjw 1..127 brp 1..511 brp_inc 1
+	  mttcan: dtseg1 1..31 dtseg2 0..15 dsjw 1..15 dbrp 1..15 dbrp_inc 1
+	  clock 50000000 
+	  re-started bus-errors arbit-lost error-warn error-pass bus-off
+	  0          0          0          0          0          0         numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 tso_max_size 65536 tso_max_segs 65535 gro_max_size 65536 parentbus platform parentdev c310000.mttcan 
+    RX:  bytes packets errors dropped  missed   mcast           
+        887363  170178      0       0       0       0 
+    TX:  bytes packets errors dropped carrier collsns           
+             0  173923      0       0       0       0 
