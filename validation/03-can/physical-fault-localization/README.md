@@ -1,154 +1,179 @@
-# Wiggle test — định vị điểm tiếp xúc chập chờn trên dây CAN
+# Wiggle test — locating the intermittent contact point on the CAN wire
 
-Bối cảnh: đã đổi module transceiver SN65HVD230 phía Jetson, triệu chứng
-KHÔNG đổi — vẫn `TEC=0` (hoặc thấp), `REC` leo cao (từng thấy 117-127),
-`TX packets=0` khi không có app chạy nhưng vẫn nhận frame lỗi liên tục từ
-STM32. Điều này loại trừ chính con chip transceiver phía Jetson là nguyên
-nhân (xem lịch sử điều tra ở [`../README.md`](../README.md),
+Context: the SN65HVD230 transceiver module on the Jetson side was replaced, the symptom
+did NOT change — still `TEC=0` (or low), `REC` climbing high (seen up to 117-127),
+`TX packets=0` when the app is not running but still receiving continuous error frames
+from STM32. This rules out the Jetson-side transceiver chip itself as the cause (see
+the investigation history in [`../README.md`](../README.md),
 [`../regression-after-reboot/README.md`](../regression-after-reboot/README.md)).
 
-Mục tiêu bài test này: tương quan **thời điểm thao tác tay** (lắc/ấn từng
-điểm tiếp xúc vật lý) với **thời điểm berr-counter tăng đột biến**, để định
-vị chính xác điểm chập chờn — hoặc loại trừ hoàn toàn khả năng lỗi tiếp xúc.
+Goal of this test: correlate **the moment of hand manipulation** (wiggling/pressing
+each physical contact point) with **the moment berr-counter spikes**, to pinpoint the
+exact intermittent point — or rule out the possibility of a contact fault entirely.
 
-## Công cụ: `scripts/wiggle_monitor.sh`
+## Tool: `scripts/wiggle_monitor.sh`
 
-Cố ý **không dùng candump, không chạy app** — chỉ đọc
-`ip -details -s link show can0` mỗi 0.5s, để cô lập tối đa khỏi phần mềm và
-chỉ còn lại tầng vật lý/driver.
+Deliberately **does not use candump, does not run the app** — only reads
+`ip -details -s link show can0` every 0.5s, to isolate as much as possible from
+software and leave only the physical/driver layer.
 
-Reset `can0` bằng `modprobe -r mttcan && modprobe mttcan` (reload driver
-thật sự) — **không** dùng `ip link down/up` hay `systemctl restart
-can0.service`, vì đã xác nhận trong
-[`../regression-after-reboot/README.md`](../regression-after-reboot/README.md)
-(và ghi lại trong `scripts/run_soak.sh`) rằng hai cách đó **không** reset
-được berr-counter (TEC/REC) hay các counter error-warn/error-pass/bus-off
-trên driver `mttcan` này.
+Reset `can0` with `modprobe -r mttcan && modprobe mttcan` (a real driver reload) —
+**not** `ip link down/up` or `systemctl restart can0.service`, since it was confirmed
+in [`../regression-after-reboot/README.md`](../regression-after-reboot/README.md)
+(and recorded in `scripts/run_soak.sh`) that those two methods do **not** reset the
+berr-counter (TEC/REC) or the error-warn/error-pass/bus-off counters on this `mttcan`
+driver.
 
-Script tự động in "banner" hướng dẫn từng bước lên màn hình đúng lúc VÀ ghi
-banner đó (kèm epoch timestamp) vào `wiggle_raw.log` — nhờ vậy mốc thời
-gian đối chiếu ở bước phân tích lấy trực tiếp từ log, không phụ thuộc vào
-việc người thao tác hô to/nhớ giờ chính xác.
+The script automatically prints a step-by-step instruction "banner" to the screen at
+the right moment AND writes that banner (with an epoch timestamp) to `wiggle_raw.log`
+— so the timing reference used at the analysis step comes directly from the log, not
+dependent on the operator calling out loud/remembering the exact time.
 
-### Cách chạy
+### How to run
 
-Chạy trực tiếp trong terminal của bạn (không qua agent) để nhìn được output
-real-time trong lúc tay đang thao tác:
+Run directly in your own terminal (not through the agent) so you can see real-time
+output while your hand is doing the manipulation:
 
 ```
 sudo scripts/wiggle_monitor.sh
 ```
 
-Mặc định: outdir `wiggle_run_<timestamp>/`, thời lượng 180s (3 phút).
-Có thể chỉ định khác: `sudo scripts/wiggle_monitor.sh <outdir> <duration_s>`.
+Default: outdir `wiggle_run_<timestamp>/`, duration 180s (3 minutes). Can be specified
+otherwise: `sudo scripts/wiggle_monitor.sh <outdir> <duration_s>`.
 
-### Lịch trình thao tác (tự động hiện trên màn hình, ~20s/bước)
+### Manipulation schedule (automatically shown on screen, ~20s/step)
 
-| Bước | Thời điểm (giây) | Thao tác |
+| Step | Time (seconds) | Action |
 |---|---|---|
-| a | 0-20 | **Baseline** — không chạm gì |
-| b | 20-40 | Lắc nhẹ đầu connector CAN phía **Jetson** (module mới) |
-| c | 40-60 | Lắc nhẹ đầu connector CAN phía **STM32** |
-| d | 60-80 | Lắc/uốn nhẹ **dọc theo dây CANH/CANL** giữa hai board |
-| e | 80-100 | Ấn nhẹ **từng chân header** module Jetson (không tháo ra) |
-| f | 100-120 | Ấn nhẹ **từng chân header** module STM32 |
-| g | 120-140 | Kiểm tra điểm nối **GND chung** giữa hai board (lắc nhẹ) |
-| h | 140-180 | **Buông tay hoàn toàn** — quan sát lỗi có còn tăng không khi không chạm |
+| a | 0-20 | **Baseline** — touch nothing |
+| b | 20-40 | Gently wiggle the CAN connector end on the **Jetson** side (new module) |
+| c | 40-60 | Gently wiggle the CAN connector end on the **STM32** side |
+| d | 60-80 | Gently wiggle/flex **along the CANH/CANL wire** between the two boards |
+| e | 80-100 | Gently press **each header pin** of the Jetson module (without removing it) |
+| f | 100-120 | Gently press **each header pin** of the STM32 module |
+| g | 120-140 | Check the **common GND** connection point between the two boards (gently wiggle) |
+| h | 140-180 | **Hands off completely** — observe whether the error keeps increasing with no touching |
 
-Bước h (buông tay, không có trong yêu cầu gốc nhưng thêm vào vì nó là phép
-đối chứng bắt buộc: nếu lỗi vẫn tăng đều trong 40s cuối này dù không ai
-chạm, đó là bằng chứng trực tiếp rằng nguyên nhân KHÔNG phải tiếp xúc cơ khí).
+Step h (hands off, not in the original request but added because it is a mandatory
+counter-test: if the error still increases steadily during these final 40s even though
+nobody is touching anything, that is direct evidence that the cause is NOT mechanical
+contact).
 
-### Output mỗi lần chạy
+### Output of each run
 
-- `run_info.txt` — trạng thái `can0` ngay sau reset (phải là
-  `ERROR-ACTIVE, berr tx=0 rx=0` nếu reset thành công) + lịch trình bước.
-- `wiggle_raw.log` — dump thô đầy đủ `ip -details -s link show can0` mỗi
-  0.5s kèm epoch timestamp, và banner mỗi lần chuyển bước.
-- `wiggle_berr.csv` — bản rút gọn dạng CSV mỗi mẫu: bước, epoch,
-  elapsed_s, can_state, berr_tx, berr_rx, rx_packets, rx_errors,
-  rx_dropped, tx_packets, restarts, bus_errors, arbit_lost, error_warn,
-  error_pass, bus_off — dùng để tính delta giữa các bước nhanh hơn là parse
-  log thô.
+- `run_info.txt` — the `can0` state right after reset (must be
+  `ERROR-ACTIVE, berr tx=0 rx=0` if the reset succeeded) + the step schedule.
+- `wiggle_raw.log` — the full raw dump of `ip -details -s link show can0` every 0.5s
+  with an epoch timestamp, and a banner at every step transition.
+- `wiggle_berr.csv` — a shortened CSV form per sample: step, epoch, elapsed_s,
+  can_state, berr_tx, berr_rx, rx_packets, rx_errors, rx_dropped, tx_packets, restarts,
+  bus_errors, arbit_lost, error_warn, error_pass, bus_off — used to compute the delta
+  between steps faster than parsing the raw log.
 
-## Kết quả
+## Result
 
-Đã chạy 1 lần: [`wiggle_run_20260904_072240/`](wiggle_run_20260904_072240/) (2026-09-04 07:22,
-180s). `run_info.txt` xác nhận reset sạch trước khi bắt đầu (`ERROR-ACTIVE, berr tx=0 rx=0`, đúng
-125kbps/sample-point 0.875 như `can_up.sh`).
+Run 1 time: [`wiggle_run_20260904_072240/`](wiggle_run_20260904_072240/) (2026-09-04
+07:22, 180s). `run_info.txt` confirms a clean reset before starting
+(`ERROR-ACTIVE, berr tx=0 rx=0`, correct 125kbps/sample-point 0.875 as in `can_up.sh`).
 
-### Số lần `entered error passive` (cột `error_pass`, tích luỹ) theo từng bước, 20s/bước
+### Number of `entered error passive` events (the `error_pass` column, cumulative) per step, 20s/step
 
-| Bước | Thao tác | Δ error_pass trong bước | Quy đổi /20s |
+| Step | Action | Δ error_pass in the step | Converted to /20s |
 |---|---|---|---|
-| a | Baseline, không chạm | 0 | 0 |
-| b | Lắc connector Jetson | 21 | 21 |
-| c | Lắc connector STM32 | 50 | 50 |
-| d | Lắc/uốn dọc dây CANH/CANL | **113** | **113** (cao nhất) |
-| e | Ấn chân header Jetson | 93 | 93 |
-| f | Ấn chân header STM32 | 47 | 47 |
-| g | Lắc điểm nối GND chung | 78 | 78 |
-| h | **Buông tay hoàn toàn** (40s) | 171 | ~85 |
+| a | Baseline, no touch | 0 | 0 |
+| b | Wiggle Jetson connector | 21 | 21 |
+| c | Wiggle STM32 connector | 50 | 50 |
+| d | Wiggle/flex along the CANH/CANL wire | **113** | **113** (highest) |
+| e | Press Jetson header pins | 93 | 93 |
+| f | Press STM32 header pins | 47 | 47 |
+| g | Wiggle the common GND connection point | 78 | 78 |
+| h | **Hands off completely** (40s) | 171 | ~85 |
 
-Trong bước h, tốc độ tăng còn **tăng dần theo thời gian** dù không ai chạm gì: `+34` (140-150s),
-`+36` (150-161s), `+46` (161-172s, quy đổi/10s), `+65` (172-180s, quy đổi/10s) — nhanh hơn ở cuối
-bước hơn là chậm dần/dừng lại.
+During step h, the rate of increase kept **accelerating over time** even though nobody
+was touching anything: `+34` (140-150s), `+36` (150-161s), `+46` (161-172s,
+converted/10s), `+65` (172-180s, converted/10s) — faster near the end of the step
+rather than slowing/stopping.
 
-### Diễn giải — **KẾT LUẬN NGƯỢC LẠI với báo cáo `regression-after-reboot/`**
+### Interpretation — **CONCLUSION OPPOSITE to the `regression-after-reboot/` report**
 
-Bước h được thiết kế làm phép đối chứng bắt buộc (xem mục thiết kế bài test ở trên): *"nếu lỗi vẫn
-tăng đều trong 40s cuối này dù không ai chạm, đó là bằng chứng trực tiếp rằng nguyên nhân KHÔNG phải
-tiếp xúc cơ khí."* Đó chính xác là những gì xảy ra — không chỉ tăng đều, mà còn **tăng tốc** trong
-lúc hoàn toàn không chạm vào bất kỳ điểm tiếp xúc nào.
+Step h was designed as a mandatory counter-test (see the test-design section above):
+*"if the error still increases steadily during these final 40s even though nobody is
+touching anything, that is direct evidence that the cause is NOT mechanical contact."*
+That is exactly what happened — not only a steady increase, but even **acceleration**
+while not touching any contact point at all.
 
-So sánh giữa các bước "chạm" cũng không cho thấy tương quan nhất quán: bước d (uốn dây) cho tốc độ
-cao nhất (113/20s), nhưng bước f (ấn chân STM32) lại thấp hơn cả baseline-tăng-tốc ở bước h
-(47/20s so với ~85/20s trung bình của h, và h kết thúc ở ~130/20s quy đổi). Nếu lỗi thực sự do một
-điểm tiếp xúc chập chờn phản ứng với thao tác tay, ta sẽ kỳ vọng thấy đột biến rõ rệt đúng lúc chạm
-vào MỘT bước cụ thể rồi tốc độ giảm hẳn khi buông tay (bước h) — không phải một xu hướng tăng dần
-xuyên suốt toàn bộ 180s bất kể có chạm hay không.
+Comparing the "touching" steps also shows no consistent correlation: step d (flexing
+the wire) gives the highest rate (113/20s), but step f (pressing STM32 pins) is even
+lower than the accelerating baseline in step h (47/20s vs. the ~85/20s average of h,
+and h ends at ~130/20s converted). If the error really were caused by an intermittent
+contact point reacting to hand manipulation, we would expect to see a clear spike
+exactly when touching ONE specific step, then the rate to drop sharply once hands are
+off (step h) — not a trend of steady increase throughout the entire 180s regardless of
+touching.
 
-**Diễn giải lại**: bằng chứng "cơn bão lỗi xảy ra trước khi module CAN nạp" ở
-[`../regression-after-reboot/README.md`](../regression-after-reboot/README.md) mục 2.3 vẫn đúng —
-đó là bằng chứng độc lập kernel-level, không phụ thuộc phép đo này. Nhưng kết luận "nguyên nhân là
-tiếp xúc cơ khí chập chờn phản ứng với rung động/chạm" (dựa trên bằng chứng gián tiếp: lỗi xảy ra
-theo cụm xen kẽ khoảng nghỉ) **chưa được xác nhận trực tiếp**, và bài wiggle test này — công cụ được
-thiết kế RIÊNG để xác nhận trực tiếp giả thuyết đó — **không** cho thấy tương quan chạm-tay/tốc độ
-lỗi. Dữ liệu phù hợp hơn với một nguồn lỗi **liên tục, không phụ thuộc tiếp xúc cơ học**, có xu hướng
-XẤU DẦN theo thời gian trong phiên đo (gợi ý trôi nhiệt/trôi xung nhịp, hoặc một vấn đề tầng vật lý
-thường trực như phản xạ tín hiệu do thiếu/lệch điện trở termination — xem khuyến nghị bên dưới —
-hơn là một mối hàn/đầu nối lỏng lẻo ngắt-nối theo rung động).
+**Reinterpretation**: the "error storm occurred before the CAN module loaded" evidence
+in [`../regression-after-reboot/README.md`](../regression-after-reboot/README.md)
+section 2.3 is still correct — that is independent kernel-level evidence, not
+dependent on this measurement. But the conclusion that "the cause is an intermittent
+mechanical contact reacting to vibration/touch" (based on indirect evidence: errors
+occurring in bursts interspersed with quiet periods) **has not been confirmed
+directly**, and this wiggle test — the tool designed SPECIFICALLY to directly confirm
+that hypothesis — does **not** show a hand-touch/error-rate correlation. The data fits
+better with a **continuous** error source, **not dependent on mechanical contact**,
+that tends to get WORSE over time within the measurement session (suggesting thermal
+drift/clock drift, or a persistent physical-layer issue such as signal reflection from
+missing/mismatched termination resistance — see the recommendations below — rather
+than a loose solder joint/connector that connects-disconnects with vibration).
 
-Lưu ý quan trọng về giới hạn phép đo này: `tx` giữ nguyên 0 suốt 180s (app không chạy, Jetson không
-phát gì) — đây là lỗi CHIỀU NHẬN THUẦN TUÝ (STM32 → Jetson) trong điều kiện rảnh. Log
-`app.log` của `soak-after-reconnect/` (lúc app đang chạy, Jetson có phát) lại cho thấy chính TEC
-(chiều Jetson phát) leo lên 96-135 cùng lúc — tức là **cả hai chiều đều từng lỗi tuỳ thời điểm**, một
-đặc điểm khớp với vấn đề tầng vật lý ảnh hưởng cả bus (termination/phản xạ/nhiễu chung), không khớp
-với một lỗi cấu hình/logic chỉ ảnh hưởng một chiều cố định.
+An important note on the limitation of this measurement: `tx` stays at 0 throughout
+the 180s (the app is not running, Jetson is not transmitting anything) — this is a
+PURE RECEIVE-DIRECTION (STM32 → Jetson) fault under idle conditions. The `app.log` log
+from `soak-after-reconnect/` (with the app running, Jetson transmitting) instead shows
+TEC itself (the Jetson-transmit direction) climbing to 96-135 at the same time —
+meaning **both directions have errored at various times**, a characteristic that
+matches a physical-layer issue affecting the whole bus (termination/reflection/common
+noise), not matching a configuration/logic fault that only affects one fixed
+direction.
 
-### Khuyến nghị bước tiếp theo (chưa làm được trong phiên này, cần đo bằng dụng cụ)
+### Recommended next steps (not done in this session, requires instrumented measurement)
 
-1. **Kiểm tra điện trở termination 120Ω ở cả hai đầu bus** (đo bằng đồng hồ khi bus đã tắt nguồn,
-   giữa CANH-CANL: nên đọc ~60Ω nếu có đúng 2 điện trở 120Ω song song ở hai đầu; đọc ~120Ω nghĩa là
-   thiếu 1 đầu, đọc hở/rất cao nghĩa là thiếu cả hai). **Chưa từng được kiểm tra trong toàn bộ quá
-   trình điều tra tới nay** — README chính (`../README.md`) không có mục nào về termination.
-2. **Soi dạng sóng CANH/CANL bằng oscilloscope** trong lúc bus có tải thật — tìm dấu hiệu phản xạ
-   (ringing) ở cạnh bit, đặc biệt nếu thiếu termination ở mục 1. Đối chiếu biên độ chênh lệch
-   CANH-CANL lúc dominant (nên ~2V, đã đo bằng đồng hồ ở mục 2.5 README chính nhưng đó là DC lúc
-   nghỉ, chưa đo AC/transient lúc có tải).
-3. **Kiểm tra dây CAN có phải cặp xoắn đôi (twisted pair) thật hay không**, và chiều dài/cách đi dây
-   so với dây động lực servo (PWM) — nếu CANH/CANL đi chung máng với dây servo hoặc không xoắn, ghép
-   nhiễu điện dung/cảm ứng từ PWM là một nguồn lỗi liên tục hợp lý (không cần chạm tay để kích hoạt).
-4. **Đo lại có tương quan nhiệt độ hay không**: chạy wiggle test kiểu này (không chạm, chỉ log) trong
-   30-60 phút liên tục ngay sau khi bật máy, xem tốc độ error_pass có tiếp tục tăng tốc theo thời gian
-   (ủng hộ giả thuyết trôi nhiệt/xung nhịp) hay ổn định lại (ủng hộ giả thuyết khác).
-5. **Kiểm tra cách ly GND giữa driver servo và mạch CAN** — đo điện áp GND-GND giữa STM32 và Jetson
-   khi servo đang hoạt động (không chỉ lúc rảnh như bài đo mục 2.5 README chính) để phát hiện chênh
-   lệch common-mode do dòng điện servo gây ra.
+1. **Check the 120Ω termination resistance at both ends of the bus** (measure with a
+   multimeter while the bus is powered off, between CANH-CANL: should read ~60Ω if
+   there are exactly 2× 120Ω resistors in parallel at the two ends; reading ~120Ω
+   means 1 end is missing, reading open/very high means both are missing). **Never
+   checked in the entire investigation to date** — the main README (`../README.md`)
+   has no section on termination.
+2. **Observe the CANH/CANL waveform with an oscilloscope** while the bus has a real
+   load — look for signs of reflection (ringing) at bit edges, especially if
+   termination is missing per item 1. Cross-check the CANH-CANL voltage differential
+   at dominant (should be ~2V, already measured with a multimeter in section 2.5 of
+   the main README but that was DC at idle, AC/transient under load not yet measured).
+3. **Check whether the CAN wire is actually a real twisted pair**, and its
+   length/routing relative to the servo power (PWM) wires — if CANH/CANL run in the
+   same channel as the servo wires or are not twisted, capacitive/inductive coupling
+   from the PWM is a plausible continuous error source (does not need hand-touching to
+   trigger).
+4. **Re-measure for a temperature correlation**: run this kind of wiggle test (no
+   touching, just logging) continuously for 30-60 minutes right after power-on, and
+   see whether the error_pass rate keeps accelerating over time (supporting the
+   thermal-drift/clock-drift hypothesis) or settles down (supporting a different
+   hypothesis).
+5. **Check the GND isolation between the servo driver and the CAN circuit** — measure
+   the GND-GND voltage between STM32 and Jetson while the servos are actively running
+   (not just at idle as in the section 2.5 measurement in the main README) to detect
+   common-mode offset caused by servo current.
 
-**CẬP NHẬT 2026-09-04, ĐÃ GIẢI QUYẾT — 5 mục trên không cần làm nữa**: nguyên nhân gốc thật là SJW
-phía Jetson quá hẹp (12 tq/6% so với STM32 2 tq/12.5%, xác nhận qua SWD), không phải bất kỳ vấn đề
-tầng vật lý nào ở trên. Đặt `sjw 16` (`scripts/can_up.sh`/`can0.service`) làm lỗi biến mất hoàn toàn
-qua soak 300s xác minh (`../sjw-fix-verification/`). Xem `../README.md` mục "TRẠNG THÁI HIỆN TẠI" để
-biết chuỗi loại trừ đầy đủ. Giữ nguyên các mục 1-5 ở trên làm hồ sơ lịch sử — đó là hướng suy luận hợp
-lý tại thời điểm viết (ngay sau khi wiggle test loại trừ tiếp xúc vật lý, trước khi có dữ liệu SWD).
+**UPDATE 2026-09-04, ROOT-CAUSE ATTRIBUTION SUPERSEDED — see
+[`../README.md`](../README.md) for the current, final root cause**: this note
+originally attributed the fix to the Jetson-side SJW being too narrow (12 tq/6% vs.
+STM32's 2 tq/12.5%, confirmed via SWD), with a 300s soak run at `sjw 16`
+(`scripts/can_up.sh`/`can0.service`) cited as confirmation
+(`../sjw-fix-verification/`). That attribution is superseded: later isolation testing
+(holding `sjw=16` fixed across both trials) found that `sjw=16` alone did not stop the
+fault while the CAN_H/CAN_L wire pair was still untwisted, and that twisting the wire
+pair was the change that actually eliminated it. The current root cause is the
+untwisted CAN_H/CAN_L wire pair (cross-coupled noise/EMI) — item 3 above, checking
+whether the wire is a real twisted pair, turned out to be the one that mattered.
+`sjw=16` is kept as an additional safety margin; its own individual contribution has
+not been verified in isolation. Items 1, 2, 4 and 5 above are kept as historical
+record.
