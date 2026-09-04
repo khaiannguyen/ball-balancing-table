@@ -1,0 +1,1709 @@
+[Thu Sep  3 22:37:09 2026] /bus@0/aconnect@2900000/ahub@2900800/asrc@2910000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:09 2026] 31d0000.serial: ttyAMA0 at MMIO 0x31d0000 (irq = 15, base_baud = 0) is a SBSA
+[Thu Sep  3 22:37:09 2026] /bus@0/padctl@3520000/ports/usb2-0: Fixed dependency cycle(s) with /bus@0/i2c@c240000/fusb301@25/connector@0
+[Thu Sep  3 22:37:09 2026] /bus@0/i2c@c240000/fusb301@25/connector@0: Fixed dependency cycle(s) with /bus@0/padctl@3520000/ports/usb2-0
+[Thu Sep  3 22:37:09 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@1: Fixed dependency cycle(s) with /bus@0/cam_i2cmux/i2c@1/rbpcv2_imx219_c@10
+[Thu Sep  3 22:37:09 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@0: Fixed dependency cycle(s) with /bus@0/cam_i2cmux/i2c@0/rbpcv2_imx219_a@10
+[Thu Sep  3 22:37:09 2026] /bus@0/aon@c000000: Fixed dependency cycle(s) with /bus@0/aon@c000000
+[Thu Sep  3 22:37:09 2026] /bus@0/memory-controller@2c00000/external-memory-controller@2c60000: Fixed dependency cycle(s) with /bpmp
+[Thu Sep  3 22:37:09 2026] /bpmp: Fixed dependency cycle(s) with /bus@0/memory-controller@2c00000/external-memory-controller@2c60000
+[Thu Sep  3 22:37:09 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@0: Fixed dependency cycle(s) with /tegra-capture-vi
+[Thu Sep  3 22:37:09 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@1: Fixed dependency cycle(s) with /tegra-capture-vi
+[Thu Sep  3 22:37:09 2026] /tegra-capture-vi: Fixed dependency cycle(s) with /bus@0/host1x@13e00000/nvcsi@15a00000/channel@0
+[Thu Sep  3 22:37:09 2026] /tegra-capture-vi: Fixed dependency cycle(s) with /bus@0/host1x@13e00000/nvcsi@15a00000/channel@1
+[Thu Sep  3 22:37:09 2026] Modules: 2G module region forced by RANDOMIZE_MODULE_REGION_FULL
+[Thu Sep  3 22:37:09 2026] Modules: 0 pages in range for non-PLT usage
+[Thu Sep  3 22:37:09 2026] Modules: 511056 pages in range for PLT usage
+[Thu Sep  3 22:37:09 2026] HugeTLB: registered 1.00 GiB page size, pre-allocated 0 pages
+[Thu Sep  3 22:37:09 2026] HugeTLB: 0 KiB vmemmap can be freed for a 1.00 GiB page
+[Thu Sep  3 22:37:09 2026] HugeTLB: registered 32.0 MiB page size, pre-allocated 0 pages
+[Thu Sep  3 22:37:09 2026] HugeTLB: 0 KiB vmemmap can be freed for a 32.0 MiB page
+[Thu Sep  3 22:37:09 2026] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[Thu Sep  3 22:37:09 2026] HugeTLB: 0 KiB vmemmap can be freed for a 2.00 MiB page
+[Thu Sep  3 22:37:09 2026] HugeTLB: registered 64.0 KiB page size, pre-allocated 0 pages
+[Thu Sep  3 22:37:09 2026] HugeTLB: 0 KiB vmemmap can be freed for a 64.0 KiB page
+[Thu Sep  3 22:37:09 2026] ACPI: Interpreter disabled.
+[Thu Sep  3 22:37:09 2026] iommu: Default domain type: Translated
+[Thu Sep  3 22:37:09 2026] iommu: DMA domain TLB invalidation policy: strict mode
+[Thu Sep  3 22:37:09 2026] SCSI subsystem initialized
+[Thu Sep  3 22:37:09 2026] libata version 3.00 loaded.
+[Thu Sep  3 22:37:09 2026] usbcore: registered new interface driver usbfs
+[Thu Sep  3 22:37:09 2026] usbcore: registered new interface driver hub
+[Thu Sep  3 22:37:09 2026] usbcore: registered new device driver usb
+[Thu Sep  3 22:37:09 2026] pps_core: LinuxPPS API ver. 1 registered
+[Thu Sep  3 22:37:09 2026] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[Thu Sep  3 22:37:09 2026] PTP clock support registered
+[Thu Sep  3 22:37:09 2026] EDAC MC: Ver: 3.0.0
+[Thu Sep  3 22:37:09 2026] ARM FF-A: FFA_VERSION returned not supported
+[Thu Sep  3 22:37:09 2026] scmi_core: SCMI protocol bus registered
+[Thu Sep  3 22:37:09 2026] efivars: Registered efivars operations
+[Thu Sep  3 22:37:09 2026] FPGA manager framework
+[Thu Sep  3 22:37:09 2026] Advanced Linux Sound Architecture Driver Initialized.
+[Thu Sep  3 22:37:09 2026] vgaarb: loaded
+[Thu Sep  3 22:37:09 2026] clocksource: Switched to clocksource arch_sys_counter
+[Thu Sep  3 22:37:09 2026] VFS: Disk quotas dquot_6.6.0
+[Thu Sep  3 22:37:09 2026] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[Thu Sep  3 22:37:09 2026] AppArmor: AppArmor Filesystem Enabled
+[Thu Sep  3 22:37:09 2026] pnp: PnP ACPI: disabled
+[Thu Sep  3 22:37:09 2026] NET: Registered PF_INET protocol family
+[Thu Sep  3 22:37:09 2026] IP idents hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[Thu Sep  3 22:37:09 2026] tcp_listen_portaddr_hash hash table entries: 4096 (order: 4, 65536 bytes, linear)
+[Thu Sep  3 22:37:09 2026] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[Thu Sep  3 22:37:09 2026] TCP established hash table entries: 65536 (order: 7, 524288 bytes, linear)
+[Thu Sep  3 22:37:09 2026] TCP bind hash table entries: 65536 (order: 9, 2097152 bytes, linear)
+[Thu Sep  3 22:37:09 2026] TCP: Hash tables configured (established 65536 bind 65536)
+[Thu Sep  3 22:37:09 2026] UDP hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[Thu Sep  3 22:37:09 2026] UDP-Lite hash table entries: 4096 (order: 5, 131072 bytes, linear)
+[Thu Sep  3 22:37:09 2026] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[Thu Sep  3 22:37:09 2026] RPC: Registered named UNIX socket transport module.
+[Thu Sep  3 22:37:09 2026] RPC: Registered udp transport module.
+[Thu Sep  3 22:37:09 2026] RPC: Registered tcp transport module.
+[Thu Sep  3 22:37:09 2026] RPC: Registered tcp-with-tls transport module.
+[Thu Sep  3 22:37:09 2026] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[Thu Sep  3 22:37:09 2026] PCI: CLS 0 bytes, default 64
+[Thu Sep  3 22:37:09 2026] Unpacking initramfs...
+[Thu Sep  3 22:37:09 2026] kvm [1]: IPA Size Limit: 48 bits
+[Thu Sep  3 22:37:09 2026] kvm [1]: GICv3: no GICV resource entry
+[Thu Sep  3 22:37:09 2026] kvm [1]: disabling GICv2 emulation
+[Thu Sep  3 22:37:09 2026] kvm [1]: GIC system register CPU interface enabled
+[Thu Sep  3 22:37:09 2026] kvm [1]: vgic interrupt IRQ9
+[Thu Sep  3 22:37:09 2026] kvm [1]: VHE mode initialized successfully
+[Thu Sep  3 22:37:09 2026] Initialise system trusted keyrings
+[Thu Sep  3 22:37:09 2026] Key type blacklist registered
+[Thu Sep  3 22:37:09 2026] workingset: timestamp_bits=42 max_order=21 bucket_order=0
+[Thu Sep  3 22:37:09 2026] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[Thu Sep  3 22:37:09 2026] NFS: Registering the id_resolver key type
+[Thu Sep  3 22:37:09 2026] Key type id_resolver registered
+[Thu Sep  3 22:37:09 2026] Key type id_legacy registered
+[Thu Sep  3 22:37:09 2026] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[Thu Sep  3 22:37:09 2026] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+[Thu Sep  3 22:37:09 2026] ntfs: driver 2.1.32 [Flags: R/O].
+[Thu Sep  3 22:37:09 2026] 9p: Installing v9fs 9p2000 file system support
+[Thu Sep  3 22:37:09 2026] integrity: Platform Keyring initialized
+[Thu Sep  3 22:37:09 2026] Key type asymmetric registered
+[Thu Sep  3 22:37:09 2026] Asymmetric key parser 'x509' registered
+[Thu Sep  3 22:37:09 2026] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 244)
+[Thu Sep  3 22:37:09 2026] io scheduler mq-deadline registered
+[Thu Sep  3 22:37:09 2026] io scheduler kyber registered
+[Thu Sep  3 22:37:09 2026] io scheduler bfq registered
+[Thu Sep  3 22:37:09 2026] EINJ: ACPI disabled.
+[Thu Sep  3 22:37:09 2026] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+[Thu Sep  3 22:37:09 2026] msm_serial: driver initialized
+[Thu Sep  3 22:37:09 2026] SuperH (H)SCI(F) driver initialized
+[Thu Sep  3 22:37:09 2026] STM32 USART driver initialized
+[Thu Sep  3 22:37:09 2026] printk: legacy console [ttyTCU0] enabled
+[Thu Sep  3 22:37:09 2026] Freeing initrd memory: 11108K
+[Thu Sep  3 22:37:09 2026] arm-smmu 8000000.iommu: probing hardware configuration...
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: SMMUv2 with:
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	stage 1 translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	stage 2 translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	nested translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	stream matching with 128 register groups
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	128 context banks (0 stage-2 only)
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	Supported page sizes: 0x61311000
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	Stage-2: 48-bit IPA -> 48-bit PA
+[Thu Sep  3 22:37:12 2026] arm-smmu 8000000.iommu: 	preserved 0 boot mappings
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: probing hardware configuration...
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: SMMUv2 with:
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	stage 1 translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	stage 2 translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	nested translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	stream matching with 128 register groups
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	128 context banks (0 stage-2 only)
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	Supported page sizes: 0x61311000
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	Stage-2: 48-bit IPA -> 48-bit PA
+[Thu Sep  3 22:37:12 2026] arm-smmu 10000000.iommu: 	preserved 0 boot mappings
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: probing hardware configuration...
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: SMMUv2 with:
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	stage 1 translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	stage 2 translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	nested translation
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	stream matching with 128 register groups
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	128 context banks (0 stage-2 only)
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	Supported page sizes: 0x61311000
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	Stage-1: 48-bit VA -> 48-bit IPA
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	Stage-2: 48-bit IPA -> 48-bit PA
+[Thu Sep  3 22:37:12 2026] arm-smmu 12000000.iommu: 	preserved 0 boot mappings
+[Thu Sep  3 22:37:12 2026] loop: module loaded
+[Thu Sep  3 22:37:12 2026] megasas: 07.727.03.00-rc1
+[Thu Sep  3 22:37:12 2026] tun: Universal TUN/TAP device driver, 1.6
+[Thu Sep  3 22:37:12 2026] thunder_xcv, ver 1.0
+[Thu Sep  3 22:37:12 2026] thunder_bgx, ver 1.0
+[Thu Sep  3 22:37:12 2026] nicpf, ver 1.0
+[Thu Sep  3 22:37:12 2026] hns3: Hisilicon Ethernet Network Driver for Hip08 Family - version
+[Thu Sep  3 22:37:12 2026] hns3: Copyright (c) 2017 Huawei Corporation.
+[Thu Sep  3 22:37:12 2026] hclge is initializing
+[Thu Sep  3 22:37:12 2026] e1000: Intel(R) PRO/1000 Network Driver
+[Thu Sep  3 22:37:12 2026] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[Thu Sep  3 22:37:12 2026] e1000e: Intel(R) PRO/1000 Network Driver
+[Thu Sep  3 22:37:12 2026] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[Thu Sep  3 22:37:12 2026] igb: Intel(R) Gigabit Ethernet Network Driver
+[Thu Sep  3 22:37:12 2026] igb: Copyright (c) 2007-2014 Intel Corporation.
+[Thu Sep  3 22:37:12 2026] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[Thu Sep  3 22:37:12 2026] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[Thu Sep  3 22:37:12 2026] sky2: driver version 1.30
+[Thu Sep  3 22:37:12 2026] PPP generic driver version 2.4.2
+[Thu Sep  3 22:37:12 2026] VFIO - User Level meta-driver version: 0.3
+[Thu Sep  3 22:37:12 2026] usbcore: registered new interface driver usb-storage
+[Thu Sep  3 22:37:12 2026] i2c_dev: i2c /dev entries driver
+[Thu Sep  3 22:37:12 2026] pps_ldisc: PPS line discipline registered
+[Thu Sep  3 22:37:12 2026] device-mapper: ioctl: 4.48.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+[Thu Sep  3 22:37:12 2026] sdhci: Secure Digital Host Controller Interface driver
+[Thu Sep  3 22:37:12 2026] sdhci: Copyright(c) Pierre Ossman
+[Thu Sep  3 22:37:12 2026] Synopsys Designware Multimedia Card Interface Driver
+[Thu Sep  3 22:37:12 2026] sdhci-pltfm: SDHCI platform and OF driver helper
+[Thu Sep  3 22:37:12 2026] ledtrig-cpu: registered to indicate activity on CPUs
+[Thu Sep  3 22:37:12 2026] SMCCC: SOC_ID: ID = jep106:036b:0234 Revision = 0x00000001
+[Thu Sep  3 22:37:12 2026] tegra-bpmp bpmp: Adding to iommu group 0
+[Thu Sep  3 22:37:12 2026] tegra-bpmp bpmp: firmware: 25124d2c239300e0a924-bfff9e30f72
+[Thu Sep  3 22:37:13 2026] clocksource: tsc: mask: 0xffffffffffffff max_cycles: 0xe6a171046, max_idle_ns: 881590405314 ns
+[Thu Sep  3 22:37:13 2026] clocksource: osc: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 49772407460 ns
+[Thu Sep  3 22:37:13 2026] clocksource: usec: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275 ns
+[Thu Sep  3 22:37:13 2026] hid: raw HID events driver (C) Jiri Kosina
+[Thu Sep  3 22:37:13 2026] usbcore: registered new interface driver usbhid
+[Thu Sep  3 22:37:13 2026] usbhid: USB HID core driver
+[Thu Sep  3 22:37:13 2026] hw perfevents: enabled with armv8_cortex_a78 PMU driver, 7 counters available
+[Thu Sep  3 22:37:13 2026] optee: probing for conduit method.
+[Thu Sep  3 22:37:13 2026] optee: revision 4.6 (565c76420cf641dd)
+[Thu Sep  3 22:37:13 2026] optee: dynamic shared memory is enabled
+[Thu Sep  3 22:37:13 2026] optee: initialized driver
+[Thu Sep  3 22:37:13 2026] Driver 'optee' was unable to register with bus_type 'arm_ffa' because the bus was not initialized.
+[Thu Sep  3 22:37:13 2026] usbcore: registered new interface driver snd-usb-audio
+[Thu Sep  3 22:37:13 2026] u32 classifier
+[Thu Sep  3 22:37:13 2026]     input device check on
+[Thu Sep  3 22:37:13 2026]     Actions configured
+[Thu Sep  3 22:37:13 2026] NET: Registered PF_PACKET protocol family
+[Thu Sep  3 22:37:13 2026] 9pnet: Installing 9P2000 support
+[Thu Sep  3 22:37:13 2026] Key type dns_resolver registered
+[Thu Sep  3 22:37:13 2026] registered taskstats version 1
+[Thu Sep  3 22:37:13 2026] Loading compiled-in X.509 certificates
+[Thu Sep  3 22:37:13 2026] Loaded X.509 cert 'Build time autogenerated kernel key: 2aa084e2fd6866a7534b775c8350e9356665cce0'
+[Thu Sep  3 22:37:13 2026] AppArmor: AppArmor sha256 policy hashing enabled
+[Thu Sep  3 22:37:13 2026] tegra-gpcdma 2600000.dma-controller: Adding to iommu group 1
+[Thu Sep  3 22:37:13 2026] tegra-gpcdma 2600000.dma-controller: GPC DMA driver register 31 channels
+[Thu Sep  3 22:37:13 2026] serial-tegra 3100000.serial: Adding to iommu group 1
+[Thu Sep  3 22:37:13 2026] 3100000.serial: ttyTHS1 at MMIO 0x3100000 (irq = 133, base_baud = 0) is a TEGRA_UART
+[Thu Sep  3 22:37:13 2026] serial-tegra 3140000.serial: Adding to iommu group 1
+[Thu Sep  3 22:37:13 2026] 3140000.serial: ttyTHS2 at MMIO 0x3140000 (irq = 134, base_baud = 0) is a TEGRA_UART
+[Thu Sep  3 22:37:13 2026] tegra_rtc c2a0000.rtc: registered as rtc1
+[Thu Sep  3 22:37:13 2026] tegra_rtc c2a0000.rtc: Tegra internal Real Time Clock
+[Thu Sep  3 22:37:13 2026] tegra-i2c 3160000.i2c: Adding to iommu group 1
+[Thu Sep  3 22:37:13 2026] tegra-i2c 3180000.i2c: Adding to iommu group 1
+[Thu Sep  3 22:37:13 2026] tegra-i2c 31b0000.i2c: Adding to iommu group 1
+[Thu Sep  3 22:37:13 2026] tegra-i2c c240000.i2c: Adding to iommu group 1
+[Thu Sep  3 22:37:13 2026] /bus@0/i2c@c240000/fusb301@25/connector@0: Fixed dependency cycle(s) with /bus@0/padctl@3520000/ports/usb2-0
+[Thu Sep  3 22:37:13 2026] tegra-i2c c250000.i2c: Adding to iommu group 1
+[Thu Sep  3 22:37:14 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@1: Fixed dependency cycle(s) with /bus@0/cam_i2cmux/i2c@1/rbpcv2_imx219_c@10
+[Thu Sep  3 22:37:14 2026] /bus@0/cam_i2cmux/i2c@1/rbpcv2_imx219_c@10: Fixed dependency cycle(s) with /bus@0/host1x@13e00000/nvcsi@15a00000/channel@1
+[Thu Sep  3 22:37:14 2026] i2c i2c-2: Added multiplexed i2c bus 9
+[Thu Sep  3 22:37:14 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@0: Fixed dependency cycle(s) with /bus@0/cam_i2cmux/i2c@0/rbpcv2_imx219_a@10
+[Thu Sep  3 22:37:14 2026] /bus@0/cam_i2cmux/i2c@0/rbpcv2_imx219_a@10: Fixed dependency cycle(s) with /bus@0/host1x@13e00000/nvcsi@15a00000/channel@0
+[Thu Sep  3 22:37:14 2026] i2c i2c-2: Added multiplexed i2c bus 10
+[Thu Sep  3 22:37:14 2026] i2c-mux-gpio bus@0:cam_i2cmux: 2 port mux on 3180000.i2c adapter
+[Thu Sep  3 22:37:14 2026] cpufreq: cpufreq_online: CPU4: Running at unlisted initial frequency: 1780000 KHz, changing to: 1728000 KHz
+[Thu Sep  3 22:37:14 2026] /bus@0/i2c@c240000/fusb301@25/connector@0: Fixed dependency cycle(s) with /bus@0/padctl@3520000/ports/usb2-0
+[Thu Sep  3 22:37:14 2026] /bus@0/padctl@3520000/ports/usb2-0: Fixed dependency cycle(s) with /bus@0/i2c@c240000/fusb301@25/connector@0
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: Adding to iommu group 2
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: Firmware timestamp: 2023-02-10 03:48:10 UTC, Version: 80.05 release
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: xHCI Host Controller
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: new USB bus registered, assigned bus number 1
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: hcc params 0x0180ff05 hci version 0x120 quirks 0x0000000000000810
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: irq 141, io mem 0x03610000
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: xHCI Host Controller
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: new USB bus registered, assigned bus number 2
+[Thu Sep  3 22:37:14 2026] tegra-xusb 3610000.usb: Host supports USB 3.1 Enhanced SuperSpeed
+[Thu Sep  3 22:37:14 2026] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 6.08
+[Thu Sep  3 22:37:14 2026] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[Thu Sep  3 22:37:14 2026] usb usb1: Product: xHCI Host Controller
+[Thu Sep  3 22:37:14 2026] usb usb1: Manufacturer: Linux 6.8.12-1021-tegra xhci-hcd
+[Thu Sep  3 22:37:14 2026] usb usb1: SerialNumber: 3610000.usb
+[Thu Sep  3 22:37:14 2026] hub 1-0:1.0: USB hub found
+[Thu Sep  3 22:37:14 2026] hub 1-0:1.0: 4 ports detected
+[Thu Sep  3 22:37:14 2026] usb usb2: New USB device found, idVendor=1d6b, idProduct=0003, bcdDevice= 6.08
+[Thu Sep  3 22:37:14 2026] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[Thu Sep  3 22:37:14 2026] usb usb2: Product: xHCI Host Controller
+[Thu Sep  3 22:37:14 2026] usb usb2: Manufacturer: Linux 6.8.12-1021-tegra xhci-hcd
+[Thu Sep  3 22:37:14 2026] usb usb2: SerialNumber: 3610000.usb
+[Thu Sep  3 22:37:14 2026] hub 2-0:1.0: USB hub found
+[Thu Sep  3 22:37:14 2026] hub 2-0:1.0: 4 ports detected
+[Thu Sep  3 22:37:14 2026] sdhci-tegra 3400000.mmc: Adding to iommu group 3
+[Thu Sep  3 22:37:14 2026] irq: IRQ150: trimming hierarchy from :bus@0:pmc@c360000
+[Thu Sep  3 22:37:14 2026] irq: IRQ152: trimming hierarchy from :bus@0:interrupt-controller@f400000-1
+[Thu Sep  3 22:37:14 2026] sdhci-tegra 3400000.mmc: Got CD GPIO
+[Thu Sep  3 22:37:14 2026] input: gpio-keys as /devices/platform/gpio-keys/input/input0
+[Thu Sep  3 22:37:14 2026] clk: Disabling unused clocks
+[Thu Sep  3 22:37:14 2026] ALSA device list:
+[Thu Sep  3 22:37:14 2026]   No soundcards found.
+[Thu Sep  3 22:37:14 2026] irq: IRQ153: trimming hierarchy from :bus@0:interrupt-controller@f400000-1
+[Thu Sep  3 22:37:14 2026] mmc0: SDHCI controller on 3400000.mmc [3400000.mmc] using ADMA 64-bit
+[Thu Sep  3 22:37:14 2026] Freeing unused kernel memory: 11584K
+[Thu Sep  3 22:37:14 2026] Run /init as init process
+[Thu Sep  3 22:37:14 2026]   with arguments:
+[Thu Sep  3 22:37:14 2026]     /init
+[Thu Sep  3 22:37:14 2026]     nv-auto-config
+[Thu Sep  3 22:37:14 2026]   with environment:
+[Thu Sep  3 22:37:14 2026]     HOME=/
+[Thu Sep  3 22:37:14 2026]     TERM=linux
+[Thu Sep  3 22:37:14 2026]     bl_prof_dataptr=2031616@0x267210000
+[Thu Sep  3 22:37:14 2026]     bl_prof_ro_ptr=65536@0x267200000
+[Thu Sep  3 22:37:14 2026] Checking overlayfs setting...
+[Thu Sep  3 22:37:14 2026] Overlayfs is disabled...
+[Thu Sep  3 22:37:14 2026] Root device found: PARTUUID=86255ab1-1579-4593-a335-c18ac266a5e9
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie: Adding to iommu group 4
+[Thu Sep  3 22:37:14 2026] irq: IRQ178: trimming hierarchy from :bus@0:interrupt-controller@f400000-1
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie: host bridge /bus@0/pcie@14100000 ranges:
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie:      MEM 0x2080000000..0x20a7ffffff -> 0x2080000000
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie:      MEM 0x20a8000000..0x20afffffff -> 0x0040000000
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie:       IO 0x0030100000..0x00301fffff -> 0x0030100000
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie: iATU: unroll T, 8 ob, 2 ib, align 64K, limit 32G
+[Thu Sep  3 22:37:14 2026] usbcore: registered new interface driver uas
+[Thu Sep  3 22:37:14 2026] tegra-xudc 3550000.usb: Adding to iommu group 5
+[Thu Sep  3 22:37:14 2026] usb 1-2: new high-speed USB device number 2 using tegra-xusb
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie: PCIe Gen.1 x1 link up
+[Thu Sep  3 22:37:14 2026] usb 1-2: New USB device found, idVendor=0bda, idProduct=5489, bcdDevice= 1.40
+[Thu Sep  3 22:37:14 2026] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[Thu Sep  3 22:37:14 2026] usb 1-2: Product: 4-Port USB 2.0 Hub
+[Thu Sep  3 22:37:14 2026] usb 1-2: Manufacturer: Generic
+[Thu Sep  3 22:37:14 2026] hub 1-2:1.0: USB hub found
+[Thu Sep  3 22:37:14 2026] hub 1-2:1.0: 4 ports detected
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie: PCIe Gen.1 x1 link up
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14100000.pcie: PCI host bridge to bus 0001:00
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:00: root bus resource [bus 00-ff]
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:00: root bus resource [mem 0x2080000000-0x20a7ffffff pref]
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:00: root bus resource [mem 0x20a8000000-0x20afffffff] (bus address [0x40000000-0x47ffffff])
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:00: root bus resource [io  0x0000-0xfffff] (bus address [0x30100000-0x301fffff])
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0: [10de:229e] type 01 class 0x060400 PCIe Root Port
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0:   bridge window [io  0x0000-0x0fff]
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0: PME# supported from D0 D3hot
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: [10ec:c822] type 00 class 0x028000 PCIe Endpoint
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: BAR 0 [io  0x0000-0x00ff]
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: BAR 2 [mem 0x20a8000000-0x20a800ffff 64bit]
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: supports D1 D2
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0: bridge window [mem 0x20a8000000-0x20a80fffff]: assigned
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0: bridge window [io  0x1000-0x1fff]: assigned
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: BAR 2 [mem 0x20a8000000-0x20a800ffff 64bit]: assigned
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: BAR 0 [io  0x1000-0x10ff]: assigned
+[Thu Sep  3 22:37:14 2026] usb 2-1: new SuperSpeed Plus Gen 2x1 USB device number 2 using tegra-xusb
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0:   bridge window [io  0x1000-0x1fff]
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0:   bridge window [mem 0x20a8000000-0x20a80fffff]
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:00: resource 4 [mem 0x2080000000-0x20a7ffffff pref]
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:00: resource 5 [mem 0x20a8000000-0x20afffffff]
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:00: resource 6 [io  0x0000-0xfffff]
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:01: resource 0 [io  0x1000-0x1fff]
+[Thu Sep  3 22:37:14 2026] pci_bus 0001:01: resource 1 [mem 0x20a8000000-0x20a80fffff]
+[Thu Sep  3 22:37:14 2026] pci 0001:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256
+[Thu Sep  3 22:37:14 2026] pci 0001:01:00.0: Max Payload Size set to  128/ 128 (was  128), Max Read Rq  128
+[Thu Sep  3 22:37:14 2026] pcieport 0001:00:00.0: Adding to iommu group 4
+[Thu Sep  3 22:37:14 2026] pcieport 0001:00:00.0: PME: Signaling with IRQ 179
+[Thu Sep  3 22:37:14 2026] pcieport 0001:00:00.0: AER: enabled with IRQ 179
+[Thu Sep  3 22:37:14 2026] usb 2-1: New USB device found, idVendor=0bda, idProduct=0489, bcdDevice= 1.40
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14160000.pcie: Adding to iommu group 6
+[Thu Sep  3 22:37:14 2026] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[Thu Sep  3 22:37:14 2026] usb 2-1: Product: 4-Port USB 3.0 Hub
+[Thu Sep  3 22:37:14 2026] usb 2-1: Manufacturer: Generic
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14160000.pcie: host bridge /bus@0/pcie@14160000 ranges:
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14160000.pcie:      MEM 0x2140000000..0x2427ffffff -> 0x2140000000
+[Thu Sep  3 22:37:14 2026] hub 2-1:1.0: USB hub found
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14160000.pcie:      MEM 0x2428000000..0x242fffffff -> 0x0040000000
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14160000.pcie:       IO 0x0036100000..0x00361fffff -> 0x0036100000
+[Thu Sep  3 22:37:14 2026] tegra194-pcie 14160000.pcie: iATU: unroll T, 8 ob, 2 ib, align 64K, limit 32G
+[Thu Sep  3 22:37:14 2026] hub 2-1:1.0: 4 ports detected
+[Thu Sep  3 22:37:14 2026] usb 1-3: new full-speed USB device number 3 using tegra-xusb
+[Thu Sep  3 22:37:15 2026] usb 1-3: New USB device found, idVendor=13d3, idProduct=3549, bcdDevice= 0.00
+[Thu Sep  3 22:37:15 2026] usb 1-3: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[Thu Sep  3 22:37:15 2026] usb 1-3: Product: Bluetooth Radio
+[Thu Sep  3 22:37:15 2026] usb 1-3: Manufacturer: Realtek
+[Thu Sep  3 22:37:15 2026] usb 1-3: SerialNumber: 00e04c000001
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 14160000.pcie: PCIe Gen.3 x4 link up
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 14160000.pcie: PCIe Gen.3 x4 link up
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 14160000.pcie: PCI host bridge to bus 0004:00
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:00: root bus resource [bus 00-ff]
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:00: root bus resource [mem 0x2140000000-0x2427ffffff pref]
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:00: root bus resource [mem 0x2428000000-0x242fffffff] (bus address [0x40000000-0x47ffffff])
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:00: root bus resource [io  0x100000-0x1fffff] (bus address [0x36100000-0x361fffff])
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0: [10de:229c] type 01 class 0x060400 PCIe Root Port
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0:   bridge window [io  0x0000-0x0fff]
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0: PME# supported from D0 D3hot
+[Thu Sep  3 22:37:15 2026] pci 0004:01:00.0: [1e4b:1202] type 00 class 0x010802 PCIe Endpoint
+[Thu Sep  3 22:37:15 2026] pci 0004:01:00.0: BAR 0 [mem 0x00000000-0x00003fff 64bit]
+[Thu Sep  3 22:37:15 2026] pci 0004:01:00.0: PME# supported from D0 D3hot D3cold
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0: bridge window [mem 0x2428000000-0x24280fffff]: assigned
+[Thu Sep  3 22:37:15 2026] pci 0004:01:00.0: BAR 0 [mem 0x2428000000-0x2428003fff 64bit]: assigned
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0:   bridge window [mem 0x2428000000-0x24280fffff]
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:00: resource 4 [mem 0x2140000000-0x2427ffffff pref]
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:00: resource 5 [mem 0x2428000000-0x242fffffff]
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:00: resource 6 [io  0x100000-0x1fffff]
+[Thu Sep  3 22:37:15 2026] pci_bus 0004:01: resource 1 [mem 0x2428000000-0x24280fffff]
+[Thu Sep  3 22:37:15 2026] pci 0004:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256
+[Thu Sep  3 22:37:15 2026] pci 0004:01:00.0: Max Payload Size set to  256/ 512 (was  128), Max Read Rq  256
+[Thu Sep  3 22:37:15 2026] pcieport 0004:00:00.0: Adding to iommu group 6
+[Thu Sep  3 22:37:15 2026] pcieport 0004:00:00.0: PME: Signaling with IRQ 182
+[Thu Sep  3 22:37:15 2026] pcieport 0004:00:00.0: AER: enabled with IRQ 182
+[Thu Sep  3 22:37:15 2026] nvme 0004:01:00.0: Adding to iommu group 6
+[Thu Sep  3 22:37:15 2026] nvme nvme0: pci function 0004:01:00.0
+[Thu Sep  3 22:37:15 2026] usb 1-2.2: new high-speed USB device number 4 using tegra-xusb
+[Thu Sep  3 22:37:15 2026] nvme 0004:01:00.0: enabling device (0000 -> 0002)
+[Thu Sep  3 22:37:15 2026] hwmon hwmon1: temp1_input not attached to any thermal zone
+[Thu Sep  3 22:37:15 2026] hwmon hwmon1: temp2_input not attached to any thermal zone
+[Thu Sep  3 22:37:15 2026] hwmon hwmon1: temp3_input not attached to any thermal zone
+[Thu Sep  3 22:37:15 2026] nvme nvme0: allocated 8 MiB host memory buffer.
+[Thu Sep  3 22:37:15 2026] nvme nvme0: 6/0/0 default/read/poll queues
+[Thu Sep  3 22:37:15 2026] nvme nvme0: Ignoring bogus Namespace Identifiers
+[Thu Sep  3 22:37:15 2026]  nvme0n1: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14 p15
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 141e0000.pcie: Adding to iommu group 7
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 141e0000.pcie: host bridge /bus@0/pcie@141e0000 ranges:
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 141e0000.pcie:      MEM 0x3000000000..0x3227ffffff -> 0x3000000000
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 141e0000.pcie:      MEM 0x3228000000..0x322fffffff -> 0x0040000000
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 141e0000.pcie:       IO 0x003e100000..0x003e1fffff -> 0x003e100000
+[Thu Sep  3 22:37:15 2026] tegra194-pcie 141e0000.pcie: iATU: unroll T, 8 ob, 2 ib, align 64K, limit 32G
+[Thu Sep  3 22:37:15 2026] usb 1-2.2: New USB device found, idVendor=0483, idProduct=374e, bcdDevice= 1.00
+[Thu Sep  3 22:37:15 2026] usb 1-2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[Thu Sep  3 22:37:15 2026] usb 1-2.2: Product: STLINK-V3
+[Thu Sep  3 22:37:15 2026] usb 1-2.2: Manufacturer: STMicroelectronics
+[Thu Sep  3 22:37:15 2026] usb 1-2.2: SerialNumber: 0031001F3234510237333934
+[Thu Sep  3 22:37:15 2026] usb-storage 1-2.2:1.1: USB Mass Storage device detected
+[Thu Sep  3 22:37:15 2026] scsi host0: usb-storage 1-2.2:1.1
+[Thu Sep  3 22:37:15 2026] EXT4-fs (nvme0n1p1): mounted filesystem e1e042b5-f597-43ef-9828-769172320749 r/w with ordered data mode. Quota mode: none.
+[Thu Sep  3 22:37:15 2026] Rootfs mounted over PARTUUID=86255ab1-1579-4593-a335-c18ac266a5e9
+[Thu Sep  3 22:37:15 2026] Switching from initrd to actual rootfs
+[Thu Sep  3 22:37:15 2026] usb 1-2.3: new full-speed USB device number 5 using tegra-xusb
+[Thu Sep  3 22:37:15 2026] systemd[1]: System time before build time, advancing clock.
+[Thu Sep  3 22:37:15 2026] NET: Registered PF_INET6 protocol family
+[Thu Sep  3 22:37:15 2026] Segment Routing with IPv6
+[Thu Sep  3 22:37:15 2026] In-situ OAM (IOAM) with IPv6
+[Thu Sep  3 22:37:15 2026] systemd[1]: systemd 255.4-1ubuntu8.16 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+[Thu Sep  3 22:37:15 2026] systemd[1]: Detected architecture arm64.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Hostname set to <localhost.localdomain>.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Using hardware watchdog 'NVIDIA Tegra186 WDT', version 0, device /dev/watchdog0
+[Thu Sep  3 22:37:15 2026] systemd[1]: Watchdog running with a timeout of 2min.
+[Thu Sep  3 22:37:15 2026] usb 1-2.3: New USB device found, idVendor=3554, idProduct=fc01, bcdDevice= 6.30
+[Thu Sep  3 22:37:15 2026] usb 1-2.3: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[Thu Sep  3 22:37:15 2026] usb 1-2.3: Product: Lenovo Services N230
+[Thu Sep  3 22:37:15 2026] usb 1-2.3: Manufacturer: Lenovo
+[Thu Sep  3 22:37:15 2026] input: Lenovo Lenovo Services N230 Mouse as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.3/1-2.3:1.0/0003:3554:FC01.0001/input/input1
+[Thu Sep  3 22:37:15 2026] input: Lenovo Lenovo Services N230 as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.3/1-2.3:1.0/0003:3554:FC01.0001/input/input2
+[Thu Sep  3 22:37:15 2026] input: Lenovo Lenovo Services N230 Consumer Control as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.3/1-2.3:1.0/0003:3554:FC01.0001/input/input3
+[Thu Sep  3 22:37:15 2026] input: Lenovo Lenovo Services N230 System Control as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.3/1-2.3:1.0/0003:3554:FC01.0001/input/input4
+[Thu Sep  3 22:37:15 2026] hid-generic 0003:3554:FC01.0001: input,hidraw0: USB HID v1.11 Mouse [Lenovo Lenovo Services N230] on usb-3610000.usb-2.3/input0
+[Thu Sep  3 22:37:15 2026] systemd[1]: /etc/systemd/system/nvargus-daemon.service:42: Standard output type syslog is obsolete, automatically updating to journal. Please update your unit file, and consider removing the setting altogether.
+[Thu Sep  3 22:37:15 2026] systemd[1]: /etc/systemd/system/nvcpupowerfix.service:37: Standard output type syslog is obsolete, automatically updating to journal. Please update your unit file, and consider removing the setting altogether.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Queued start job for default target graphical.target.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Created slice system-modprobe.slice - Slice /system/modprobe.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Created slice system-serial\x2dgetty.slice - Slice /system/serial-getty.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Created slice system-systemd\x2dfsck.slice - Slice /system/systemd-fsck.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Created slice user.slice - User and Session Slice.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Expecting device dev-disk-by\x2duuid-3595\x2d7D70.device - /dev/disk/by-uuid/3595-7D70...
+[Thu Sep  3 22:37:15 2026] systemd[1]: Expecting device dev-ttyGS0.device - /dev/ttyGS0...
+[Thu Sep  3 22:37:15 2026] systemd[1]: Expecting device dev-ttyTCU0.device - /dev/ttyTCU0...
+[Thu Sep  3 22:37:15 2026] systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Reached target remote-fs.target - Remote File Systems.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Reached target remote-veritysetup.target - Remote Verity Protected Volumes.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Reached target slices.target - Slice Units.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Reached target snapd.mounts-pre.target - Mounting snaps.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Listening on syslog.socket - Syslog Socket.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Listening on systemd-fsckd.socket - fsck to fsckd communication Socket.
+[Thu Sep  3 22:37:15 2026] systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+[Thu Sep  3 22:37:16 2026] systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+[Thu Sep  3 22:37:16 2026] systemd[1]: Listening on systemd-journald.socket - Journal Socket.
+[Thu Sep  3 22:37:16 2026] systemd[1]: Listening on systemd-networkd.socket - Network Service Netlink Socket.
+[Thu Sep  3 22:37:16 2026] systemd[1]: systemd-oomd.socket - Userspace Out-Of-Memory (OOM) Killer Socket was skipped because of an unmet condition check (ConditionPathExists=/proc/pressure/memory).
+[Thu Sep  3 22:37:16 2026] systemd[1]: systemd-pcrextend.socket - TPM2 PCR Extension (Varlink) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[Thu Sep  3 22:37:16 2026] systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+[Thu Sep  3 22:37:16 2026] systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+[Thu Sep  3 22:37:16 2026] systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Mounting sys-kernel-tracing.mount - Kernel Trace File System...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting systemd-journald.service - Journal Service...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting keyboard-setup.service - Set the console keyboard layout...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+[Thu Sep  3 22:37:16 2026] systemd-journald[222]: Collecting audit messages is disabled.
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+[Thu Sep  3 22:37:16 2026] fuse: init (API version 7.39)
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting modprobe@nvme_fabrics.service - Load Kernel Module nvme_fabrics...
+[Thu Sep  3 22:37:16 2026] systemd[1]: nvfb-ping-config.service - NVIDIA first-boot setup service for ping was skipped because of an unmet condition check (ConditionFirstBoot=yes).
+[Thu Sep  3 22:37:16 2026] systemd[1]: nvfb-udev.service - NVIDIA specific first-boot udev script was skipped because of an unmet condition check (ConditionFirstBoot=yes).
+[Thu Sep  3 22:37:16 2026] systemd[1]: systemd-fsck-root.service - File System Check on Root Device was skipped because of an unmet condition check (ConditionPathIsReadWrite=!/).
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+[Thu Sep  3 22:37:16 2026] systemd[1]: systemd-pcrlock-file-system.service - Lock File Systems to TPM2 PCR Policy was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[Thu Sep  3 22:37:16 2026] systemd[1]: systemd-pcrlock-machine-id.service - Lock Machine ID to TPM2 PCR Policy was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[Thu Sep  3 22:37:16 2026] systemd[1]: systemd-pcrmachine.service - TPM2 PCR Machine ID Measurement was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[Thu Sep  3 22:37:16 2026] bridge: filtering via arp/ip/ip6tables is no longer available by default. Update your scripts to load br_netfilter if you need this.
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting systemd-remount-fs.service - Remount Root and Kernel File Systems...
+[Thu Sep  3 22:37:16 2026] Bridge firewalling registered
+[Thu Sep  3 22:37:16 2026] systemd[1]: systemd-tpm2-setup-early.service - TPM2 SRK Setup (Early) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[Thu Sep  3 22:37:16 2026] hsp_mailbox_client: loading out-of-tree module taints kernel.
+[Thu Sep  3 22:37:16 2026] systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+[Thu Sep  3 22:37:16 2026] systemd[1]: Started systemd-journald.service - Journal Service.
+[Thu Sep  3 22:37:16 2026] tegra186-cam-rtcpu bc00000.rtcpu: Adding to iommu group 8
+[Thu Sep  3 22:37:16 2026] tegra186-cam-rtcpu bc00000.rtcpu: Trace buffer configured at IOVA=0xbff00000
+[Thu Sep  3 22:37:16 2026] EXT4-fs (nvme0n1p1): re-mounted e1e042b5-f597-43ef-9828-769172320749.
+[Thu Sep  3 22:37:16 2026]  bc00000.rtcpu:hsp-vm1: camrtc_hsp_vm_read_boot_log: RTCPU boot complete
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus: region 0: iova=0xbfec0000-0xbfee02ff size=131840
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:echo@0: echo: ver=0 grp=1 RX[16x64]=0x1000-0x1480 TX[16x64]=0x1480-0x1900
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:dbg@1: dbg: ver=0 grp=1 RX[1x512]=0x1900-0x1b80 TX[1x512]=0x1b80-0x1e00
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:dbg@2: dbg: ver=0 grp=1 RX[1x8192]=0x1e00-0x3e80 TX[1x8192]=0x3e80-0x5f00
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:ivccontrol@3: ivccontrol: ver=0 grp=1 RX[64x320]=0x5f00-0xaf80 TX[64x320]=0xaf80-0x10000
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:ivccapture@4: ivccapture: ver=0 grp=1 RX[512x64]=0x10000-0x18080 TX[512x64]=0x18080-0x20100
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:diag@5: diag: ver=0 grp=1 RX[1x128]=0x20100-0x20200 TX[1x128]=0x20200-0x20300
+[Thu Sep  3 22:37:16 2026] tegra186-cam-rtcpu bc00000.rtcpu: using cam RTCPU IRQ (193)
+[Thu Sep  3 22:37:16 2026] tegra186-cam-rtcpu bc00000.rtcpu: tegra_camrtc_mon_create is successful
+[Thu Sep  3 22:37:16 2026] tegra186-cam-rtcpu bc00000.rtcpu: firmware version cpu=rce cmd=6 sha1=dfa4cae106f00e37b6d2d53e94a5c9636b9cc011
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:echo@0: ivc channel driver missing
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:dbg@1: ivc channel driver missing
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:dbg@2: ivc channel driver missing
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:ivccontrol@3: ivc channel driver missing
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:ivccapture@4: ivc channel driver missing
+[Thu Sep  3 22:37:16 2026] scsi 0:0:0:0: Direct-Access     MBED     microcontroller  1.0  PQ: 0 ANSI: 2
+[Thu Sep  3 22:37:16 2026] tegra-ivc-bus bc00000.rtcpu:ivc-bus:diag@5: ivc channel driver missing
+[Thu Sep  3 22:37:16 2026] sd 0:0:0:0: [sda] 6224 512-byte logical blocks: (3.19 MB/3.04 MiB)
+[Thu Sep  3 22:37:16 2026] [RCE] TCU debug prints will be routed to traces.
+[Thu Sep  3 22:37:16 2026] sd 0:0:0:0: [sda] Write Protect is off
+[Thu Sep  3 22:37:16 2026] tegra194-pcie 141e0000.pcie: Phy link never came up
+[Thu Sep  3 22:37:16 2026] sd 0:0:0:0: [sda] Mode Sense: 00 00 00 00
+[Thu Sep  3 22:37:16 2026] sd 0:0:0:0: [sda] Asking for cache data failed
+[Thu Sep  3 22:37:16 2026] sd 0:0:0:0: [sda] Assuming drive cache: write through
+[Thu Sep  3 22:37:16 2026] sd 0:0:0:0: [sda] Attached SCSI removable disk
+[Thu Sep  3 22:37:16 2026] tegra-camera-rtcpu-debugfs bc00000.rtcpu:ivc-bus:dbg@2: nvidia,mem-map[1] node has no device
+[Thu Sep  3 22:37:16 2026] tegra-camera-rtcpu-debugfs bc00000.rtcpu:ivc-bus:dbg@2: nvidia,mem-map[2] node has no device
+[Thu Sep  3 22:37:16 2026] tegra-camera-rtcpu-debugfs bc00000.rtcpu:ivc-bus:dbg@2: nvidia,mem-map[3] node has no device
+[Thu Sep  3 22:37:16 2026] camchar: rtcpu character device driver loaded
+[Thu Sep  3 22:37:16 2026] mc: Linux media interface: v0.10
+[Thu Sep  3 22:37:16 2026] Adding 2097148k swap on /swapfile.  Priority:-2 extents:17 across:79953920k SS
+[Thu Sep  3 22:37:16 2026] videodev: Linux video capture interface: v2.00
+[Thu Sep  3 22:37:16 2026] systemd-journald[222]: Received client request to flush runtime journal.
+[Thu Sep  3 22:37:16 2026] tegra-host1x 13e00000.host1x: Adding to iommu group 9
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.0: Adding to iommu group 10
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.1: Adding to iommu group 11
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.2: Adding to iommu group 12
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.3: Adding to iommu group 13
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.4: Adding to iommu group 14
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.5: Adding to iommu group 15
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.6: Adding to iommu group 16
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.7: Adding to iommu group 17
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.8: Adding to iommu group 18
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.9: Adding to iommu group 19
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.10: Adding to iommu group 20
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.11: Adding to iommu group 21
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.12: Adding to iommu group 22
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.13: Adding to iommu group 23
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.14: Adding to iommu group 24
+[Thu Sep  3 22:37:16 2026] host1x-context 13e00000.host1x.host1x-ctx.15: Adding to iommu group 25
+[Thu Sep  3 22:37:16 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@1: Fixed dependency cycle(s) with /bus@0/cam_i2cmux/i2c@1/rbpcv2_imx219_c@10
+[Thu Sep  3 22:37:16 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@1: Fixed dependency cycle(s) with /tegra-capture-vi
+[Thu Sep  3 22:37:16 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@0: Fixed dependency cycle(s) with /bus@0/cam_i2cmux/i2c@0/rbpcv2_imx219_a@10
+[Thu Sep  3 22:37:16 2026] /bus@0/host1x@13e00000/nvcsi@15a00000/channel@0: Fixed dependency cycle(s) with /tegra-capture-vi
+[Thu Sep  3 22:37:16 2026] tegra-soc-hwpm f100000.hwpm: Adding to iommu group 26
+[Thu Sep  3 22:37:16 2026] tegra-vic 15340000.vic: Adding to iommu group 27
+[Thu Sep  3 22:37:16 2026] tegra-nvdec 15480000.nvdec: Adding to iommu group 28
+[Thu Sep  3 22:37:16 2026] tegra-nvjpg 15380000.nvjpg: Adding to iommu group 29
+[Thu Sep  3 22:37:16 2026] tegra-nvjpg 15540000.nvjpg: Adding to iommu group 30
+[Thu Sep  3 22:37:16 2026] tegra-ofa 15a50000.ofa: Adding to iommu group 31
+[Thu Sep  3 22:37:16 2026] [drm] Initialized tegra 1.0.99 20120330 for 13e00000.host1x.drm on minor 0
+[Thu Sep  3 22:37:16 2026] tegra-camrtc-capture-isp tegra-capture-isp: capture_isp_probe: Probe-time fuse cache initialized - mask=0x1, num_devices=1
+[Thu Sep  3 22:37:16 2026] tegra194-isp5 14800000.isp: Adding to iommu group 32
+[Thu Sep  3 22:37:16 2026]  camera-diag: Limiting to 1 ISP instance(s) for this chip
+[Thu Sep  3 22:37:16 2026]  camera-diag: Failed to find ISP device node
+[Thu Sep  3 22:37:16 2026] camera-diagnostics bc00000.rtcpu:ivc-bus:diag@5: Failed to initialize diagnostic channel: -19
+[Thu Sep  3 22:37:16 2026] camera-diagnostics bc00000.rtcpu:ivc-bus:diag@5: Probe failed with error: -19
+[Thu Sep  3 22:37:16 2026] loop0: detected capacity change from 0 to 8
+[Thu Sep  3 22:37:16 2026] loop1: detected capacity change from 0 to 126688
+[Thu Sep  3 22:37:16 2026] loop2: detected capacity change from 0 to 502096
+[Thu Sep  3 22:37:16 2026] loop3: detected capacity change from 0 to 1132440
+[Thu Sep  3 22:37:16 2026] loop4: detected capacity change from 0 to 501888
+[Thu Sep  3 22:37:16 2026] loop5: detected capacity change from 0 to 187776
+[Thu Sep  3 22:37:16 2026] loop6: detected capacity change from 0 to 385528
+[Thu Sep  3 22:37:16 2026] loop7: detected capacity change from 0 to 88824
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.716:2): apparmor="STATUS" operation="profile_load" profile="unconfined" name="Discord" pid=393 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.716:3): apparmor="STATUS" operation="profile_load" profile="unconfined" name="QtWebEngineProcess" pid=395 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.716:4): apparmor="STATUS" operation="profile_load" profile="unconfined" name="balena-etcher" pid=396 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.716:5): apparmor="STATUS" operation="profile_load" profile="unconfined" name="1password" pid=392 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.716:6): apparmor="STATUS" operation="profile_load" profile="unconfined" name="brave" pid=397 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.716:7): apparmor="STATUS" operation="profile_load" profile="unconfined" name=4D6F6E676F444220436F6D70617373 pid=394 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.720:8): apparmor="STATUS" operation="profile_load" profile="unconfined" name="chrome" pid=402 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.720:9): apparmor="STATUS" operation="profile_load" profile="unconfined" name="cam" pid=399 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.724:10): apparmor="STATUS" operation="profile_load" profile="unconfined" name="vscode" pid=403 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] audit: type=1400 audit(1780673790.724:11): apparmor="STATUS" operation="profile_load" profile="unconfined" name="ch-checkns" pid=400 comm="apparmor_parser"
+[Thu Sep  3 22:37:17 2026] tegra194-pcie 141e0000.pcie: Phy link never came up
+[Thu Sep  3 22:37:17 2026] tegra194-pcie 141e0000.pcie: PCI host bridge to bus 0007:00
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: root bus resource [bus 00-ff]
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: root bus resource [mem 0x3000000000-0x3227ffffff pref]
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: root bus resource [mem 0x3228000000-0x322fffffff] (bus address [0x40000000-0x47ffffff])
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: root bus resource [io  0x200000-0x2fffff] (bus address [0x3e100000-0x3e1fffff])
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0: [10de:229a] type 01 class 0x060400 PCIe Root Port
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0:   bridge window [io  0x0000-0x0fff]
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0: PME# supported from D0 D3hot
+[Thu Sep  3 22:37:17 2026] pstore: Using crash dump compression: deflate
+[Thu Sep  3 22:37:17 2026] printk: legacy console [ramoops-1] enabled
+[Thu Sep  3 22:37:17 2026] pstore: Registered ramoops as persistent store backend
+[Thu Sep  3 22:37:17 2026] ramoops: using 0x200000@0x26b5f0000, ecc: 0
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: resource 4 [mem 0x3000000000-0x3227ffffff pref]
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: resource 5 [mem 0x3228000000-0x322fffffff]
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: resource 6 [io  0x200000-0x2fffff]
+[Thu Sep  3 22:37:17 2026] pci 0007:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256
+[Thu Sep  3 22:37:17 2026] Host1x-Fence: Default interface init done
+[Thu Sep  3 22:37:17 2026] pcieport 0007:00:00.0: Adding to iommu group 7
+[Thu Sep  3 22:37:17 2026] pcieport 0007:00:00.0: PME: Signaling with IRQ 191
+[Thu Sep  3 22:37:17 2026] pcieport 0007:00:00.0: AER: enabled with IRQ 191
+[Thu Sep  3 22:37:17 2026] spi-tegra114 3210000.spi: Adding to iommu group 1
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:01: busn_res: [bus 01-ff] is released
+[Thu Sep  3 22:37:17 2026] pci_bus 0007:00: busn_res: [bus 00-ff] is released
+[Thu Sep  3 22:37:17 2026] tegra194-pcie 140a0000.pcie: Adding to iommu group 33
+[Thu Sep  3 22:37:17 2026] nvvrs_pseq 4-003c: NVVRS Vendor ID: 0x9
+[Thu Sep  3 22:37:17 2026] nvvrs_pseq 4-003c: NVVRS Model Rev: 0x82
+[Thu Sep  3 22:37:17 2026] nvvrs_pseq 4-003c: NVVRS PSEQ probe successful
+[Thu Sep  3 22:37:17 2026] at24 0-0050: 256 byte 24c02 EEPROM, read-only
+[Thu Sep  3 22:37:17 2026] spi-tegra114 3230000.spi: Adding to iommu group 1
+[Thu Sep  3 22:37:17 2026] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+[Thu Sep  3 22:37:17 2026] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+[Thu Sep  3 22:37:17 2026] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+[Thu Sep  3 22:37:17 2026] tegra-hda 3510000.hda: Adding to iommu group 34
+[Thu Sep  3 22:37:17 2026] at24 0-0057: 256 byte 24c02 EEPROM, read-only
+[Thu Sep  3 22:37:17 2026] tegra194-pcie 140a0000.pcie: host bridge /bus@0/pcie@140a0000 ranges:
+[Thu Sep  3 22:37:17 2026] tegra194-pcie 140a0000.pcie:      MEM 0x3240000000..0x3527ffffff -> 0x3240000000
+[Thu Sep  3 22:37:17 2026] tegra194-pcie 140a0000.pcie:      MEM 0x3528000000..0x352fffffff -> 0x0040000000
+[Thu Sep  3 22:37:17 2026] tegra194-pcie 140a0000.pcie:       IO 0x002a100000..0x002a1fffff -> 0x002a100000
+[Thu Sep  3 22:37:18 2026] tegra194-pcie 140a0000.pcie: iATU: unroll T, 8 ob, 2 ib, align 64K, limit 32G
+[Thu Sep  3 22:37:18 2026] imx219 9-0010: tegracam sensor driver:imx219_v2.0.6
+[Thu Sep  3 22:37:18 2026] imx219 9-0010: imx219_board_setup: error during i2c read probe (-121)
+[Thu Sep  3 22:37:18 2026] rtl88x2ce 0001:01:00.0: Adding to iommu group 4
+[Thu Sep  3 22:37:18 2026] rtl88x2ce 0001:01:00.0: enabling device (0000 -> 0003)
+[Thu Sep  3 22:37:18 2026] imx219 9-0010: board setup failed
+[Thu Sep  3 22:37:18 2026] imx219: probe of 9-0010 failed with error -121
+[Thu Sep  3 22:37:18 2026] imx219 10-0010: tegracam sensor driver:imx219_v2.0.6
+[Thu Sep  3 22:37:18 2026] tegra-camrtc-capture-vi tegra-capture-vi: subdev imx219 10-0010 bound
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/processing-engine@2908000
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/asrc@2910000
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amixer@290bb00
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903b00
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903a00
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903900
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903300
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903200
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903100
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903000
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/mvc@290a200
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/mvc@290a000
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902600
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902400
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902200
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902000
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/i2s@2901300
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/i2s@2901100
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/admaif@290f000
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/i2s@2901100: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/i2s@2901300: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902200: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902400: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902600: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903100: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903200: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903300: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903900: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903a00: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903b00: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/processing-engine@2908000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/mvc@290a000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/mvc@290a200: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/amixer@290bb00: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/admaif@290f000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] CAN device driver interface
+[Thu Sep  3 22:37:18 2026] /bus@0/aconnect@2900000/ahub@2900800/asrc@2910000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:18 2026] input: NVIDIA Jetson Orin Nano HDA HDMI/DP,pcm=3 as /devices/platform/bus@0/3510000.hda/sound/card0/input6
+[Thu Sep  3 22:37:18 2026] input: NVIDIA Jetson Orin Nano HDA HDMI/DP,pcm=7 as /devices/platform/bus@0/3510000.hda/sound/card0/input7
+[Thu Sep  3 22:37:18 2026] input: NVIDIA Jetson Orin Nano HDA HDMI/DP,pcm=8 as /devices/platform/bus@0/3510000.hda/sound/card0/input8
+[Thu Sep  3 22:37:18 2026] input: NVIDIA Jetson Orin Nano HDA HDMI/DP,pcm=9 as /devices/platform/bus@0/3510000.hda/sound/card0/input9
+[Thu Sep  3 22:37:18 2026] thermal-trip-event cpu-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] tegra234-aon c000000.aon: Adding to iommu group 35
+[Thu Sep  3 22:37:18 2026]  c000000.aon:hsp: probed
+[Thu Sep  3 22:37:18 2026] tegra234-aon c000000.aon: init done
+[Thu Sep  3 22:37:18 2026] thermal-trip-event gpu-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] thermal-trip-event cv0-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] TT CAN feature is not supported
+[Thu Sep  3 22:37:18 2026] 	 Message RAM Configuration
+                           	| base addr   |0x0c312000|
+                           	| sidfc_flssa |0x00000000|
+                           	| xidfc_flesa |0x00000040|
+                           	| rxf0c_f0sa  |0x000000c0|
+                           	| rxf1c_f1sa  |0x000009c0|
+                           	| rxbc_rbsa   |0x000009c0|
+                           	| txefc_efsa  |0x000009c0|
+                           	| txbc_tbsa   |0x00000a40|
+                           	| tmc_tmsa    |0x00000ec0|
+                           	| mram size   |0x00001000|
+[Thu Sep  3 22:37:18 2026] Release 3.2.3 from 09.06.2018
+[Thu Sep  3 22:37:18 2026] irq: IRQ212: trimming hierarchy from :bus@0:pmc@c360000
+[Thu Sep  3 22:37:18 2026] net can0: mttcan device registered (regs=000000008f37b421, irq=211)
+[Thu Sep  3 22:37:18 2026] fusb301 1-0025: device id: 0x12
+[Thu Sep  3 22:37:18 2026] tegra-dce d800000.dce: Adding to iommu group 36
+[Thu Sep  3 22:37:18 2026] tegra-dce d800000.dce: dce-reset not supported in dce kmd
+[Thu Sep  3 22:37:18 2026] tegra-dce d800000.dce: Setting DCE HSP functions for tegra234-dce
+[Thu Sep  3 22:37:18 2026] dce: dce_ipc_channel_init_unlocked:248  Invalid Channel State [0x0] for ch_type [2]
+[Thu Sep  3 22:37:18 2026] dce: tegra_dce_probe:370  Found display consumer device
+[Thu Sep  3 22:37:18 2026] thermal-trip-event cv1-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] dce: dce_admin_send_cmd_ver:824  version : dcefw:[0x4] dcekmd:[0x4] err : [0x0]
+[Thu Sep  3 22:37:18 2026] dce: dce_admin_setup_clients_ipc:1002 Channel Reset Complete for Type [1] ...
+[Thu Sep  3 22:37:18 2026] dce: dce_admin_setup_clients_ipc:978  Get queue info failed for [2]
+[Thu Sep  3 22:37:18 2026] dce: dce_admin_setup_clients_ipc:1002 Channel Reset Complete for Type [3] ...
+[Thu Sep  3 22:37:18 2026] gic 2a41000.interrupt-controller: GIC IRQ controller registered
+[Thu Sep  3 22:37:18 2026] dce: dce_start_boot_flow:207  DCE_BOOT_DONE
+[Thu Sep  3 22:37:18 2026] Bluetooth: Core ver 2.22
+[Thu Sep  3 22:37:18 2026] NET: Registered PF_BLUETOOTH protocol family
+[Thu Sep  3 22:37:18 2026] Bluetooth: HCI device and connection manager initialized
+[Thu Sep  3 22:37:18 2026] Bluetooth: HCI socket layer initialized
+[Thu Sep  3 22:37:18 2026] Bluetooth: L2CAP socket layer initialized
+[Thu Sep  3 22:37:18 2026] Bluetooth: SCO socket layer initialized
+[Thu Sep  3 22:37:18 2026] thermal-trip-event cv2-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] tegra-aconnect bus@0:aconnect@2900000: Tegra ACONNECT bus registered
+[Thu Sep  3 22:37:18 2026] thermal-trip-event soc0-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] fusb301 1-0025: toggle_time(0) is not updated
+[Thu Sep  3 22:37:18 2026] fusb301 1-0025: fusb301_set_mode: mode (32)(32)
+[Thu Sep  3 22:37:18 2026] fusb301 1-0025: fusb301_detach: type[0x00] chipstate[0x01]
+[Thu Sep  3 22:37:18 2026] fusb301 1-0025: fusb_update_state: 1
+[Thu Sep  3 22:37:18 2026] fusb301 1-0025: mode[0x20], host_cur[0x02], dttime[0x00]
+[Thu Sep  3 22:37:18 2026] tegra194-pcie 140a0000.pcie: PCIe Gen.1 x1 link up
+[Thu Sep  3 22:37:18 2026] modprobe: btusb: not loading in-tree driver, out-of-tree rtk_btusb is present
+[Thu Sep  3 22:37:18 2026] modprobe: btusb: not loading in-tree driver, out-of-tree rtk_btusb is present
+[Thu Sep  3 22:37:18 2026] modprobe: btusb: not loading in-tree driver, out-of-tree rtk_btusb is present
+[Thu Sep  3 22:37:18 2026] thermal-trip-event soc1-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] thermal-trip-event soc2-throttle-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] modprobe: btusb: not loading in-tree driver, out-of-tree rtk_btusb is present
+[Thu Sep  3 22:37:18 2026] rtk_btusb: Realtek Bluetooth USB driver ver 3.1.65ab490.20240531-141726
+[Thu Sep  3 22:37:18 2026] rtk_btcoex: rtk_btcoex_init: version: 1.2
+[Thu Sep  3 22:37:18 2026] rtk_btcoex: create workqueue
+[Thu Sep  3 22:37:18 2026] rtk_btcoex: alloc buffers 1792, 2432 for ev and l2
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_probe intf->cur_altsetting->desc.bInterfaceNumber 0
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_probe can_wakeup 1, may wakeup 0
+[Thu Sep  3 22:37:18 2026] rtk_btusb: patch_add
+[Thu Sep  3 22:37:18 2026] rtk_btusb: auto suspend is disabled
+[Thu Sep  3 22:37:18 2026] rtk_btusb: pid = 0x3549
+[Thu Sep  3 22:37:18 2026] rtk_btusb: patch_add: Reset gEVersion to 0xff
+[Thu Sep  3 22:37:18 2026] thermal-trip-event hot-surface-alert: cooling device registered.
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_probe: done
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_open start
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_open hdev->promisc ==0
+[Thu Sep  3 22:37:18 2026] rtk_btusb: download_patch start
+[Thu Sep  3 22:37:18 2026] rtk_btusb: chip type value: 0x73
+[Thu Sep  3 22:37:18 2026] usbcore: registered new interface driver rtk_btusb
+[Thu Sep  3 22:37:18 2026] rtk_btusb: chip_type->status = 0x0, chip_type->chip = 0xbeef
+[Thu Sep  3 22:37:18 2026] rtk_btusb: HCI reset.
+[Thu Sep  3 22:37:18 2026] rtk_btusb: read_ver_rsp->lmp_subver = 0x8822
+[Thu Sep  3 22:37:18 2026] rtk_btusb: read_ver_rsp->hci_rev = 0xc
+[Thu Sep  3 22:37:18 2026] rtk_btusb: patch_entry->lmp_sub = 0x8822
+[Thu Sep  3 22:37:18 2026] rtk_btusb: load_firmware start
+[Thu Sep  3 22:37:18 2026] rtk_btusb: lmp_version = 0x8822
+[Thu Sep  3 22:37:18 2026] rtk_btusb: config filename rtl8822cu_config
+[Thu Sep  3 22:37:18 2026] rtk_btusb: no bdaddr file /opt/bdaddr
+[Thu Sep  3 22:37:18 2026] rtk_btusb: Origin cfg len 6
+[Thu Sep  3 22:37:18 2026] rtk_btusb: 55 ab 23 87 00 00
+[Thu Sep  3 22:37:18 2026] rtk_btusb: New cfg len 6
+[Thu Sep  3 22:37:18 2026] rtk_btusb: 55 ab 23 87 00 00
+[Thu Sep  3 22:37:18 2026] rtk_btusb: fw name is  rtl8822cu_fw
+[Thu Sep  3 22:37:18 2026] rtk_btusb: This is not 8723a, use new patch style!
+[Thu Sep  3 22:37:18 2026] rtk_btusb: rtk_get_eversion: gEVersion 255
+[Thu Sep  3 22:37:18 2026] rtk_btusb: eversion->status = 0x0, eversion->version = 0x3
+[Thu Sep  3 22:37:18 2026] rtk_btusb: load_firmware: New gEVersion 3
+[Thu Sep  3 22:37:18 2026] rtk_btusb: rtk_get_fw_project_id: opcode 0, len 1, data 13
+[Thu Sep  3 22:37:18 2026] rtk_btusb: lmp_version is 8822, project_id is 13, match!
+[Thu Sep  3 22:37:18 2026] rtk_btusb: fw_version = 0xefd6d8d7
+[Thu Sep  3 22:37:18 2026] rtk_btusb: number_of_total_patch = 3
+[Thu Sep  3 22:37:18 2026] rtk_btusb: chipID 4
+[Thu Sep  3 22:37:18 2026] rtk_btusb: patch_length 0x8660
+[Thu Sep  3 22:37:18 2026] rtk_btusb: start_offset 0x00005d00
+[Thu Sep  3 22:37:18 2026] rtk_btusb: Svn version: -412133102
+[Thu Sep  3 22:37:18 2026] rtk_btusb: Coexistence: BTCOEX_20210106-2020
+[Thu Sep  3 22:37:18 2026] rtk_btusb: buf_len = 0x8666
+[Thu Sep  3 22:37:18 2026] rtk_btusb: fw: exists, config file: exists
+[Thu Sep  3 22:37:18 2026] rtk_btusb: load_firmware done
+[Thu Sep  3 22:37:18 2026] rtk_btusb: download_data start
+[Thu Sep  3 22:37:18 2026] tegra194-pcie 140a0000.pcie: PCIe Gen.1 x1 link up
+[Thu Sep  3 22:37:18 2026] ivc-cdev: hypervisor not present
+[Thu Sep  3 22:37:18 2026] nvsciipc nvsciipc: creating nvsciipc_uid sysfs group
+[Thu Sep  3 22:37:18 2026] nvsciipc nvsciipc: nvsciipc_uid sysfs group: done
+[Thu Sep  3 22:37:18 2026] nvsciipc: Failed to find nvsciipc node
+[Thu Sep  3 22:37:18 2026] nvsciipc: loaded module
+[Thu Sep  3 22:37:18 2026] tegra194-pcie 140a0000.pcie: PCI host bridge to bus 0008:00
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:00: root bus resource [bus 00-ff]
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:00: root bus resource [mem 0x3240000000-0x3527ffffff pref]
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:00: root bus resource [mem 0x3528000000-0x352fffffff] (bus address [0x40000000-0x47ffffff])
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:00: root bus resource [io  0x300000-0x3fffff] (bus address [0x2a100000-0x2a1fffff])
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0: [10de:229c] type 01 class 0x060400 PCIe Root Port
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0:   bridge window [io  0x0000-0x0fff]
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0:   bridge window [mem 0x00000000-0x000fffff]
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0:   bridge window [mem 0x00000000-0x000fffff 64bit pref]
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0: PME# supported from D0 D3hot
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: [10ec:8168] type 00 class 0x020000 PCIe Endpoint
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: BAR 0 [io  0x0000-0x00ff]
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: BAR 2 [mem 0x00000000-0x00000fff 64bit]
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: BAR 4 [mem 0x00000000-0x00003fff 64bit]
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: supports D1 D2
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+[Thu Sep  3 22:37:18 2026] nvmap_heap_init: nvmap_heap_init: created heap block cache
+[Thu Sep  3 22:37:18 2026] nvmap_init_ivc_queue: nvmap-sci-ipc-ivc-queue property not found
+[Thu Sep  3 22:37:18 2026] nvmap_page_pool_init: Total RAM pages: 1931793
+[Thu Sep  3 22:37:18 2026] nvmap_page_pool_init: nvmap page pool size: 241474 pages (943 MB)
+[Thu Sep  3 22:37:18 2026] nvmap_background_zero_thread: PP zeroing thread starting.
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0: bridge window [mem 0x3528000000-0x35280fffff]: assigned
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0: bridge window [io  0x300000-0x300fff]: assigned
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: BAR 4 [mem 0x3528000000-0x3528003fff 64bit]: assigned
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: BAR 2 [mem 0x3528004000-0x3528004fff 64bit]: assigned
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: BAR 0 [io  0x300000-0x3000ff]: assigned
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0: PCI bridge to [bus 01-ff]
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0:   bridge window [io  0x300000-0x300fff]
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0:   bridge window [mem 0x3528000000-0x35280fffff]
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:00: resource 4 [mem 0x3240000000-0x3527ffffff pref]
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:00: resource 5 [mem 0x3528000000-0x352fffffff]
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:00: resource 6 [io  0x300000-0x3fffff]
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:01: resource 0 [io  0x300000-0x300fff]
+[Thu Sep  3 22:37:18 2026] pci_bus 0008:01: resource 1 [mem 0x3528000000-0x35280fffff]
+[Thu Sep  3 22:37:18 2026] pci 0008:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256
+[Thu Sep  3 22:37:18 2026] pci 0008:01:00.0: Max Payload Size set to  128/ 128 (was  128), Max Read Rq  128
+[Thu Sep  3 22:37:18 2026] rtk_btusb: download_data done
+[Thu Sep  3 22:37:18 2026] rtk_btusb: HCI reset.
+[Thu Sep  3 22:37:18 2026] pcieport 0008:00:00.0: Adding to iommu group 33
+[Thu Sep  3 22:37:18 2026] pcieport 0008:00:00.0: PME: Signaling with IRQ 206
+[Thu Sep  3 22:37:18 2026] pcieport 0008:00:00.0: AER: enabled with IRQ 206
+[Thu Sep  3 22:37:18 2026] rtk_btusb: read_ver_rsp->lmp_subver = 0xd8d7
+[Thu Sep  3 22:37:18 2026] rtk_btusb: read_ver_rsp->hci_rev = 0xefd6
+[Thu Sep  3 22:37:18 2026] rtk_btusb: patch_entry->lmp_sub = 0x8822
+[Thu Sep  3 22:37:18 2026] rtk_btusb: Rtk patch end 0
+[Thu Sep  3 22:37:18 2026] rtk_btusb: chip type value: 0x73
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_open set HCI UP RUNNING
+[Thu Sep  3 22:37:18 2026] rtk_btcoex: Open BTCOEX
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_open end
+[Thu Sep  3 22:37:18 2026] rtk_btcoex: rtk_vendor_cmd_to_fw: opcode 0xfc1b
+[Thu Sep  3 22:37:18 2026] rtk_btcoex: BTCOEX hci_rev 0xefd6
+[Thu Sep  3 22:37:18 2026] rtk_btcoex: BTCOEX lmp_subver 0xd8d7
+[Thu Sep  3 22:37:18 2026] cdc_acm 1-2.2:1.2: ttyACM0: USB ACM device
+[Thu Sep  3 22:37:18 2026] usbcore: registered new interface driver cdc_acm
+[Thu Sep  3 22:37:18 2026] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters
+[Thu Sep  3 22:37:18 2026] rtk_btusb: btusb_notify: hci0 evt 3
+[Thu Sep  3 22:37:18 2026] nv_nvsciipc_init.sh[694]: found /dev/nvsciipc
+[Thu Sep  3 22:37:18 2026] nvsciipc: nvsciipc_uid is set as 2000
+[Thu Sep  3 22:37:18 2026] nv_nvsciipc_init.sh[694]: set 2000 to /sys/devices/platform/nvsciipc/nvsciipc_uid
+[Thu Sep  3 22:37:19 2026] nvsciipc: Failed to find nvsciipc node
+[Thu Sep  3 22:37:19 2026] nvsciipc: set_db start
+[Thu Sep  3 22:37:19 2026] nvsciipc: set_db done
+[Thu Sep  3 22:37:19 2026] nvgpu: 17000000.gpu              nvgpu_get_nvhost_dev:114  [INFO]  host1x device found at iteration 0
+
+[Thu Sep  3 22:37:19 2026] nvgpu: 17000000.gpu          nvgpu_nvhost_syncpt_init:156  [INFO]  syncpt_unit_base 60000000 syncpt_unit_size 4000000 size 10000 number of syncpoints 200
+
+[Thu Sep  3 22:37:19 2026] NET: Registered PF_QIPCRTR protocol family
+[Thu Sep  3 22:37:19 2026] tegra194-vi5 13e00000.host1x:vi0@15c00000: Adding to iommu group 37
+[Thu Sep  3 22:37:19 2026] tegra194-vi5 13e00000.host1x:vi0@15c00000: vi5_probe: client init done
+[Thu Sep  3 22:37:19 2026] tegra194-vi5 13e00000.host1x:vi0@15c00000: Unable to create debugfs entry
+[Thu Sep  3 22:37:19 2026] tegra-camrtc-capture-vi tegra-capture-vi: subdev 13e00000.host1x:nvcsi@15a00000--2 bound
+[Thu Sep  3 22:37:19 2026] tegra194-vi5 13e00000.host1x:vi1@14c00000: Adding to iommu group 38
+[Thu Sep  3 22:37:19 2026] tegra194-vi5 13e00000.host1x:vi1@14c00000: vi5_probe: client init done
+[Thu Sep  3 22:37:19 2026] tegra194-vi5 13e00000.host1x:vi1@14c00000: Unable to create debugfs entry
+[Thu Sep  3 22:37:19 2026] tegra-camrtc-capture-vi tegra-capture-vi: subdev 13e00000.host1x:nvcsi@15a00000--1 bound
+[Thu Sep  3 22:37:19 2026] nvvrs-pseq-rtc nvvrs-pseq-rtc: registered as rtc0
+[Thu Sep  3 22:37:19 2026] nvvrs-pseq-rtc nvvrs-pseq-rtc: setting system clock to 1970-01-01T00:00:39 UTC (39)
+[Thu Sep  3 22:37:19 2026] systemd-journald[222]: Time jumped backwards, rotating.
+[Thu Sep  3 22:37:19 2026] Consider using thermal netlink events interface
+[Thu Sep  3 22:37:19 2026] rtl88x2ce 0001:01:00.0 wlP1p1s0: renamed from wlan0
+[Thu Sep  3 22:37:19 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/i2s@2901100
+[Thu Sep  3 22:37:19 2026] /bus@0/aconnect@2900000/ahub@2900800/i2s@2901100: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:19 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/i2s@2901300
+[Thu Sep  3 22:37:19 2026] /bus@0/aconnect@2900000/ahub@2900800/i2s@2901300: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:19 2026] tegra-adma 2930000.dma-controller: Tegra210 ADMA driver registered 32 channels
+[Thu Sep  3 22:37:19 2026] nv_platform 13800000.display: Adding to iommu group 39
+[Thu Sep  3 22:37:19 2026] nv_platform 13800000.display: Cannot reserve IOVA region of 0 size
+[Thu Sep  3 22:37:19 2026] nv_platform 13800000.display: Cannot reserve IOVA region of 0 size
+[Thu Sep  3 22:37:19 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902000
+[Thu Sep  3 22:37:20 2026] loop8: detected capacity change from 0 to 32768
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] platform 13800000.display:nvdisplay-niso: Adding to iommu group 40
+[Thu Sep  3 22:37:20 2026] NVRM: loading NVIDIA UNIX Open Kernel Module for aarch64  TempVersion  Release Build  (r595_00)  (buildbrain@03d5624e-58e4-4d2e-841c-817f5277e6d6-bv5r-zgps2)  Mon Jun  1 01:50:50 PM PDT 2026
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902200
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902200: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902400
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902400: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] r8168 0008:01:00.0: Adding to iommu group 33
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/sfc@2902600
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/sfc@2902600: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] r8168 Gigabit Ethernet driver 8.053.00-NAPI loaded
+[Thu Sep  3 22:37:20 2026] r8168 0008:01:00.0: enabling device (0000 -> 0003)
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903000
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903100
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903100: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903200
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903200: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amx@2903300
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/amx@2903300: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] nvidia-modeset: Loading NVIDIA UNIX Open Kernel Mode Setting Driver for aarch64  TempVersion  Release Build  (r595_00)  (buildbrain@03d5624e-58e4-4d2e-841c-817f5277e6d6-bv5r-zgps2)  Mon Jun  1 01:50:53 PM PDT 2026
+[Thu Sep  3 22:37:20 2026] [drm] [nvidia-drm] [GPU ID 0xfffffffe] Loading driver
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903900
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903900: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] r8168: This product is covered by one or more of the following patents: US6,570,884, US6,115,776, and US6,327,625.
+[Thu Sep  3 22:37:20 2026] r8168  Copyright (C) 2024 Realtek NIC software team <nicfae@realtek.com> 
+                            This program comes with ABSOLUTELY NO WARRANTY; for details, please see <http://www.gnu.org/licenses/>. 
+                            This is free software, and you are welcome to redistribute it under certain conditions; see <http://www.gnu.org/licenses/>. 
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903a00
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903a00: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/adx@2903b00
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/adx@2903b00: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/processing-engine@2908000
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/processing-engine@2908000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/mvc@290a000
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/mvc@290a000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/mvc@290a200
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/mvc@290a200: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/amixer@290bb00
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/amixer@290bb00: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/admaif@290f000
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/admaif@290f000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800/asrc@2910000
+[Thu Sep  3 22:37:20 2026] /bus@0/aconnect@2900000/ahub@2900800/asrc@2910000: Fixed dependency cycle(s) with /bus@0/aconnect@2900000/ahub@2900800
+[Thu Sep  3 22:37:20 2026] Mass Storage Function, version: 2009/09/11
+[Thu Sep  3 22:37:20 2026] LUN: removable file: (no medium)
+[Thu Sep  3 22:37:20 2026] NVRM: GPU0 rpcRmApiControl_dce: NVRM_RPC_DCE: Failed RM ctrl call cmd:0x731341 result 0xffff: Failure: Generic Error [NV_ERR_GENERIC]
+[Thu Sep  3 22:37:20 2026] NVRM: GPU0 rpcRmApiControl_dce: NVRM_RPC_DCE: Failed RM ctrl call cmd:0x730282 result 0x1f: Invalid argument to call [NV_ERR_INVALID_ARGUMENT]
+[Thu Sep  3 22:37:20 2026] [drm] Initialized nvidia-drm 0.0.0 20160202 for 13800000.display on minor 1
+[Thu Sep  3 22:37:20 2026] [drm] [nvidia-drm] [GPU ID 0xfffffffe] Invalid framebuffer console info
+[Thu Sep  3 22:37:20 2026] nv_platform 13800000.display: [drm] Cannot find any crtc or sizes
+[Thu Sep  3 22:37:20 2026] configfs-gadget.l4t gadget.0: HOST MAC 16:d8:b5:58:96:f4
+[Thu Sep  3 22:37:20 2026] configfs-gadget.l4t gadget.0: MAC 16:d8:b5:58:96:f5
+[Thu Sep  3 22:37:20 2026] configfs-gadget.l4t gadget.0: HOST MAC 16:d8:b5:58:96:f6
+[Thu Sep  3 22:37:20 2026] configfs-gadget.l4t gadget.0: MAC 16:d8:b5:58:96:f7
+[Thu Sep  3 22:37:20 2026] tegra-xudc 3550000.usb: EP 0 (type: ctrl, dir: out) enabled
+[Thu Sep  3 22:37:20 2026] l4tbr0: port 1(usb0) entered blocking state
+[Thu Sep  3 22:37:20 2026] l4tbr0: port 1(usb0) entered disabled state
+[Thu Sep  3 22:37:20 2026] configfs-gadget.l4t gadget.0 usb0: entered allmulticast mode
+[Thu Sep  3 22:37:20 2026] configfs-gadget.l4t gadget.0 usb0: entered promiscuous mode
+[Thu Sep  3 22:37:20 2026] loop8: detected capacity change from 0 to 32768
+[Thu Sep  3 22:37:20 2026] rtk_btusb: btusb_flush add delay 
+[Thu Sep  3 22:37:20 2026] rtk_btusb: btusb_close
+[Thu Sep  3 22:37:20 2026] rtk_btcoex: Close BTCOEX
+[Thu Sep  3 22:37:20 2026] rtk_btcoex: -x
+[Thu Sep  3 22:37:21 2026] loop9: detected capacity change from 0 to 8
+[Thu Sep  3 22:37:21 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:37:21 2026] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[Thu Sep  3 22:37:21 2026] Bluetooth: BNEP filters: protocol multicast
+[Thu Sep  3 22:37:21 2026] Bluetooth: BNEP socket layer initialized
+[Thu Sep  3 22:37:21 2026] Bluetooth: MGMT ver 1.22
+[Thu Sep  3 22:37:21 2026] NET: Registered PF_ALG protocol family
+[Thu Sep  3 22:37:21 2026] mttcan_controller_config: ctrlmode 0
+[Thu Sep  3 22:37:21 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:37:21 2026] rtk_btusb: btusb_open start
+[Thu Sep  3 22:37:21 2026] rtk_btusb: btusb_open hdev->promisc ==0
+[Thu Sep  3 22:37:21 2026] rtk_btusb: download_patch start
+[Thu Sep  3 22:37:21 2026] rtk_btusb: chip type value: 0x73
+[Thu Sep  3 22:37:21 2026] rtk_btusb: chip_type->status = 0x0, chip_type->chip = 0xbeef
+[Thu Sep  3 22:37:21 2026] rtk_btusb: HCI reset.
+[Thu Sep  3 22:37:21 2026] rtk_btusb: read_ver_rsp->lmp_subver = 0xd8d7
+[Thu Sep  3 22:37:21 2026] rtk_btusb: read_ver_rsp->hci_rev = 0xefd6
+[Thu Sep  3 22:37:21 2026] rtk_btusb: patch_entry->lmp_sub = 0x8822
+[Thu Sep  3 22:37:21 2026] rtk_btusb: Firmware already exists
+[Thu Sep  3 22:37:21 2026] rtk_btusb: Rtk patch end 1
+[Thu Sep  3 22:37:21 2026] rtk_btusb: chip type value: 0x73
+[Thu Sep  3 22:37:21 2026] rtk_btusb: btusb_open set HCI UP RUNNING
+[Thu Sep  3 22:37:21 2026] rtk_btcoex: Open BTCOEX
+[Thu Sep  3 22:37:21 2026] rtk_btusb: btusb_open end
+[Thu Sep  3 22:37:21 2026] rtk_btcoex: rtk_vendor_cmd_to_fw: opcode 0xfc1b
+[Thu Sep  3 22:37:21 2026] rtk_btcoex: BTCOEX hci_rev 0xefd6
+[Thu Sep  3 22:37:21 2026] rtk_btcoex: BTCOEX lmp_subver 0xd8d7
+[Thu Sep  3 22:37:21 2026] nvgpu: 17000000.gpu                    ga10b_init_hal:2237 [INFO]  Semaphore-based GP_GET tracking is not intended for GA10B production drivers
+
+[Thu Sep  3 22:37:21 2026] r8168 0008:01:00.0 enP8p1s0: renamed from eth0
+[Thu Sep  3 22:37:21 2026] nvgpu: 17000000.gpu                 fbp_pg_mask_store:2151 [INFO]  no value change, same mask already set
+[Thu Sep  3 22:37:21 2026] nvgpu: 17000000.gpu                 tpc_pg_mask_store:2240 [INFO]  no value change, same mask already set
+[Thu Sep  3 22:37:21 2026] enP8p1s0: 0xffff800081e3b000, 3c:6d:66:b5:4b:29, IRQ 258
+[Thu Sep  3 22:37:21 2026] tegra210-admaif 290f000.admaif: Adding to iommu group 41
+[Thu Sep  3 22:37:22 2026] nvgpu: 17000000.gpu                  gk20a_scale_init:648  [INFO]  No specific device tree OPP table, using default frequency table
+[Thu Sep  3 22:37:22 2026] nvgpu: 17000000.gpu                  gk20a_scale_init:680  [INFO]  enabled scaling for GPU
+
+[Thu Sep  3 22:37:22 2026] nvgpu: 17000000.gpu                  gk20a_scale_init:694  [INFO]  DevFreq cooling device registered successfully
+[Thu Sep  3 22:37:22 2026] tegra-audio-graph-card sound: Registered APE graph sound card with DPCM links for AHUB
+[Thu Sep  3 22:37:22 2026] tegra-mixer-controls sound:mixer-controls: Begin probe of override control device
+[Thu Sep  3 22:37:22 2026] tegra-mixer-controls sound:mixer-controls: Registered override controls for APE sound card
+[Thu Sep  3 22:37:22 2026] nvgpu: 17000000.gpu                 fbp_pg_mask_store:2151 [INFO]  no value change, same mask already set
+[Thu Sep  3 22:37:22 2026] nvgpu: 17000000.gpu                 tpc_pg_mask_store:2240 [INFO]  no value change, same mask already set
+[Thu Sep  3 22:37:23 2026] Bluetooth: RFCOMM TTY layer initialized
+[Thu Sep  3 22:37:23 2026] Bluetooth: RFCOMM socket layer initialized
+[Thu Sep  3 22:37:23 2026] Bluetooth: RFCOMM ver 1.11
+[Thu Sep  3 22:37:25 2026] rtl8822ce_interrupt: 78 callbacks suppressed
+[Thu Sep  3 22:37:26 2026] rfkill: input handler disabled
+[Thu Sep  3 22:37:32 2026] tegra186-emc 2c60000.external-memory-controller: sync_state() pending due to 15820000.crypto
+[Thu Sep  3 22:37:32 2026] tegra-mc 2c00000.memory-controller: sync_state() pending due to 15820000.crypto
+[Thu Sep  3 22:37:32 2026] tegra186-emc 2c60000.external-memory-controller: sync_state() pending due to 15840000.crypto
+[Thu Sep  3 22:37:32 2026] tegra-mc 2c00000.memory-controller: sync_state() pending due to 15840000.crypto
+[Thu Sep  3 22:37:32 2026] tegra186-emc 2c60000.external-memory-controller: sync_state() pending due to 13e00000.host1x:vi0-thi@15f00000
+[Thu Sep  3 22:37:32 2026] tegra-mc 2c00000.memory-controller: sync_state() pending due to 13e00000.host1x:vi0-thi@15f00000
+[Thu Sep  3 22:37:32 2026] tegra186-emc 2c60000.external-memory-controller: sync_state() pending due to 13e00000.host1x:vi1-thi@14f00000
+[Thu Sep  3 22:37:32 2026] tegra-mc 2c00000.memory-controller: sync_state() pending due to 13e00000.host1x:vi1-thi@14f00000
+[Thu Sep  3 22:40:10 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:40:34 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:40:34 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:40:34 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:40:34 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:40:35 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:40:35 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:40:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:40:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:40:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:45:17 2026] usb 1-2.1: new full-speed USB device number 6 using tegra-xusb
+[Thu Sep  3 22:45:17 2026] usb 1-2.1: New USB device found, idVendor=258a, idProduct=002a, bcdDevice=11.02
+[Thu Sep  3 22:45:17 2026] usb 1-2.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[Thu Sep  3 22:45:17 2026] usb 1-2.1: Product: Gaming KB 
+[Thu Sep  3 22:45:17 2026] usb 1-2.1: Manufacturer: SINO WEALTH
+[Thu Sep  3 22:45:17 2026] input: SINO WEALTH Gaming KB  as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.1/1-2.1:1.0/0003:258A:002A.0002/input/input10
+[Thu Sep  3 22:45:17 2026] hid-generic 0003:258A:002A.0002: input,hidraw1: USB HID v1.11 Keyboard [SINO WEALTH Gaming KB ] on usb-3610000.usb-2.1/input0
+[Thu Sep  3 22:45:17 2026] input: SINO WEALTH Gaming KB  System Control as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.1/1-2.1:1.1/0003:258A:002A.0003/input/input11
+[Thu Sep  3 22:45:17 2026] input: SINO WEALTH Gaming KB  Consumer Control as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.1/1-2.1:1.1/0003:258A:002A.0003/input/input12
+[Thu Sep  3 22:45:17 2026] input: SINO WEALTH Gaming KB  Keyboard as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.1/1-2.1:1.1/0003:258A:002A.0003/input/input13
+[Thu Sep  3 22:45:17 2026] input: SINO WEALTH Gaming KB  Mouse as /devices/platform/bus@0/3610000.usb/usb1/1-2/1-2.1/1-2.1:1.1/0003:258A:002A.0003/input/input14
+[Thu Sep  3 22:45:17 2026] hid-generic 0003:258A:002A.0003: input,hidraw2: USB HID v1.11 Keyboard [SINO WEALTH Gaming KB ] on usb-3610000.usb-2.1/input1
+[Thu Sep  3 22:45:40 2026] rfkill: input handler enabled
+[Thu Sep  3 22:45:45 2026] rfkill: input handler disabled
+[Thu Sep  3 22:46:35 2026] warning: `ThreadPoolForeg' uses wireless extensions which will stop working for Wi-Fi 7 hardware; use nl80211
+[Thu Sep  3 22:46:38 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:38 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:38 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:38 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:38 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:39 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:43 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:43 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:45 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:46:55 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:55 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:55 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:55 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:55 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:56 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:56 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:46:56 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:17 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:17 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:17 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:17 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:17 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:17 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:19 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:19 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:22 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:24 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:24 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:24 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:27 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:27 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:36 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:38 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:41 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:41 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:54 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:55 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:55 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:47:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:47:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:01 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:01 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:01 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:01 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:05 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:05 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:16 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:19 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:22 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:22 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:23 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:23 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:23 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:23 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:23 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:23 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:23 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:24 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:25 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:25 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:26 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:26 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:26 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:27 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:27 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:27 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:28 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:28 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:28 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:28 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:28 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:29 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:31 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:31 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:31 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:31 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:32 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:33 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:33 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:33 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:33 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:37 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:48:38 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:40 2026] tegra194-isp5 14800000.isp: [PIPELINE 0] ISP capture setup complete (channel_id=0)
+[Thu Sep  3 22:48:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:41 2026] can: controller area network core
+[Thu Sep  3 22:48:41 2026] NET: Registered PF_CAN protocol family
+[Thu Sep  3 22:48:41 2026] can: raw protocol
+[Thu Sep  3 22:48:41 2026] tegra194-vi5 13e00000.host1x:vi0@15c00000: [PIPELINE 0] VI capture setup complete (channel_id=1, csi_stream=1, vc=0)
+[Thu Sep  3 22:48:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:41 2026] [RCE] VM0 deactivatingVM0 activating===== NVCSI Stream Configuration =====
+[Thu Sep  3 22:48:41 2026] [RCE] stream_id: PP 1, csi_port: PORT B
+[Thu Sep  3 22:48:41 2026] [RCE] Brick: PHY 0, Mode: D-PHY
+[Thu Sep  3 22:48:41 2026] [RCE] Partition: CIL B, LP bypass: Disabled, Lanes: 2
+[Thu Sep  3 22:48:41 2026] [RCE] Clock information:
+[Thu Sep  3 22:48:41 2026] [RCE] CIL rate: 204000000 Hz
+[Thu Sep  3 22:48:41 2026] [RCE] MIPI clock rate: 456000 kHz
+[Thu Sep  3 22:48:41 2026] [RCE] Physical rate: 912000 Kbps
+[Thu Sep  3 22:48:41 2026] [RCE] T_HS settle: autoconfigured, T_CLK settle: autoconfigured
+                           ======================================
+[Thu Sep  3 22:48:41 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020100)
+[Thu Sep  3 22:48:41 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000777)
+[Thu Sep  3 22:48:41 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:48:41 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000555)
+[Thu Sep  3 22:48:41 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007411)
+[Thu Sep  3 22:48:41 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:48:41 2026] [RCE] CSI port AB
+[Thu Sep  3 22:48:41 2026] [RCE]   AFE_HFGAIN_IO0_A=6
+[Thu Sep  3 22:48:41 2026] [RCE]   AFE_HFGAIN_IO1_A=6
+[Thu Sep  3 22:48:41 2026] [RCE]   AFE_HFGAIN_CLK_A=6
+[Thu Sep  3 22:48:41 2026] [RCE]   AFE_HFGAIN_IO0_B=6
+[Thu Sep  3 22:48:41 2026] [RCE]   AFE_HFGAIN_IO1_B=6
+[Thu Sep  3 22:48:41 2026] [RCE]   AFE_HFGAIN_CLK_B=6
+[Thu Sep  3 22:48:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:42 2026] tegra194-vi5 13e00000.host1x:vi0@15c00000: [PIPELINE 0] VI capture setup complete (channel_id=1, csi_stream=1, vc=0)
+[Thu Sep  3 22:48:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020000)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000666)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000541)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007427)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:48:42 2026] [RCE] ===== NVCSI Stream Configuration =====
+[Thu Sep  3 22:48:42 2026] [RCE] stream_id: PP 1, csi_port: PORT B
+[Thu Sep  3 22:48:42 2026] [RCE] Brick: PHY 0, Mode: D-PHY
+[Thu Sep  3 22:48:42 2026] [RCE] Partition: CIL B, LP bypass: Disabled, Lanes: 2
+[Thu Sep  3 22:48:42 2026] [RCE] Clock information:
+[Thu Sep  3 22:48:42 2026] [RCE] CIL rate: 204000000 Hz
+[Thu Sep  3 22:48:42 2026] [RCE] MIPI clock rate: 456000 kHz
+[Thu Sep  3 22:48:42 2026] [RCE] Physical rate: 912000 Kbps
+[Thu Sep  3 22:48:42 2026] [RCE] T_HS settle: autoconfigured, T_CLK settle: autoconfigured
+                           ======================================
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020100)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000666)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000541)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007427)
+[Thu Sep  3 22:48:42 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:48:42 2026] [RCE] CSI port AB
+[Thu Sep  3 22:48:42 2026] [RCE]   AFE_HFGAIN_IO0_A=6
+[Thu Sep  3 22:48:42 2026] [RCE]   AFE_HFGAIN_IO1_A=6
+[Thu Sep  3 22:48:42 2026] [RCE]   AFE_HFGAIN_CLK_A=6
+[Thu Sep  3 22:48:42 2026] [RCE]   AFE_HFGAIN_IO0_B=6
+[Thu Sep  3 22:48:42 2026] [RCE]   AFE_HFGAIN_IO1_B=6
+[Thu Sep  3 22:48:42 2026] [RCE]   AFE_HFGAIN_CLK_B=6
+[Thu Sep  3 22:48:42 2026] [RCE] VI ch[11] frame configuration: 1280x720 
+[Thu Sep  3 22:48:42 2026] [RCE]     left skip pixels=0 top skip lines=0
+[Thu Sep  3 22:48:42 2026] [RCE]     right crop pixels=0 bottom crop lines=0
+[Thu Sep  3 22:48:42 2026] [RCE]     pixel format=VI_PIXFMT_FORMAT_T_R16 fmt=196
+[Thu Sep  3 22:48:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:43 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:43 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:45 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:46 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:46 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:46 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:47 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:47 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:47 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:50 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:50 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:51 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:51 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:51 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:51 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:51 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:53 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:53 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:53 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:55 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:56 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:57 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:58 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:48:59 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:00 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:01 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:01 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:02 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020000)
+[Thu Sep  3 22:49:02 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000666)
+[Thu Sep  3 22:49:02 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:49:02 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000541)
+[Thu Sep  3 22:49:02 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007427)
+[Thu Sep  3 22:49:02 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:49:02 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:02 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:02 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:02 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:02 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:03 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:03 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:03 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:03 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:04 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:04 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:05 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:05 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:18 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:19 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:19 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:19 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:22 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:22 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:23 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:24 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:24 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:24 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:25 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:25 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:26 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:26 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:27 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:27 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:47 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:48 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:49 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:50 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:50 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:50 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:50 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:51 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:52 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:53 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:53 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:53 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:49:54 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:50:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:50:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:50:09 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:50:09 2026] mttcan_controller_config: ctrlmode 0
+[Thu Sep  3 22:50:09 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:51:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:16 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:16 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:16 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:16 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:16 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:18 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:18 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:18 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:19 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:20 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:51:21 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:15 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:35 2026] tegra194-isp5 14800000.isp: [PIPELINE 0] ISP capture setup complete (channel_id=0)
+[Thu Sep  3 22:53:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:36 2026] tegra194-vi5 13e00000.host1x:vi0@15c00000: [PIPELINE 0] VI capture setup complete (channel_id=1, csi_stream=1, vc=0)
+[Thu Sep  3 22:53:36 2026] [RCE] VM0 deactivatingVM0 activating===== NVCSI Stream Configuration =====
+[Thu Sep  3 22:53:36 2026] [RCE] stream_id: PP 1, csi_port: PORT B
+[Thu Sep  3 22:53:36 2026] [RCE] Brick: PHY 0, Mode: D-PHY
+[Thu Sep  3 22:53:36 2026] [RCE] Partition: CIL B, LP bypass: Disabled, Lanes: 2
+[Thu Sep  3 22:53:36 2026] [RCE] Clock information:
+[Thu Sep  3 22:53:36 2026] [RCE] CIL rate: 204000000 Hz
+[Thu Sep  3 22:53:36 2026] [RCE] MIPI clock rate: 456000 kHz
+[Thu Sep  3 22:53:36 2026] [RCE] Physical rate: 912000 Kbps
+[Thu Sep  3 22:53:36 2026] [RCE] T_HS settle: autoconfigured, T_CLK settle: autoconfigured
+                           ======================================
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020100)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000777)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000555)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007411)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:53:36 2026] [RCE] CSI port AB
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO0_A=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO1_A=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_CLK_A=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO0_B=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO1_B=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_CLK_B=6
+[Thu Sep  3 22:53:36 2026] tegra194-vi5 13e00000.host1x:vi0@15c00000: [PIPELINE 0] VI capture setup complete (channel_id=1, csi_stream=1, vc=0)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020000)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000666)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000541)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007427)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:53:36 2026] [RCE] ===== NVCSI Stream Configuration =====
+[Thu Sep  3 22:53:36 2026] [RCE] stream_id: PP 1, csi_port: PORT B
+[Thu Sep  3 22:53:36 2026] [RCE] Brick: PHY 0, Mode: D-PHY
+[Thu Sep  3 22:53:36 2026] [RCE] Partition: CIL B, LP bypass: Disabled, Lanes: 2
+[Thu Sep  3 22:53:36 2026] [RCE] Clock information:
+[Thu Sep  3 22:53:36 2026] [RCE] CIL rate: 204000000 Hz
+[Thu Sep  3 22:53:36 2026] [RCE] MIPI clock rate: 456000 kHz
+[Thu Sep  3 22:53:36 2026] [RCE] Physical rate: 912000 Kbps
+[Thu Sep  3 22:53:36 2026] [RCE] T_HS settle: autoconfigured, T_CLK settle: autoconfigured
+                           ======================================
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020100)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000666)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000541)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007427)
+[Thu Sep  3 22:53:36 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:53:36 2026] [RCE] CSI port AB
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO0_A=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO1_A=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_CLK_A=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO0_B=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_IO1_B=6
+[Thu Sep  3 22:53:36 2026] [RCE]   AFE_HFGAIN_CLK_B=6
+[Thu Sep  3 22:53:36 2026] [RCE] VI ch[11] frame configuration: 1280x720 
+[Thu Sep  3 22:53:36 2026] [RCE]     left skip pixels=0 top skip lines=0
+[Thu Sep  3 22:53:36 2026] [RCE]     right crop pixels=0 bottom crop lines=0
+[Thu Sep  3 22:53:36 2026] [RCE]     pixel format=VI_PIXFMT_FORMAT_T_R16 fmt=196
+[Thu Sep  3 22:53:37 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:37 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:37 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:37 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:38 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:38 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:39 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:40 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:41 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:42 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:43 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:43 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:44 2026] mttcan c310000.mttcan can0: entered error warning state
+[Thu Sep  3 22:53:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:53:45 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c18 mask=0x06070000 value=0x04020000 (was 0x04020000)
+[Thu Sep  3 22:53:45 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000555 (was 0x00000666)
+[Thu Sep  3 22:53:45 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011c00 mask=0x00000001 value=0x00000000 (was 0x00000000)
+[Thu Sep  3 22:53:45 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d88 mask=0x0000003c value=0x00000000 (was 0x00000541)
+[Thu Sep  3 22:53:45 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011de4 mask=0x000000ff value=0x00000027 (was 0x00007427)
+[Thu Sep  3 22:53:45 2026] [RCE] NVCSI prod write phy: 0 cil: 1 reg=0x00011d84 mask=0x00000fff value=0x00000666 (was 0x00000555)
+[Thu Sep  3 22:54:03 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:03 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:03 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:04 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:04 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:04 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:06 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:07 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:08 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:09 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:10 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:11 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:12 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:13 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:14 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:16 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:17 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:30 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:31 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:31 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:31 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:33 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:33 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:33 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:34 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:35 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:35 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:36 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:37 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:37 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:37 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:37 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:38 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:38 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:39 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:40 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:41 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:42 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:43 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:44 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:45 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:45 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:46 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:46 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:46 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:47 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:47 2026] mttcan c310000.mttcan can0: entered error passive state
+[Thu Sep  3 22:54:50 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:54:50 2026] mttcan_controller_config: ctrlmode 1
+[Thu Sep  3 22:54:50 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:55:15 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:55:15 2026] mttcan_controller_config: ctrlmode 1
+[Thu Sep  3 22:55:15 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:55:34 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:55:34 2026] mttcan_controller_config: ctrlmode 0
+[Thu Sep  3 22:55:34 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:56:40 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:56:40 2026] mttcan_controller_config: ctrlmode 0
+[Thu Sep  3 22:56:40 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:56:52 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:56:52 2026] mttcan_controller_config: ctrlmode 0
+[Thu Sep  3 22:56:52 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:57:22 2026] mttcan c310000.mttcan can0: Bitrate set
+[Thu Sep  3 22:57:22 2026] mttcan_controller_config: ctrlmode 0
+[Thu Sep  3 22:57:22 2026] mttcan c310000.mttcan can0: Bitrate set

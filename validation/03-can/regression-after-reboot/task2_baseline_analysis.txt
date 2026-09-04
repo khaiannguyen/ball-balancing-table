@@ -1,0 +1,45 @@
+Task 2 baseline analysis (app OFF), 30s candump, Thu Sep  3 11:01:51 PM +07 2026
+==========================================================
+
+Total frames: 6425
+
+-- ID distribution --
+   2625 100
+   1767 102
+    533 103
+    528 1FF
+    505 101
+    467 104
+
+-- error frames (candump ERRORFRAME marker) --
+count: 0
+
+-- bus-wide gaps between consecutive frames > 50ms --
+line 2497: 009.896501s -> 010.360446s  gap=463.945ms
+line 2818: 011.862849s -> 012.339108s  gap=476.259ms
+line 2924: 012.862078s -> 013.328479s  gap=466.401ms
+line 3106: 014.148964s -> 014.317750s  gap=168.786ms
+line 6010: 025.926420s -> 026.617648s  gap=691.228ms
+line 6157: 027.298893s -> 027.606909s  gap=308.016ms
+line 6272: 028.151893s -> 028.596108s  gap=444.215ms
+line 6341: 028.960643s -> 029.585120s  gap=624.477ms
+
+-- bus-wide gap stats --
+n=6424 mean=4.66833ms max=691.228ms
+
+-- per-ID mean/max gap (ms) --
+0x100: n=2624 mean=11.4259ms max=693.492ms
+0x101: n=504 mean=59.2908ms max=695.097ms
+0x102: n=1766 mean=16.9659ms max=899.35ms
+0x103: n=532 mean=56.3566ms max=694.971ms
+0x104: n=466 mean=64.2325ms max=889.623ms
+0x1FF: n=527 mean=56.8915ms max=744.2ms
+
+-- berr-counter / netdevice stats before vs after (from link_before.txt / link_after.txt) --
+    can state ERROR-WARNING (berr-counter tx 105 rx 0) restart-ms 100 
+    RX:  bytes packets errors dropped  missed   mcast           
+    TX:  bytes packets errors dropped carrier collsns           
+  ... 30s later ...
+    can state ERROR-WARNING (berr-counter tx 105 rx 0) restart-ms 100 
+    RX:  bytes packets errors dropped  missed   mcast           
+    TX:  bytes packets errors dropped carrier collsns           
