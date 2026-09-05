@@ -1,0 +1,2 @@
+CANDUMP_START=1788594111.029943335 (2026-09-05 14:41:51 +07)
+outdir=/home/khaian/balance_ball/validation/04-e2e/synthetic-latency build=/home/khaian/balance_ball/build-synthetic/balance_ball_main test_duration_s=175
