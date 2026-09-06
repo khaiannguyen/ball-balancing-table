@@ -1,0 +1,20 @@
+Build flag: VALIDATION_DEADLOCK_TEST_CONTROL (task_control_loop.c), BTN6 trigger.
+Capture: serial_timestamp_logger.ps1 COM4@115200, single continuous session.
+
+Trigger/boot pairs (host_t_ms, continuous host clock):
+
+trial  trigger_ms   boot_ms    delta_ms
+1      1465.2       1917.1     451.9
+2      5606.2       6070.8     464.6
+3      10421.9      10916.1    494.2
+4      15419.2      15860.7    441.5
+5      18320.3      18828.9    508.6
+6      21851.0      22289.4    438.4
+
+N=6, mean=466.5ms, range 438.4-508.6ms. Wider spread than 2.3 (IWDG-starve,
+mean 410.3ms) is expected: WatchdogTask only detects the missing
+ALIVE_BIT_CONTROL_LOOP on its next 100ms (10Hz) snapshot after the deadlock
+starts, adding up to ~100ms of jitter on top of the ~410ms IWDG countdown
+(410 + up to 100 ~= 510ms upper bound, matching the observed max of 508.6ms).
+
+All 6 boots: RSR=0x04420000 (IWDG=1, PIN=1).

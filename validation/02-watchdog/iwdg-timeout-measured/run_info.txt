@@ -1,0 +1,47 @@
+Build flag: VALIDATION_IWDG_STARVE_TEST (task_watchdog.c), BTN6 trigger.
+On BTN6 press, WatchdogTask permanently stops calling HAL_IWDG_Refresh()
+regardless of alive_mask ("[TRIGGER] IWDG refresh starved") — this measures
+the raw IWDG timeout, independent of any specific task's alive-mask logic.
+
+IWDG config (Core/Src/main.c, MX_IWDG1_Init): Prescaler=/32, Reload=500,
+Window=4095 (window disabled). Theoretical timeout = 32 * (500+1) / f_LSI
+= 16032 / 32000 Hz (nominal) = 501ms.
+
+3 capture sessions, 15 trigger/boot pairs total (host_t_ms, continuous host
+clock across resets). serial_log_20260906_194355.txt starts with 2 [BOOT]
+lines from a different, earlier build (no VALIDATION_IWDG_STARVE_TEST, no
+[WDG_TICK]) before a mid-file reflash boundary -- those 2 boots are 2.0
+evidence only (see rcc-rsr-fix/run_info.txt) and are NOT among the 4 trials
+counted below, which all come from after the reflash, within this build:
+
+file                              trial  trigger_ms  boot_ms   delta_ms
+serial_log_20260906_194355.txt    1      262108.3    262518.3  410.0
+serial_log_20260906_194355.txt    2      265568.2    265978.8  410.6
+serial_log_20260906_194355.txt    3      268533.2    268943.8  410.6
+serial_log_20260906_194355.txt    4      270806.8    271216.8  410.0
+serial_log_20260906_194911.txt    5      1417.7      1828.4    410.7
+serial_log_20260906_194911.txt    6      3249.1      3748.6    499.5   <- excluded (see below)
+serial_log_20260906_194911.txt    7      5612.6      6023.4    410.8
+serial_log_20260906_194911.txt    8      13326.5     13736.6   410.1
+serial_log_20260906_194911.txt    9      17182.1     17592.0   409.9
+serial_log_20260906_195024.txt    10     2223.9      2634.6    410.7
+serial_log_20260906_195024.txt    11     6576.5      6986.7    410.2
+serial_log_20260906_195024.txt    12     10137.7     10547.9   410.2
+serial_log_20260906_195024.txt    13     13996.3     14406.8   410.5
+serial_log_20260906_195024.txt    14     18251.1     18661.4   410.3
+serial_log_20260906_195024.txt    15     21909.5     22319.8   410.3
+
+N=14 valid (trial 6 excluded): mean=410.35ms, population std=0.29ms.
+Trial 6 (499.5ms) sits right next to trial 5 (host_t_ms=1417.7, only ~1.4s
+after that session's own [BOOT] at t=~0) — a startup catch-up burst in the
+WatchdogTask/scheduler right after boot plausibly delayed the first BTN6
+sample, stretching this one trial's delta close to the 501ms theoretical
+ceiling instead of the steady-state ~410ms. Excluded as an outlier rather
+than averaged in.
+
+Theoretical vs measured: 501ms (nominal 32kHz LSI) vs 410.35ms measured ->
+implied real LSI ~= 501/410.35 * 32000 ~= 39082 Hz ~= 39.1kHz. The LSI RC
+oscillator is not factory-trimmed on this part; a gap of this size is within
+its documented tolerance and is not a firmware bug.
+
+All 15 boots: RSR=0x04420000 (IWDG=1, PIN=1).

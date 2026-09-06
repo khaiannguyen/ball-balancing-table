@@ -1,0 +1,40 @@
+Build: STM32CubeIDE, no VALIDATION_* build flag needed (plain firmware boot path).
+Capture: serial_timestamp_logger.ps1 COM4@115200 (host_t_ms = host-side stopwatch,
+continuous across MCU resets; MCU tick in [BOOT] resets to 0 every boot).
+RCC->RSR read at the top of main(), before HAL_Init(); flags cleared via
+__HAL_RCC_CLEAR_RESET_FLAGS() right after the read/printf each boot.
+
+Evidence used from these files (both duplicated verbatim from their primary
+folders — see validation/02-watchdog/iwdg-timeout-measured/ and
+deadlock-display-isolation/ for the rest of each session):
+
+serial_log_20260906_194355.txt
+  line 1:  host_t_ms=249640.3  [BOOT] RSR=0x00420000 PIN=1 (manual reset-button press)
+  line 13: host_t_ms=253434.3  [BOOT] RSR=0x00420000 PIN=1 (reflash-triggered reset, NOT
+           a second button press -- see mid-file reflash boundary note below)
+
+  Mid-file reflash boundary: the window between line 1 (t=249640.3) and line 13
+  (t=253434.3), ~3.79s, shows only clock-init + "StartTaskCanRx/Tx STARTED" --
+  zero [WDG_TICK] lines, despite that print running at 10Hz once the
+  VALIDATION_IWDG_STARVE_TEST build is active. [WDG_TICK] starts immediately
+  after line 13. Conclusion: line 1 is on a build without that instrumentation;
+  the board was reflashed to VALIDATION_IWDG_STARVE_TEST between the two boots
+  while the same PowerShell logger session kept appending to this one file.
+  The 4 starve trials that follow line 13 in this same file are counted under
+  iwdg-timeout-measured/, not here -- nothing from this file was discarded.
+  Line 13's PIN=1 is most likely ST-Link's post-programming reset (drives
+  physical NRST, same flag as a button press), not a manual re-press.
+
+serial_log_20260906_203542.txt
+  line 2:  host_t_ms=29.9   [BOOT] RSR=0x00420000 PIN=1 (manual reset-button press)
+  line 12: host_t_ms=79.3   [BOOT] RSR=0x00420000 PIN=1 (manual reset-button press,
+           button-bounce or deliberate immediate re-press -- this file has no
+           WDG_TICK instrumentation at all, so no reflash-boundary evidence
+           either way for this pair)
+
+Cross-validation flag pattern (not from this folder's own files, cited for
+comparison only):
+  IWDG-caused reboots (deadlock-control-loop/, iwdg-timeout-measured/) all read
+  RSR=0x04420000, i.e. PIN=1 AND IWDG=1 together — a different register value
+  than the pure reset-button case above, on separate occasions, with no code
+  path that could hardcode either result.

@@ -1,0 +1,304 @@
+# host_t_ms is a CONTINUOUS clock across MCU resets - use this to compute delta t, not the MCU tick printed in [TRIGGER]/[BOOT] lines.
+[host_t_ms=31.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=41.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=46.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=52.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=56.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=61.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=66.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=72.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=78.3] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=83.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=89.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=94.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=98.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=105.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=110.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=115.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=120.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=127] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=131.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=137.7] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=143.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=148.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=154.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=159.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=165.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=171.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=176.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=181.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=188.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=194.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=198.9] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=204.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=210.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=215.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=221.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=227.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=232.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=237.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=243.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=248.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=253.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=259.5] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=264.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=273.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=278.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=283.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=290.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=295.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=300.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=306.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=311.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=317.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=322.6] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=327.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=334] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=339] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=343.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=350.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=355.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=361.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=366.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=372.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=378.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=384.1] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=390.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=395.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=401.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=407.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=412.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=417.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=423.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=427.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=433.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=439] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=444.5] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=449.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=455.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=460.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=466.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=472.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=477.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=483.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=488.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=494.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=499.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=505.7] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=511.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=517.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=525.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=535.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=540.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=547.2] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=554.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=560.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=566.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=572.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=578.3] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=583.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=589.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=596.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=601.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=607.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=613.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=619] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=625.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=630.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=636.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=642.8] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=648.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=655.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=660.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=666.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=672.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=678] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=683.6] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=690] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=695.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=700.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=707.4] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=712.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=718.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=724.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=730.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=736.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=741.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=747.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=753.3] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=758.7] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=765] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=770.5] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=778.9] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=787.4] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=793.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=798.1] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=804.5] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=809.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=815.8] [WDG_TICK] alive_mask=0x07 btn6_raw=1 starved=0
+[host_t_ms=821.9] [WDG_TICK] alive_mask=0x07 btn6_ra
+[host_t_ms=827.2] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=1155] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=1465.2] [TRIGGER] ControlLoopTask deadlock start, tick=11748
+[host_t_ms=1917.1] [BOOT] tick=0 RSR=0x04420000 IWDG=1 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=1925.3] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=1928.8] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=1934.1] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=1940.1] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=1947.2] SYSCLK = 400000000 Hz
+[host_t_ms=1953.1] HCLK   = 200000000 Hz
+[host_t_ms=1958.8] PCLK1  = 100000000 Hz
+[host_t_ms=1965.7] PCLK2  = 100000000 Hz
+[host_t_ms=1971.5] SystemCoreClock = 400000000 Hz
+[host_t_ms=1991.3] StartTaskCanRx STARTED
+[host_t_ms=1995.5] StartTaskCanTx STARTED (125 kbit/s bus budget)
+[host_t_ms=2857.5] IMU write-verify OK: reg 0x37 = 0x00
+[host_t_ms=2862.4] IMU write-verify OK: reg 0x38 = 0x01
+[host_t_ms=2867.3] IMU write-verify OK: reg 0x1B = 0x08
+[host_t_ms=2872.7] IMU write-verify OK: reg 0x1C = 0x08
+[host_t_ms=2878.9] IMU write-verify OK: reg 0x1A = 0x03
+[host_t_ms=2888.4] IMU write-verify OK: reg 0x19 = 0x00
+[host_t_ms=2895] INT=1 EN=1 GYRO=1 ACCEL=1 CONFIG=1 SMPLRT=1 WHO=0x70
+[host_t_ms=2900.9] PWR_MGMT_2 (0x6C) = 0x00
+[host_t_ms=2906.4] MPU6500 init: OK
+[host_t_ms=3047.5] deadband done (S1=10 S2=10 S3=10)
+[host_t_ms=3306.1] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=3309.2] FAULT SET - mat heartbeat!
+[host_t_ms=4294.6] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=5286.1] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=5606.2] [TRIGGER] ControlLoopTask deadlock start, tick=3733
+[host_t_ms=6070.8] [BOOT] tick=0 RSR=0x04420000 IWDG=1 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=6078.8] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=6082.3] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=6088.2] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=6095.2] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=6102.8] SYSCLK = 400000000 Hz
+[host_t_ms=6108.3] HCLK   = 200000000 Hz
+[host_t_ms=6114] PCLK1  = 100000000 Hz
+[host_t_ms=6120.5] PCLK2  = 100000000 Hz
+[host_t_ms=6125.9] SystemCoreClock = 400000000 Hz
+[host_t_ms=6144.7] StartTaskCanRx STARTED
+[host_t_ms=6149.6] StartTaskCanTx STARTED (125 kbit/s bus budget)
+[host_t_ms=7011.4] IMU write-verify OK: reg 0x37 = 0x00
+[host_t_ms=7021.2] IMU write-verify OK: reg 0x38 = 0x01
+[host_t_ms=7029.2] IMU write-verify OK: reg 0x1B = 0x08
+[host_t_ms=7037.4] IMU write-verify OK: reg 0x1C = 0x08
+[host_t_ms=7044.1] IMU write-verify OK: reg 0x1A = 0x03
+[host_t_ms=7050] IMU write-verify OK: reg 0x19 = 0x00
+[host_t_ms=7056.7] INT=1 EN=1 GYRO=1 ACCEL=1 CONFIG=1 SMPLRT=1 WHO=0x70
+[host_t_ms=7061.9] PWR_MGMT_2 (0x6C) = 0x00
+[host_t_ms=7068.5] MPU6500 init: OK
+[host_t_ms=7200.6] deadband done (S1=10 S2=10 S3=10)
+[host_t_ms=7456.8] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=7459.3] FAULT SET - mat heartbeat!
+[host_t_ms=8447.7] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=9439.8] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=10421.9] [TRIGGER] ControlLoopTask deadlock start, tick=4404
+[host_t_ms=10916.1] [BOOT] tick=0 RSR=0x04420000 IWDG=1 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=10924.3] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=10927.9] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=10937.4] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=10944.1] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=10952.8] SYSCLK = 400000000 Hz
+[host_t_ms=10959.1] HCLK   = 200000000 Hz
+[host_t_ms=10965.8] PCLK1  = 100000000 Hz
+[host_t_ms=10972.3] PCLK2  = 100000000 Hz
+[host_t_ms=10978.4] SystemCoreClock = 400000000 Hz
+[host_t_ms=10990.3] StartTaskCanRx STARTED
+[host_t_ms=10994.5] StartTaskCanTx STARTED (125 kbit/s bus budget)
+[host_t_ms=11857.1] IMU write-verify OK: reg 0x37 = 0x00
+[host_t_ms=11867.3] IMU write-verify OK: reg 0x38 = 0x01
+[host_t_ms=11876.6] IMU write-verify OK: reg 0x1B = 0x08
+[host_t_ms=11882.4] IMU write-verify OK: reg 0x1C = 0x08
+[host_t_ms=11889.4] IMU write-verify OK: reg 0x1A = 0x03
+[host_t_ms=11895.1] IMU write-verify OK: reg 0x19 = 0x00
+[host_t_ms=11902.1] INT=1 EN=1 GYRO=1 ACCEL=1 CONFIG=1 SMPLRT=1 WHO=0x70
+[host_t_ms=11907.8] PWR_MGMT_2 (0x6C) = 0x00
+[host_t_ms=11913.7] MPU6500 init: OK
+[host_t_ms=12046.6] deadband done (S1=10 S2=10 S3=10)
+[host_t_ms=12308.2] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=12310.6] FAULT SET - mat heartbeat!
+[host_t_ms=13293] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=14284.7] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=15276.3] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=15419.2] [TRIGGER] ControlLoopTask deadlock start, tick=4556
+[host_t_ms=15860.7] [BOOT] tick=0 RSR=0x04420000 IWDG=1 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=15868.9] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=15872.4] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=15876.5] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=15885.4] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=15892.1] SYSCLK = 400000000 Hz
+[host_t_ms=15898.3] HCLK   = 200000000 Hz
+[host_t_ms=15905.1] PCLK1  = 100000000 Hz
+[host_t_ms=15913] PCLK2  = 100000000 Hz
+[host_t_ms=15919.9] SystemCoreClock = 400000000 Hz
+[host_t_ms=15934.9] StartTaskCanRx STARTED
+[host_t_ms=15939.2] StartTaskCanTx STARTED (125 kbit/s bus budget)
+[host_t_ms=16801.2] IMU write-verify OK: reg 0x37 = 0x00
+[host_t_ms=16806.3] IMU write-verify OK: reg 0x38 = 0x01
+[host_t_ms=16812.5] IMU write-verify OK: reg 0x1B = 0x08
+[host_t_ms=16821] IMU write-verify OK: reg 0x1C = 0x08
+[host_t_ms=16828.9] IMU write-verify OK: reg 0x1A = 0x03
+[host_t_ms=16835.1] IMU write-verify OK: reg 0x19 = 0x00
+[host_t_ms=16841.5] INT=1 EN=1 GYRO=1 ACCEL=1 CONFIG=1 SMPLRT=1 WHO=0x70
+[host_t_ms=16851.1] PWR_MGMT_2 (0x6C) = 0x00
+[host_t_ms=16858.9] MPU6500 init: OK
+[host_t_ms=16991] deadband done (S1=10 S2=10 S3=10)
+[host_t_ms=17246.2] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=17248.6] FAULT SET - mat heartbeat!
+[host_t_ms=18237.6] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=18320.3] [TRIGGER] ControlLoopTask deadlock start, tick=2490
+[host_t_ms=18828.9] [BOOT] tick=0 RSR=0x04420000 IWDG=1 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=18837.1] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=18840.5] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=18845.9] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=18853.7] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=18860.8] SYSCLK = 400000000 Hz
+[host_t_ms=18868.2] HCLK   = 200000000 Hz
+[host_t_ms=18874.1] PCLK1  = 100000000 Hz
+[host_t_ms=18881] PCLK2  = 100000000 Hz
+[host_t_ms=18888.2] SystemCoreClock = 400000000 Hz
+[host_t_ms=18903.1] StartTaskCanRx STARTED
+[host_t_ms=18907.2] StartTaskCanTx STARTED (125 kbit/s bus budget)
+[host_t_ms=19769.4] IMU write-verify OK: reg 0x37 = 0x00
+[host_t_ms=19774.5] IMU write-verify OK: reg 0x38 = 0x01
+[host_t_ms=19782.7] IMU write-verify OK: reg 0x1B = 0x08
+[host_t_ms=19791.7] IMU write-verify OK: reg 0x1C = 0x08
+[host_t_ms=19798.4] IMU write-verify OK: reg 0x1A = 0x03
+[host_t_ms=19806.1] IMU write-verify OK: reg 0x19 = 0x00
+[host_t_ms=19813.3] INT=1 EN=1 GYRO=1 ACCEL=1 CONFIG=1 SMPLRT=1 WHO=0x70
+[host_t_ms=19819.4] PWR_MGMT_2 (0x6C) = 0x00
+[host_t_ms=19825.3] MPU6500 init: OK
+[host_t_ms=19959.1] deadband done (S1=10 S2=10 S3=10)
+[host_t_ms=20214.3] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=20216.7] FAULT SET - mat heartbeat!
+[host_t_ms=21204.3] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=21851] [TRIGGER] ControlLoopTask deadlock start, tick=3060
+[host_t_ms=22289.4] [BOOT] tick=0 RSR=0x04420000 IWDG=1 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=22297.6] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=22301.1] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=22313] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=22318.7] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=22325.1] SYSCLK = 400000000 Hz
+[host_t_ms=22330.9] HCLK   = 200000000 Hz
+[host_t_ms=22337.6] PCLK1  = 100000000 Hz
+[host_t_ms=22343.2] PCLK2  = 100000000 Hz
+[host_t_ms=22349.4] SystemCoreClock = 400000000 Hz
+[host_t_ms=22363.7] StartTaskCanRx STARTED
+[host_t_ms=22367.8] StartTaskCanTx STARTED (125 kbit/s bus budget)
+[host_t_ms=23229.3] IMU write-verify OK: reg 0x37 = 0x00
+[host_t_ms=23234.2] IMU write-verify OK: reg 0x38 = 0x01
+[host_t_ms=23239.1] IMU write-verify OK: reg 0x1B = 0x08
+[host_t_ms=23245] IMU write-verify OK: reg 0x1C = 0x08
+[host_t_ms=23252.3] IMU write-verify OK: reg 0x1A = 0x03
+[host_t_ms=23260.2] IMU write-verify OK: reg 0x19 = 0x00
+[host_t_ms=23268.2] INT=1 EN=1 GYRO=1 ACCEL=1 CONFIG=1 SMPLRT=1 WHO=0x70
+[host_t_ms=23273.7] PWR_MGMT_2 (0x6C) = 0x00
+[host_t_ms=23280.3] MPU6500 init: OK
+[host_t_ms=23419.6] deadband done (S1=10 S2=10 S3=10)
+[host_t_ms=23675.8] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=23679.1] FAULT SET - mat heartbeat!
+[host_t_ms=24667.1] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=25658.5] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=26649.4] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1
+[host_t_ms=27641.3] [BTN_RAW] 1=1 2=1 3=1 4=1 5=1 6=1

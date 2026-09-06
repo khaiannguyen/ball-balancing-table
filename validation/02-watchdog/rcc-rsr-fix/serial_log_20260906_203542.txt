@@ -1,0 +1,35 @@
+# host_t_ms is a CONTINUOUS clock across MCU resets - use this to compute delta t, not the MCU tick printed in [TRIGGER]/[BOOT] lines.
+[host_t_ms=29.9] [BOOT] tick=0 RSR=0x00420000 IWDG=0 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=38.7] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=40.1] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=44.8] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=50.1] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=54.3] SYSCLK = 400000000 Hz
+[host_t_ms=59.2] HCLK   = 200000000 Hz
+[host_t_ms=64.4] PCLK1  = 100000000 Hz
+[host_t_ms=68.7] PCLK2  = 100000000 Hz
+[host_t_ms=73.9] SystemCoreClock = 400000000 Hz
+[host_t_ms=79.3] [BOOT] tick=0 RSR=0x00420000 IWDG=0 WWDG=0 SFT=0 BOR=0 POR=0 PIN=1 LPWR=0
+[host_t_ms=83.9] FDCAN kernel clock = 80000000 Hz
+[host_t_ms=89.3] RCC_D2CCIP1R = 0x10000000, FDCANSEL = 1
+[host_t_ms=94.6] RCC_PLL1DIVR = 0x01040031
+[host_t_ms=99.4] RCC_PLLCKSELR = 0x02020012
+[host_t_ms=104.7] SYSCLK = 400000000 Hz
+[host_t_ms=109.6] HCLK   = 200000000 Hz
+[host_t_ms=116] PCLK1  = 100000000 Hz
+[host_t_ms=120.6] PCLK2  = 100000000 Hz
+[host_t_ms=126.4] SystemCoreClock = 400000000 Hz
+[host_t_ms=131.7] StartTaskCanRx STARTED
+[host_t_ms=136.4] StartTaskCanTx STARTED (125 kbit/s bus budget)
+[host_t_ms=142.2] IMU write-verify OK: reg 0x37 = 0x00
+[host_t_ms=147.5] IMU write-verify OK: reg 0x38 = 0x01
+[host_t_ms=152.9] IMU write-verify OK: reg 0x1B = 0x08
+[host_t_ms=158.5] IMU write-verify OK: reg 0x1C = 0x08
+[host_t_ms=164] IMU write-verify OK: reg 0x1A = 0x03
+[host_t_ms=168.7] IMU write-verify OK: reg 0x19 = 0x00
+[host_t_ms=174.6] INT=1 EN=1 GYRO=1 ACCEL=1 CONFIG=1 SMPLRT=1 WHO=0x70
+[host_t_ms=179.7] PWR_MGMT_2 (0x6C) = 0x00
+[host_t_ms=185.2] MPU6500 init: OK
+[host_t_ms=190.4] deadband done (S1=10 S2=10 S3=10)
+[host_t_ms=195.9] FAULT SET - mat heartbeat!
+[host_t_ms=118541.1] FAULT SET - mat heartbeat!

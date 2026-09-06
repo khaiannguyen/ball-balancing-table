@@ -1,0 +1,21 @@
+Build flag: VALIDATION_DEADLOCK_TEST_DISPLAY (task_display.c), BTN6 trigger.
+Capture: serial_timestamp_logger.ps1 COM4@115200, single continuous session
+(35 lines total).
+
+DisplayTask's deadlock path (for(;;){ __NOP(); }) has no printf before the
+infinite loop by design, so there is no [TRIGGER] line for this test — the
+absence of any further DisplayTask output (including the periodic UI sync)
+after BTN6 is pressed is itself part of the evidence, alongside the absence
+of a new [BOOT].
+
+Timeline:
+  line 2:  host_t_ms=29.9    [BOOT] RSR=0x00420000 PIN=1 (session start)
+  line 12: host_t_ms=79.3    [BOOT] RSR=0x00420000 PIN=1 (button-bounce reboot)
+  line 34: host_t_ms=195.9   "FAULT SET - mat heartbeat!" (last line before gap)
+  line 35: host_t_ms=118541.1 "FAULT SET - mat heartbeat!" (next line; file ends)
+
+Gap: 118541.1 - 195.9 = 118345.2ms (~118.3s) with no [BOOT] in between, i.e.
+~289x the measured IWDG timeout (2.3: 410.3ms) elapsed without a reset.
+"FAULT SET - mat heartbeat!" is printed by a task other than DisplayTask (a
+CAN-mat heartbeat fault flag, unrelated to the watchdog) and its reappearance
+after the gap corroborates that the rest of the system kept running.
