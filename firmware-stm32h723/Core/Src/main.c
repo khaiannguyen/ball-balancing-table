@@ -1050,13 +1050,7 @@ void StartCanTx(void *argument)
 void StartWatchdog(void *argument)
 {
   /* USER CODE BEGIN StartWatchdog */
-  /* Infinite loop */
-  for(;;)
-  {
-	//HAL_IWDG_Refresh(&hiwdg1);
-    osDelay(1);
-    HAL_IWDG_Refresh(&hiwdg1);
-  }
+  StartTaskWatchdog(argument);
   /* USER CODE END StartWatchdog */
 }
 
