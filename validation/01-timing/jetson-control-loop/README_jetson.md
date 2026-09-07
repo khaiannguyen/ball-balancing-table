@@ -1,31 +1,31 @@
-# Jetson `TaskControlLoop` jitter & WCET (mục 1.3)
+# Jetson `TaskControlLoop` jitter & WCET (section 1.3)
 
-## Tóm tắt
+## Summary
 
 > Jetson TaskControlLoop: already uses absolute-time sleep_until (no bug found) — jitter 17.59 µs std, WCET 6.34 µs mean / 31.01 µs max (0.06% mean / 0.31% max of 10ms budget), N=2000 cycles — see `validation/01-timing/jetson-control-loop/`.
 
-## Xác nhận từ đọc code (trước khi đo)
+## Confirmation from code review (before measuring)
 
-Đối chiếu `task_control_loop.cpp` với mẫu chuẩn của `task_can_tx.cpp`: vòng lặp chính dùng đúng `sleep_until(next_wake)` với `next_wake += period` — cơ chế absolute-time tự sửa lệch (self-correcting), không tích luỹ drift. **Không có bug cùng loại với STM32** (STM32 dùng `osDelay` tương đối, đã sửa ở mục 1.1). Vì vậy mục này chỉ đo xác nhận 1 lần, không có before/after.
+Comparing `task_control_loop.cpp` against the reference pattern in `task_can_tx.cpp`: the main loop correctly uses `sleep_until(next_wake)` with `next_wake += period` — an absolute-time, self-correcting mechanism that does not accumulate drift. **No bug of the same kind as STM32** was found (STM32 used a relative `osDelay`, fixed in section 1.1). Therefore this section only measures once to confirm, with no before/after comparison.
 
-## Phương pháp đo
+## Measurement method
 
-- **Công cụ:** `clock_gettime(CLOCK_MONOTONIC)`, đơn vị nanosecond, quy đổi ra µs khi phân tích (`/1000`).
-- **Period (jitter):** ghi ở đầu thân vòng lặp, khoảng cách giữa 2 lần vào loop liên tiếp.
-- **WCET:** `t0` đầu thân vòng lặp, `t1` — xem lưu ý quan trọng bên dưới.
-- **Buffer:** `std::vector<uint64_t>` đã `reserve(2000)` trước vòng lặp thời gian thực, dump ra CSV **một lần duy nhất** (dùng cờ `static bool`) sau khi đủ N=2000 mẫu, không I/O nào khác trong hot path (task chạy `SCHED_FIFO`).
-- **Điều kiện đo:** chạy hệ thống thật đầy đủ (camera + CAN + PID + watchdog + video) trong ~25 giây, `can0` up, **không cần đặt bóng lên bàn** — camera nhìn khung hình trống (`detected=0` suốt quá trình), đúng như thiết kế: `TaskControlLoop` vẫn chạy đúng chu kỳ không phụ thuộc có bóng hay không.
+- **Tool:** `clock_gettime(CLOCK_MONOTONIC)`, in nanoseconds, converted to µs during analysis (`/1000`).
+- **Period (jitter):** recorded at the start of the loop body, as the gap between two consecutive loop entries.
+- **WCET:** `t0` at the start of the loop body, `t1` — see the important note below.
+- **Buffer:** a `std::vector<uint64_t>` with `reserve(2000)` called before the real-time loop, dumped to CSV **exactly once** (using a `static bool` flag) after N=2000 samples were collected, with no other I/O in the hot path (the task runs under `SCHED_FIFO`).
+- **Measurement conditions:** the full real system running (camera + CAN + PID + watchdog + video) for ~25 seconds, with `can0` up, **no ball needed on the table** — the camera views an empty frame (`detected=0` throughout), which is by design: `TaskControlLoop` still runs at the correct period regardless of whether a ball is present.
 
-## ⚠️ Lưu ý quan trọng — sai lệch so với đặc tả gốc cho mốc t1 của WCET
+## ⚠️ Important note — deviation from the original spec for the WCET t1 marker
 
-Đặc tả gốc yêu cầu `t1` đặt "ngay sau khi gửi xong CAN (`can_send`/tương đương)". Tuy nhiên khi đọc code thật, phát hiện: **`task_control_loop.cpp` không gọi trực tiếp hàm gửi CAN nào** — nó chỉ ghi giá trị PID output vào `system_state().attitude_desired` qua hàm `attitude_desired_write()`. Việc gửi CAN thật sự diễn ra ở **task riêng biệt `TaskCanTx`**, không đồng bộ (chạy độc lập, không nằm trong cùng chu kỳ của `TaskControlLoop`).
+The original spec called for `t1` to be placed "right after the CAN send completes (`can_send` or equivalent)." However, upon reviewing the actual code, it was found that **`task_control_loop.cpp` does not call any CAN-send function directly** — it only writes the PID output into `system_state().attitude_desired` via the `attitude_desired_write()` function. The actual CAN transmission happens in a **separate task, `TaskCanTx`**, running asynchronously and independently of `TaskControlLoop`'s cycle.
 
-Vì vậy, mốc `t1` trong phép đo này dùng **`attitude_desired_write()`** — điểm hand-off CAN duy nhất tồn tại trong file `task_control_loop.cpp`. Điều này có nghĩa:
+For this reason, the `t1` marker in this measurement uses **`attitude_desired_write()`** — the only CAN hand-off point that exists in the `task_control_loop.cpp` file. This means:
 
-- Số liệu WCET dưới đây phản ánh đúng **thời gian thực thi nội bộ của `TaskControlLoop`** (đọc cảm biến → tính PID → ghi setpoint), **không bao gồm** thời gian truyền CAN vật lý thật sự (việc đó thuộc về `TaskCanTx`, cần đo riêng nếu muốn biết WCET đầu-cuối của toàn bộ đường truyền CAN).
-- Đây là cách diễn giải hợp lý nhất trong giới hạn của file này, nhưng khác với chữ "can_send" trong đặc tả gốc — ghi rõ ở đây để người đọc sau không hiểu nhầm là đã đo trọn vẹn thời gian CAN.
+- The WCET figures below reflect the **internal execution time of `TaskControlLoop`** (read sensors → compute PID → write setpoint) and **do not include** the actual physical CAN transmission time (that belongs to `TaskCanTx` and would need to be measured separately to get the true end-to-end WCET of the full CAN path).
+- This is the most reasonable interpretation possible within the constraints of this file, but it differs from the word "can_send" in the original spec — noted explicitly here so future readers don't mistakenly assume the full CAN timing was measured.
 
-## Kết quả (N = 2000 mẫu)
+## Results (N = 2000 samples)
 
 | | Period (jitter) | WCET |
 |---|---|---|
@@ -33,26 +33,26 @@ Vì vậy, mốc `t1` trong phép đo này dùng **`attitude_desired_write()`** 
 | std (µs) | 17.591 | 1.144 |
 | min (µs) | 9785.273 | 1.600 |
 | max (µs) | 10216.203 | 31.009 |
-| % của ngân sách 10ms | — | mean 0.063%, max 0.310% |
+| % of the 10ms budget | — | mean 0.063%, max 0.310% |
 
-## Đánh giá
+## Assessment
 
-- **Period trung bình ≈ 10000 µs**, đúng khớp `CONTROL_LOOP_PERIOD_MS`. `std = 17.59 µs` (0.18% chu kỳ) — nhỏ, xác nhận cơ chế `sleep_until` hoạt động đúng như thiết kế, không có drift tích luỹ trong cửa sổ đo 2000 chu kỳ (~20 giây).
-- **WCET rất nhỏ** so với ngân sách: trung bình chỉ chiếm 0.063%, tệ nhất (max) cũng chỉ 0.31% của 10ms — dư địa thời gian rất lớn cho phần xử lý nội bộ của `TaskControlLoop`. Không loại trừ khả năng WCET đầu-cuối thật sự (bao gồm cả `TaskCanTx` gửi CAN) cao hơn con số này — xem lưu ý ở trên.
-- Không phát hiện bug jitter kiểu STM32 (`osDelay`) — kết quả này xác nhận đúng nhận định ban đầu trong file kế hoạch, không cần sửa code.
+- **Average period ≈ 10000 µs**, matching `CONTROL_LOOP_PERIOD_MS` exactly. `std = 17.59 µs` (0.18% of the period) — small, confirming that the `sleep_until` mechanism works as designed, with no accumulated drift over the 2000-cycle (~20 second) measurement window.
+- **WCET is very small** relative to the budget: the mean consumes only 0.063%, and the worst case (max) only 0.31% of the 10ms budget — a very large margin for `TaskControlLoop`'s internal processing. It cannot be ruled out that the true end-to-end WCET (including `TaskCanTx`'s actual CAN send) is higher than this figure — see the note above.
+- No jitter bug of the STM32 kind (`osDelay`) was found — this result confirms the initial expectation stated in the plan file, and no code change was needed.
 
-## Bằng chứng
+## Evidence
 
 ```
 validation/01-timing/jetson-control-loop/
 ├── README.md
 ├── control_loop_period_ns.csv
 ├── control_loop_wcet_ns.csv
-└── control_loop_timing_summary.txt   (hoặc .md, tuỳ tên Claude Code đã lưu)
+└── control_loop_timing_summary.txt   (or .md, depending on what Claude Code saved it as)
 ```
 
-File CSV gốc và summary hiện đang ở `~/Downloads` trên Jetson — copy vào đúng thư mục trên trước khi commit.
+The raw CSV files and summary are currently in `~/Downloads` on the Jetson — copy them into the correct directory above before committing.
 
-## Ghi chú thay đổi code
+## Code change note
 
-`src/task_control_loop.cpp` đã được sửa để thêm instrumentation đo timing (2 buffer `std::vector`, dump CSV một lần khi đủ N=2000 mẫu) — thay đổi này **chưa commit**. Cân nhắc: giữ lại instrumentation này trong code (có thể bọc trong `#ifdef VALIDATION_...` giống style `VALIDATION_DEADLOCK_TEST_CONTROL` đã có ở STM32) để tái đo dễ dàng sau này, hoặc gỡ bỏ nếu chỉ cần đo 1 lần cho việc validation này.
+`src/task_control_loop.cpp` was modified to add timing instrumentation (2 `std::vector` buffers, dumping to CSV once N=2000 samples are reached) — this change **has not been committed**. Consider either keeping this instrumentation in the code (possibly wrapped in `#ifdef VALIDATION_...`, similar to the `VALIDATION_DEADLOCK_TEST_CONTROL` style already used on STM32) to make re-measurement easy later, or removing it if this validation only needed a one-time measurement.

@@ -1,49 +1,49 @@
-# Control-loop WCET — STM32H723 (mục 1.2)
+# Control-loop WCET — STM32H723 (section 1.2)
 
-## Tóm tắt
+## Summary
 
-> Control loop WCET: 7.88 µs (0.08% of 10ms budget), N=2048 cycles, Home mode (mode mặc định lúc boot — Balance/Position không đo được, xem giới hạn bên dưới) — see `validation/01-timing/control-loop-wcet/`.
+> Control loop WCET: 7.88 µs (0.08% of 10ms budget), N=2048 cycles, Home mode (default mode at boot — Balance/Position could not be measured, see limitations below) — see `validation/01-timing/control-loop-wcet/`.
 
-## Phương pháp đo
+## Measurement method
 
-Tái dùng nguyên hạ tầng DWT của mục 1.1, thêm buffer riêng `s_exec_buf[2048]` và cặp mốc:
-- **t0:** đầu thân xử lý mỗi chu kỳ trong `for(;;)`, ngay sau đoạn đo period của 1.1.
-- **t1:** ngay sau lệnh `servo_actuator_step()` — đặt ở cả 3 vị trí gọi hàm này trong code thật (nhánh `state != STATE_RUN`, nhánh `!setpoint_get`, và nhánh chính sau `switch(sp.mode)`), để không bỏ sót chu kỳ nào bất kể trạng thái hệ thống.
+Reused the DWT infrastructure from section 1.1, adding a dedicated buffer `s_exec_buf[2048]` and a pair of markers:
+- **t0:** start of per-cycle processing in the `for(;;)` loop, right after the period-measurement code from 1.1.
+- **t1:** immediately after the `servo_actuator_step()` call — placed at all 3 real call sites of this function in the code (the `state != STATE_RUN` branch, the `!setpoint_get` branch, and the main branch after `switch(sp.mode)`), so no cycle is missed regardless of system state.
 
-`time_us = (t1 - t0) / 400` (CPU 400MHz). N = 2048 mẫu, xác nhận `s_exec_idx == 2048` (buffer đầy hoàn toàn) trước khi halt và dump — cùng quy trình kiểm tra chặt chẽ như mục 1.1, sau khi rút kinh nghiệm từ các lần dump dở buffer ở mục đó.
+`time_us = (t1 - t0) / 400` (CPU 400MHz). N = 2048 samples, confirmed `s_exec_idx == 2048` (buffer fully filled) before halting and dumping — same rigorous verification process as section 1.1, following the lessons learned there about partially-filled buffer dumps.
 
-## Kết quả
+## Results
 
-| | Home mode (mode mặc định lúc boot) |
+| | Home mode (default mode at boot) |
 |---|---|
 | N | 2048 |
 | mean (µs) | 2.85 |
-| **WCET = max (µs)** | **7.88** (0.08% của ngân sách 10ms) |
+| **WCET = max (µs)** | **7.88** (0.08% of the 10ms budget) |
 | min (µs) | 2.705 |
 | std (µs) | 0.365 |
 
-File dữ liệu gốc: `wcet_home_raw.bin`, `wcet_home_raw_summary.csv`.
+Raw data files: `wcet_home_raw.bin`, `wcet_home_raw_summary.csv`.
 
-## Trả lời 3 câu hỏi của mục 1.2
+## Answering the 3 questions from section 1.2
 
-**1. WCET chiếm bao nhiêu % ngân sách 10ms?**
-7.88 µs / 10000 µs ≈ **0.08%** — cực kỳ dư dả, không có nguy cơ vi phạm deadline ở mode đã đo.
+**1. What percentage of the 10ms budget does the WCET consume?**
+7.88 µs / 10000 µs ≈ **0.08%** — an extremely large margin, no risk of deadline violation in the measured mode.
 
-**2. Mode nào tốn nhất (Balance vs Position vs Home)?**
-**Không trả lời được đầy đủ** — chỉ đo được **Home mode**. Xem mục Giới hạn bên dưới.
+**2. Which mode is the most expensive (Balance vs Position vs Home)?**
+**Cannot be fully answered** — only **Home mode** was measured. See the Limitations section below.
 
-**3. Có `dt` dài bất thường không (multi-segment trajectory)?**
-Không quan sát thấy — `max = 7.88µs` chỉ chênh lệch nhỏ so với `mean = 2.85µs` (gấp ~2.8 lần), và `std = 0.365µs` rất nhỏ so với mean. Không có mẫu nào đột biến cao bất thường trong tập N=2048 ở Home mode. Không loại trừ khả năng multi-segment trajectory consumption chỉ xảy ra ở Position/Balance mode (không đo được ở đây).
+**3. Are there any anomalously long `dt` values (multi-segment trajectory)?**
+None observed — `max = 7.88 µs` is only slightly higher than `mean = 2.85 µs` (about 2.8×), and `std = 0.365 µs` is very small relative to the mean. No abnormally high spikes were seen in the N=2048 sample set in Home mode. It cannot be ruled out that multi-segment trajectory consumption only occurs in Position/Balance mode (not measurable here).
 
-## Giới hạn của phép đo — quan trọng, đọc trước khi dùng số liệu này
+## Measurement limitations — important, read before using these figures
 
-Chỉ đo được **Home mode** (mode mặc định khi hệ thống mới boot, `OPMODE_HOME = 0`). Balance mode và Position mode **chưa đo được** do thiết kế chương trình hiện tại không cho phép chuyển mode trong điều kiện thao tác thực tế lúc đo. Vì vậy:
+Only **Home mode** was measured (the default mode when the system boots, `OPMODE_HOME = 0`). Balance mode and Position mode **could not be measured** because the current program design did not allow switching modes under the actual operating conditions available at measurement time. As a result:
 
-- Con số WCET 7.88µs / 0.08% **chỉ đại diện cho Home mode**, không thể suy ra hoặc giả định áp dụng cho Balance/Position.
-- Home mode nhiều khả năng là mode **ít tốn tính toán nhất** (không có vòng điều khiển PID phản hồi cảm biến phức tạp như Balance, không có nội suy trajectory nhiều đoạn như Position) — nên WCET thật của Balance/Position **có thể cao hơn đáng kể** con số này. Không được dùng số liệu Home mode để kết luận hệ thống an toàn ở mọi mode.
-- Câu hỏi "mode nào tốn nhất" của mục 1.2 **còn để ngỏ**, cần bổ sung đo khi có cách chuyển mode được (ví dụ qua lệnh CAN, nút bấm vật lý, hoặc sửa tạm code để ép mode trong lúc đo).
+- The WCET figure of 7.88 µs / 0.08% **represents Home mode only** and cannot be assumed or extrapolated to Balance/Position.
+- Home mode is likely the **least computationally expensive mode** (no closed-loop sensor-feedback PID as complex as Balance, no multi-segment trajectory interpolation as in Position) — so the true WCET of Balance/Position **could be significantly higher** than this figure. The Home-mode data must not be used to conclude the system is safe in every mode.
+- The question of "which mode is most expensive" from section 1.2 **remains open**, and needs additional measurement once a way to switch modes becomes available (e.g., via a CAN command, a physical button, or a temporary code modification to force the mode during measurement).
 
-## Bằng chứng
+## Evidence
 
 ```
 validation/01-timing/control-loop-wcet/

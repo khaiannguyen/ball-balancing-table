@@ -1,23 +1,23 @@
-# Control-loop jitter — STM32H723 (mục 1.1)
+# Control-loop jitter — STM32H723 (section 1.1)
 
-## Tóm tắt
+## Summary
 
 > Control loop jitter: 4.12 µs std (osDelay) → 8.67 µs std (vTaskDelayUntil), N=2048 cycles, Balance mode — vTaskDelayUntil did not reduce short-window jitter in this run (both well under 0.1% of the 10ms period); see `validation/01-timing/control-loop-jitter/`.
 
-## Bối cảnh
+## Background
 
-`task_control_loop.c` dùng `osDelay(CONTROL_LOOP_PERIOD_MS)` ở 3 vị trí trong vòng lặp chính của ControlLoopTask, trong khi `task_watchdog.c` và `task_can_tx.c` đều dùng `vTaskDelayUntil()` (periodic, absolute-time, không tích luỹ trôi). Đây là task quan trọng nhất hệ thống (sinh lệnh servo trực tiếp), nên bug này được ưu tiên sửa và đo trước/sau.
+`task_control_loop.c` used `osDelay(CONTROL_LOOP_PERIOD_MS)` at 3 call sites in the main loop of ControlLoopTask, while `task_watchdog.c` and `task_can_tx.c` both used `vTaskDelayUntil()` (periodic, absolute-time, non-drifting). This is the most critical task in the system (it directly generates servo commands), so this bug was prioritized for a fix, with before/after measurements.
 
-## Phương pháp đo
+## Measurement method
 
-- **Công cụ:** DWT cycle counter (Cortex-M7, CPU 400MHz → `time_us = cycles / 400`).
-- **Vị trí ghi mẫu:** đầu thân vòng lặp `for(;;)` của ControlLoopTask, ghi vào ring buffer tĩnh `s_period_buf[2048]` (`uint32_t`, đơn vị: cycles giữa 2 lần vào vòng lặp liên tiếp).
-- **Điều kiện đo:** Balance mode, có tải thật (servo + IMU + CAN hoạt động đồng thời), không đo lúc idle.
-- **N mẫu:** 2048 (buffer đầy hoàn toàn — `s_idx == 2048` xác nhận trước khi dump, tránh dump dở buffer).
-- **Cách lấy dữ liệu:** halt bằng debugger (CubeIDE) đúng lúc buffer đầy, export vùng nhớ `s_period_buf` qua Memory View → RAW Binary (`.bin`, 8192 bytes = 2048 × 4 bytes), sau đó parse bằng script Python (`analyze.py` / `analyze_after.py`) để tính `mean`/`std`/`min`/`max` theo µs và xuất CSV.
-- **Không dùng UART/printf trong hot path** — `retarget.c` dùng `HAL_UART_Transmit(..., HAL_MAX_DELAY)` (blocking thật sự từng byte), có thể phá phép đo nếu lỡ log trong vòng lặp.
+- **Tool:** DWT cycle counter (Cortex-M7, CPU 400MHz → `time_us = cycles / 400`).
+- **Sampling point:** start of the `for(;;)` loop body of ControlLoopTask, recorded into a static ring buffer `s_period_buf[2048]` (`uint32_t`, unit: cycles between two consecutive loop entries).
+- **Measurement conditions:** Balance mode, under real load (servo + IMU + CAN running simultaneously), not measured at idle.
+- **Sample count N:** 2048 (buffer fully filled — confirmed `s_idx == 2048` before dumping, to avoid dumping a partially-filled buffer).
+- **Data capture method:** halted via debugger (CubeIDE) exactly when the buffer was full, exported the `s_period_buf` memory region via Memory View → RAW Binary (`.bin`, 8192 bytes = 2048 × 4 bytes), then parsed with a Python script (`analyze.py` / `analyze_after.py`) to compute mean/std/min/max in µs and export to CSV.
+- **No UART/printf in the hot path** — `retarget.c` uses `HAL_UART_Transmit(..., HAL_MAX_DELAY)` (genuinely blocking, byte-by-byte), which could corrupt the measurement if accidentally logged inside the loop.
 
-## Kết quả
+## Results
 
 | | before (`osDelay`) | after (`vTaskDelayUntil`) |
 |---|---|---|
@@ -27,27 +27,27 @@
 | min (µs) | 9815.57 | 9608.17 |
 | max (µs) | 10004.78 | 10004.69 |
 
-File dữ liệu gốc: `before/before_raw.bin`, `before/before_summary.csv`, `after/after_raw.bin`, `after/after_summary.csv`.
+Raw data files: `before/before_raw.bin`, `before/before_summary.csv`, `after/after_raw.bin`, `after/after_summary.csv`.
 
-## Đánh giá
+## Assessment
 
-`vTaskDelayUntil` **không cải thiện jitter** trong cửa sổ đo ngắn này (~20 giây, N=2048) — std thực đo **tăng** so với `osDelay` (8.67 µs vs 4.12 µs), ngược với giả thuyết ban đầu.
+`vTaskDelayUntil` **did not improve jitter** within this short measurement window (~20 seconds, N=2048) — the measured std actually **increased** compared to `osDelay` (8.67 µs vs 4.12 µs), the opposite of the initial hypothesis.
 
-Đây là phát hiện hợp lệ, không phải lỗi đo: cả hai giá trị std đều rất nhỏ so với chu kỳ 10ms (0.04% và 0.087%), cho thấy hệ thống ổn định ở cả 2 phiên bản trong khoảng thời gian đo — khác biệt tuyệt đối chỉ vài µs. Chênh lệch có thể do điều kiện tải giữa 2 lần đo không hoàn toàn giống hệt nhau (đo ở 2 phiên debug riêng biệt, cách nhau về thời gian), không loại trừ khả năng nhiễu môi trường đo (cache write-back vào RAM_D1, xem ghi chú buffer bên dưới) đóng góp vào chênh lệch này nhiều hơn bản thân cơ chế delay.
+This is a valid finding, not a measurement error: both std values are very small relative to the 10ms period (0.04% and 0.087% respectively), showing the system is stable in both versions over the measured interval — the absolute difference is only a few µs. The discrepancy may stem from the two measurement runs not having perfectly identical load conditions (measured in two separate debug sessions, separated in time); it's also possible that measurement-environment noise (cache write-back into RAM_D1, see the buffer note below) contributed more to this difference than the delay mechanism itself.
 
-**Về mặt lý thuyết, `vTaskDelayUntil` vẫn là lựa chọn đúng để giữ nguyên** — lợi ích chính của nó là chống **trôi tích luỹ dài hạn** (long-term drift), một hiệu ứng cần thời gian chạy dài hơn nhiều so với ~20 giây của phép đo này mới bộc lộ rõ qua std của period tức thời. Phép đo hiện tại không đủ để bác bỏ lợi ích lý thuyết đó, chỉ cho biết trong cửa sổ ngắn cả hai cách đều chấp nhận được.
+**On theoretical grounds, `vTaskDelayUntil` should still be kept** — its main benefit is protecting against **long-term accumulated drift**, an effect that requires a much longer run than this ~20-second measurement to manifest clearly in the instantaneous period's std. The current measurement is not sufficient to rule out that theoretical benefit; it only shows that, within a short window, both approaches are acceptable.
 
-## Ghi chú kỹ thuật về buffer đo
+## Technical note on the measurement buffer
 
-Buffer `s_period_buf` dùng mảng tĩnh bình thường (hướng (a) trong kế hoạch), không ép vào DTCM — vì linker script hiện tại của project (`STM32H723ZGTX_FLASH.ld`) không định nghĩa section `.dtcm` trong `SECTIONS{}`, nên attribute `section(".dtcm")` sẽ không thực sự đặt buffer vào DTCM. Buffer nằm trong `RAM_D1` (AXI SRAM), có thể dính cache write-back do `SCB_EnableDCache()` được gọi trong `main.c` — đây là nguồn nhiễu nhỏ nhưng chấp nhận được so với độ lớn jitter ms-scale đang đo.
+The `s_period_buf` buffer uses a plain static array (approach (a) in the plan), not forced into DTCM — because the project's current linker script (`STM32H723ZGTX_FLASH.ld`) does not define a `.dtcm` section in `SECTIONS{}`, so the `section(".dtcm")` attribute would not actually place the buffer in DTCM. The buffer resides in `RAM_D1` (AXI SRAM), which may be subject to write-back caching since `SCB_EnableDCache()` is called in `main.c` — a minor but acceptable noise source relative to the ms-scale jitter being measured.
 
-## Ghi chú vận hành (rút kinh nghiệm khi đo)
+## Operational notes (lessons learned while measuring)
 
-- Phải xác nhận `s_idx == 2048` qua **Live Expressions** (không cần halt để xem — CubeIDE cập nhật giá trị này khi board đang chạy) **trước khi** halt để dump. Một số lần dump thử nghiệm cho ra N < 2048 (buffer chưa đầy) đã bị loại bỏ, không dùng trong bảng kết quả trên.
-- Cần xoá các breakpoint còn sót lại (ví dụ breakpoint tình cờ nằm trong `tasks.c` của FreeRTOS) trước khi Resume, nếu không chương trình có thể tự dừng giữa chừng ở idle task thay vì chạy liên tục tới khi buffer đầy.
-- Sau khi sửa code (`osDelay` → `vTaskDelayUntil`), cần build lại (không chỉ Debug/Resume lại binary cũ) trước khi đo after.
+- Must confirm `s_idx == 2048` via **Live Expressions** (no need to halt to view — CubeIDE updates this value while the board is running) **before** halting to dump. Some trial dumps that yielded N < 2048 (buffer not yet full) were discarded and not used in the results table above.
+- Any leftover breakpoints (e.g., a breakpoint accidentally left in FreeRTOS's `tasks.c`) must be cleared before Resume, otherwise the program may halt partway at the idle task instead of running continuously until the buffer fills.
+- After changing the code (`osDelay` → `vTaskDelayUntil`), the project must be rebuilt (not just Debug/Resume on the old binary) before taking the "after" measurement.
 
-## Bằng chứng
+## Evidence
 
 ```
 validation/01-timing/control-loop-jitter/
